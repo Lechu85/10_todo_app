@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} {{ firstName|capitalize }}{% endblock %}
+
+{% block body %}
+
+    {{ parent() }}
+
+    <h2 class="mt-2">Strona o {{ firstName|capitalize }}</h2>
+
+    {% for number in numbers %}
+
+        <li>{{ number }}</li>
+    {% endfor %}
+{% endblock %}

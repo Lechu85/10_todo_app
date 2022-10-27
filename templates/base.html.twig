@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+            <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
+        {% endblock %}
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+        {% endblock %}
+
+    </head>
+    <body>
+        <div class="container-xxl">
+            {% block body %}
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="{{ path('home_index') }}">Główna</a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="{{ path('about_index', {'firstName' : 'Kamil'}) }}">O nas</a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="{{ path('totolotek_index') }}">Losuj</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </nav>
+
+                <img src="{{ asset('img/logo.png') }}" alt="">
+
+            {% endblock %}
+        </div>
+    </body>
+</html>
