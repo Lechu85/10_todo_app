@@ -21,23 +21,41 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
-    public function save(Product $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
+	public function findAllLoverThanPrice(int $price): array
+	{
+		$entityManager = $this->getEntityManager();
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
+		$query = $entityManager->createQuery(
+			'SELECT p
+            FROM App\Entity\Product p
+            WHERE p.price < :price
+            ORDER BY p.price ASC'
+		)->setParameter('price', $price);
 
-    public function remove(Product $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
+		// returns an array of Product objects
+		return $query->getResult();
+	}
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
+	public function findAllGreaterThanPriceDql(int $price, bool $includeUnavailableProducts = false): array
+	{
+		// automatically knows to select Products
+		// the "p" is an alias you'll use in the rest of the query
+		$qb = $this->createQueryBuilder('p')
+			->andWhere('p.price > :price')
+			->setParameter('price', $price)
+			->orderBy('p.price', 'ASC');
+
+		if (!$includeUnavailableProducts) {
+			$qb->andWhere('p.active = TRUE');
+		}
+
+		$query = $qb->getQuery();
+
+		return $query->execute();
+
+		// to get just one result:
+		// $product = $query->setMaxResults(1)->getOneOrNullResult();
+	}
 
 //    /**
 //     * @return Product[] Returns an array of Product objects
@@ -63,4 +81,5 @@ class ProductRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
 }
