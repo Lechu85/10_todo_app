@@ -17,7 +17,7 @@ class HomeController extends AbstractController
 	public function index(AddHelper $addHelper): Response
 	{
 
-		dd($addHelper->add(2, 3));
+		//dd($addHelper->add(2, 3));
 
 		return $this->render('home.html.twig');
 

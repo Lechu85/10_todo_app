@@ -56,7 +56,10 @@ class RegistrationController extends AbstractController
             );
             // do anything else you need here, like send an email
 
-            return $userAuthenticator->authenticateUser(
+	        $this->addFlash('success', 'Dziekujemy za rejestracxje.');
+
+
+	        return $userAuthenticator->authenticateUser(
                 $user,
                 $authenticator,
                 $request

@@ -35,9 +35,47 @@
                                 <a class="nav-link" href="{{ path('totolotek_index') }}">Losuj</a>
                             </li>
 
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="{{ path('app_admin') }}">Admin</a>
+                                </li>
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="{{ path('app_edit_profile') }}">Edytuj profil</a>
+                                </li>
+                            {% endif %}
+
+
+
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="{{ path('app_logout') }}">Wyloguj</a>
+                                </li>
+                            {% else %}
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="{{ path('app_login') }}">Zaloguj się</a>
+                                </li>
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="{{ path('app_register') }}">Zarejestruj się</a>
+                                </li>
+                            {% endif %}
+
                         </ul>
                     </div>
                 </nav>
+
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <p>Email: {{ app.user.email }}</p>
+                {% endif %}
+
+
+                {# read and display several types of flash messages #}
+                {% for label, messages in app.flashes(['success', 'warning']) %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
 
                 <img src="{{ asset('img/logo.png') }}" alt="">
 
