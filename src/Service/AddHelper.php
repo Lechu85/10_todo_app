@@ -10,13 +10,13 @@ class AddHelper
 {
 	private Filesystem $filesystem;
 	public $mailer;
-	private $adminEmail;
+	private $adminEmail; //z pliku services.yaml
 
 	public function __construct(Filesystem $filesystem, MailerInterface $mailer, string $adminEmail)
 	{
 		$this->filesystem = $filesystem;
 		$this->mailer = $mailer;
-		$this->adminEmail = $adminEmail;
+		$this->adminEmail = $adminEmail; //z pliku services.yaml
 	}
 
 	public function add(int $a, int $b): int
