@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Message\SmsNotification;
 use App\Service\AddHelper;
+use App\Service\AddHelper2Decorator;
 use App\Service\SendInfoToAdmin;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
@@ -14,14 +17,32 @@ class HomeController extends AbstractController
 	/**
 	 * @Route("/", name="home_index")
 	 */
-	public function index(AddHelper $addHelper): Response
+	public function index(AddHelper $addHelper, MessageBusInterface $bus): Response
 	{
 
 		//dd($addHelper->add(2, 3));
+		//zapisuje plik na dysku komputera. asynchronciznie
+		//$bus->dispatch(new SmsNotification('Look! I created a message!', 2));
+		return $this->render('home.html.twig');
+
+	}
+
+
+
+	/**
+	 * @Route("/decorator", name="home_index_decorator")
+	 */
+	public function decorator(AddHelper2Decorator $addHelper2, MessageBusInterface $bus): Response
+	{
+		//testujemy dekoratory klas
+		$result = $addHelper2->add(1,1);
+		dd($result);
 
 		return $this->render('home.html.twig');
 
 	}
+
+
 
 	/**
 	 * @Route("/about/{firstName}", name="about_index")

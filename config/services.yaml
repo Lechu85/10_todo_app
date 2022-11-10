@@ -27,3 +27,11 @@ services:
     App\Service\AddHelper:
         bind:
             $adminEmail: 'admin@sotech.pl'
+
+    App\EventListener\RequestListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
+
+    App\Service\AddHelper2Decorator:
+        decorates: App\Service\AddHelper2
+        arguments: ['@.inner']
