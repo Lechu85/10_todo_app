@@ -10,7 +10,7 @@ class RequestSubscriber implements EventSubscriberInterface
 {
     public function onKernelRequest(RequestEvent $event): void
     {
-        dump($event);
+        //dump($event);
     }
 
     public static function getSubscribedEvents(): array

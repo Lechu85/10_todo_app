@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20221027191302 extends AbstractMigration
+final class Version20221110200943 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,12 +20,12 @@ final class Version20221027191302 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE product ADD ean VARCHAR(20) DEFAULT NULL, ADD eann VARCHAR(22) DEFAULT NULL');
+        $this->addSql('ALTER TABLE task CHANGE dony_by_user done_by_user INT DEFAULT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE product DROP ean, DROP eann');
+        $this->addSql('ALTER TABLE task CHANGE done_by_user dony_by_user INT DEFAULT NULL');
     }
 }

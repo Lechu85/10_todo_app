@@ -24,7 +24,7 @@ class TaskController extends AbstractController
         ]);
     }
 
-	#[Route('/new', name: 'app_task_new')]
+	#[Route('/task/new', name: 'app_task_new')]
 	public function new(Request $request, EntityManagerInterface $entityManager): Response
 	{
 		$form = $this->createForm(TaskType::class);
@@ -32,7 +32,7 @@ class TaskController extends AbstractController
 		$form->handleRequest($request);
 		if ($form->isSubmitted() && $form->isValid()) {
 
-			dd($form->get('agreeTerms')->getData());
+			//dd($form->get('agreeTerms')->getData());
 
 			$task = $form->getData();
 			$entityManager->persist($task);

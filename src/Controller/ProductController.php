@@ -160,4 +160,6 @@ class ProductController extends AbstractController
 
 		dd($products);
 	}
+
+
 }

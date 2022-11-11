@@ -49,7 +49,7 @@ class TaskRepository extends ServiceEntityRepository
 			foreach($errors as $error) {
 				//$formatedViolationList[] = array($error->getPropertyPath() => $error->getMessage());
 				$formatedViolationList[$error->getPropertyPath()][] = $error->getMessage();
-				$formatedViolationListString .= "\n - ".$error->getMessage();
+				$formatedViolationListString .= "\n - [".$error->getPropertyPath().'] '.$error->getMessage();
 			}
 
 			return array(
@@ -69,7 +69,7 @@ class TaskRepository extends ServiceEntityRepository
 		);
 
 	}
-	public function updateTask(Task $task, $request): array
+	public function updateTask(?Task $task, $request): array
 	{
 
 		if ($task == null) {

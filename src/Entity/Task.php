@@ -7,7 +7,6 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
 class Task
 {
@@ -18,11 +17,10 @@ class Task
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: 'Podaj tresc zadania')]
     private ?string $task = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Assert\NotBlank]
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Assert\Type(\DateTime::class)]
     private ?\DateTimeInterface $dueDate = null;
 
@@ -36,9 +34,12 @@ class Task
     private ?string $description = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Assert\NotBlank(message: 'Podaj status zadania')]
     private ?int $status = null;
 
+	//todo z automatu wstawiac
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotBlank(message: 'Podaj date utworzenia zadania')]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -57,7 +58,7 @@ class Task
     private ?\DateTimeInterface $doneAt = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $donyByUser = null;
+    private ?int $doneByUser = null;
 
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $remind = null;
@@ -211,14 +212,14 @@ class Task
         return $this;
     }
 
-    public function getDonyByUser(): ?int
+    public function getDoneByUser(): ?int
     {
-        return $this->donyByUser;
+        return $this->doneByUser;
     }
 
-    public function setDonyByUser(?int $donyByUser): self
+    public function setDoneByUser(?int $doneByUser): self
     {
-        $this->donyByUser = $donyByUser;
+        $this->doneByUser = $doneByUser;
 
         return $this;
     }
@@ -234,4 +235,5 @@ class Task
 
         return $this;
     }
+
 }

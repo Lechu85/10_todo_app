@@ -36,7 +36,6 @@ class HomeController extends AbstractController
 	{
 		//testujemy dekoratory klas
 		$result = $addHelper2->add(1,1);
-		dd($result);
 
 		return $this->render('home.html.twig');
 

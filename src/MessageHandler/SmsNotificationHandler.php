@@ -28,7 +28,7 @@ class SmsNotificationHandler
 			'c:/_symfony_messenger/sms.txt',
 			'Cześć '.$user->getName().'. '.$message->getContent());
 
-		dump($message->getContent());
+		//dump($message->getContent());
 		die();
 	}
 }
