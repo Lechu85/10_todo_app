@@ -34,12 +34,10 @@ class Task
     private ?string $description = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    #[Assert\NotBlank(message: 'Podaj status zadania')]
     private ?int $status = null;
 
 	//todo z automatu wstawiac
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\NotBlank(message: 'Podaj date utworzenia zadania')]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -133,9 +131,13 @@ class Task
         return $this->status;
     }
 
-    public function setStatus(int $status): self
+    public function setStatus(?int $status): self
     {
-        $this->status = $status;
+		if ($status == null) {
+			$this->status = 1;
+		} else {
+			$this->status = $status;
+		}
 
         return $this;
     }
@@ -147,8 +149,11 @@ class Task
 
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->createdAt = $createdAt;
-
+	    if ($createdAt == null) {
+			$this->createdAt = new \DateTime();
+	    } else {
+	        $this->createdAt = $createdAt;
+        }
         return $this;
     }
 
@@ -235,5 +240,10 @@ class Task
 
         return $this;
     }
+
+	public function toArray()
+	{
+		return get_object_vars($this);
+	}
 
 }

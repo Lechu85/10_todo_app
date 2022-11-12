@@ -9,11 +9,17 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Task list! ✅</h1>
+    <h1>
+        Task list!
+    </h1>
+    <p>
+        <a href="{{ path('app_task_new') }}">Add new</a>
+    </p>
 
     <table style="width: 800px;">
         {% for task in tasks %}
         <tr>
+            <td><input type="checkbox"></td>
             <td>{{ task.id }}</td>
             <td>{{ task.task }}</td>
             <td>{{ task.dueDate|date("Y-m-d") }}</td>

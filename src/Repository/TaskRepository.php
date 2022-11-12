@@ -27,11 +27,14 @@ class TaskRepository extends ServiceEntityRepository
 	}
 
 
-	public function addTask($request): array
+	public function addTask($data): array
 	{
+		//z formularza leci objekt, zapi tablica
+		if (is_object($data)) {
+			$data = $data->toArray();
+		}
 
-		$data = json_decode($request->getContent(), true);
-
+		//dump('po przetworzeniu', $data);
 
 		$task = new Task();
 
@@ -54,7 +57,8 @@ class TaskRepository extends ServiceEntityRepository
 
 			return array(
 				'msg' => 'Blad walidacji' . $formatedViolationListString,
-				'status' => 400 //bad request
+				'status' => 400, //bad request
+				'flash_status' => 'error',
 			);
 
 		}
@@ -65,7 +69,8 @@ class TaskRepository extends ServiceEntityRepository
 
 		return array(
 			'msg' => 'Zadanie zostalo utworzone! ID:'.$task->getId(),
-			'status' => 201
+			'status' => 201,
+			'flash_status' => 'success',
 		);
 
 	}
@@ -75,7 +80,8 @@ class TaskRepository extends ServiceEntityRepository
 		if ($task == null) {
 			return array(
 				'msg' => 'Nie znaleziono produktu do edycji',
-				'status' => 404
+				'status' => 404,
+				'flash_status' => 'error',
 			);
 
 		} else {
@@ -91,7 +97,8 @@ class TaskRepository extends ServiceEntityRepository
 
 			return array(
 				'msg' => 'Zadanie ID: '.$task->getId().' zostalo uaktualnione',
-				'status' => 200
+				'status' => 200,
+				'flash_status' => 'success',
 			);
 
 		}

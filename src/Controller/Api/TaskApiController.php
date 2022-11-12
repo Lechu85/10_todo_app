@@ -57,10 +57,11 @@ class TaskApiController extends AbstractController
 		}
 	}
 
-    #[Route('/api/task/', name: 'api_task_add', methods: 'POST')]
+    #[Route('/api/task', name: 'api_task_add', methods: 'POST')]
     public function create(Request $request): JsonResponse
     {
-        $result = $this->taskRepository->addTask($request);
+		$data = json_decode($request->getContent(), true);
+        $result = $this->taskRepository->addTask($data);
 
         return new JsonResponse(['status' => $result['msg']], $result['status']);
     }

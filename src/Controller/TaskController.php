@@ -13,11 +13,19 @@ use Symfony\Component\Routing\Annotation\Route;
 class TaskController extends AbstractController
 {
 
-    #[Route('/task', name: 'app_task')]
-    public function index(EntityManagerInterface $entityManager): Response
+	private EntityManagerInterface $entityManager;
+	private $taskRepository;
+
+	public function __construct(EntityManagerInterface $entityManager)
+	{
+		$this->entityManager = $entityManager;
+		$this->taskRepository = $entityManager->getRepository(Task::class);
+	}
+
+	#[Route('/tasks', name: 'app_task_show_list')]
+    public function showAll(): Response
     {
-		$taskRepository = $entityManager->getRepository(Task::class);
-		$tasks = $taskRepository->findAll();
+		$tasks = $this->taskRepository->findAll();
 
         return $this->render('task/index.html.twig', [
             'tasks' => $tasks,
@@ -25,7 +33,7 @@ class TaskController extends AbstractController
     }
 
 	#[Route('/task/new', name: 'app_task_new')]
-	public function new(Request $request, EntityManagerInterface $entityManager): Response
+	public function new(Request $request): Response
 	{
 		$form = $this->createForm(TaskType::class);
 
@@ -34,13 +42,16 @@ class TaskController extends AbstractController
 
 			//dd($form->get('agreeTerms')->getData());
 
-			$task = $form->getData();
-			$entityManager->persist($task);
-			$entityManager->flush();
+			$data = $form->getData();
 
-			$this->addFlash('success', 'Your form has been saved.');
+			$result = $this->taskRepository->addTask($data);
 
-			return $this->redirectToRoute('app_task');
+			//$this->entityManager->persist($task);
+			//$this->entityManager->flush();
+
+			$this->addFlash($result['flash_status'], $result['msg']);
+
+			return $this->redirectToRoute('app_task_show_list');
 		}
 
 		return $this->renderForm('task/new.html.twig', [
@@ -49,7 +60,7 @@ class TaskController extends AbstractController
 	}
 
 	#[Route('/task/edit/{id}', name: 'app_task_edit')]
-	public function edit(Task $task, Request $request, EntityManagerInterface $entityManager): Response
+	public function edit(Task $task, Request $request): Response
 	{
 		$form = $this->createForm(TaskType::class,$task);
 
@@ -57,12 +68,15 @@ class TaskController extends AbstractController
 		if ($form->isSubmitted() && $form->isValid()) {
 
 			$task = $form->getData();
-			$entityManager->persist($task);
-			$entityManager->flush();
+
+
+			$this->entityManager->persist($task);
+			$this->entityManager->flush();
+
 
 			$this->addFlash('success', 'Your form has been edit.');
 
-			return $this->redirectToRoute('app_task');
+			return $this->redirectToRoute('app_task_show_list');
 		}
 
 		return $this->renderForm('task/edit.html.twig', [
