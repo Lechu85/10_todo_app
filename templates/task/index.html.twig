@@ -2,13 +2,6 @@
 
 {% block title %}Hello TaskController!{% endblock %}
 
-{% block javascripts %}
-    <script>
-        document.addEventListener();
-    </script>
-
-{% endblock %}
-
 {% block body %}
 
     {{ parent() }}
@@ -27,11 +20,11 @@
         <a href="{{ path('app_task_category_show_list') }}">Category list</a>
     </p>
     <form action="{{ path('app_task_checkbox_test') }}" method="post">
-        <input type="text" name="operation_type" value="">
+        <input type="text" name="group_action_name" id="group_action_name" value="">
         <table style="width: 800px;">
             {% for task in tasks %}
             <tr>
-                <td><input type="checkbox" name="task[{{ task.id }}]" value="1"></td>
+                <td><input type="checkbox" name="task[]" value="{{ task.id }}"></td>
                 <td>{{ task.id }}</td>
                 <td>{{ task.task }}</td>
                 <td>{{ task.dueDate|date("Y-m-d") }}</td>
@@ -46,6 +39,32 @@
         <button type="submit" id="btn_group_action_done" class="btn btn-primary">Wykonane</button>
     </form>
 
-
 </div>
+
+    <div id="toast">aaaaaaaaa</div>
+
+<script>
+
+function doGroupAction(event, type_action) {
+
+    const task_checkboxes = document.querySelectorAll('input[name="task[]"]:checked')
+
+    if (task_checkboxes.length === 0) {
+        alert('Zaznacz przynajmniej jedno zadanie');
+        event.preventDefault()
+
+    } else {
+        document.getElementById('group_action_name').value = type_action
+    }
+
+}
+
+document.getElementById('btn_group_action_delete').addEventListener('click', function(event) {
+    doGroupAction(event, 'delete')
+});
+document.getElementById('btn_group_action_done').addEventListener('click', function(event) {
+    doGroupAction(event, 'done')
+});
+</script>
+
 {% endblock %}

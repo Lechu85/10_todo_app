@@ -6,11 +6,15 @@ use App\Entity\Task;
 use App\Entity\TaskCategory;
 use App\Form\TaskCategoryType;
 use App\Form\TaskType;
+use DateTime;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function PHPUnit\Framework\throwException;
 
 class TaskController extends AbstractController
 {
@@ -106,7 +110,45 @@ class TaskController extends AbstractController
 	#[Route('/task/checkbox_test', name: 'app_task_checkbox_test', methods: 'POST')]
 	public function groupAction(Request $request)
 	{
-		dd($request->getContent(), $request->get('task'));
+
+		$group_action_name = $request->get('group_action_name');
+		$checkedTask = $request->get('task');
+
+		if ($group_action_name == 'done') {
+
+			$queryBuilder = $this->entityManager->createQueryBuilder();
+
+			$query = $queryBuilder->update('App:Task', 't')
+				->set('t.doneAt', ':doneAt')
+				->set('t.description', ':description')
+				->where('t.id IN ( :idList ) ')
+				->setParameter('doneAt', new \DateTime(), Types::DATETIME_MUTABLE)
+				->setParameter('idList', $checkedTask)
+				->getQuery();
+
+			$query->execute();
+
+			$this->addFlash('success', 'Zadania zostały wykonane');
+
+		} else if ($group_action_name == 'delete') {
+
+			$queryBuilder = $this->entityManager->createQueryBuilder();
+
+			$query = $queryBuilder->delete('App:Task', 't')
+				->where('t.id IN ( :idList ) ')
+				->setParameter('idList', $checkedTask)
+				->getQuery();
+
+			$query->execute();
+
+			$this->addFlash('success', 'Zadania zostały usunięte');
+
+		} else {
+			throw new Exception('Niepoprawny parametr');
+		}
+
+		return $this->redirectToRoute('app_task_show_list');
+
 	}
 
 }
