@@ -2,7 +2,16 @@
 
 {% block title %}Hello TaskController!{% endblock %}
 
+{% block javascripts %}
+    <script>
+        document.addEventListener();
+    </script>
+
+{% endblock %}
+
 {% block body %}
+
+    {{ parent() }}
 <style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
@@ -13,22 +22,29 @@
         Task list!
     </h1>
     <p>
-        <a href="{{ path('app_task_new') }}">Add new</a>
+        <a href="{{ path('app_task_new') }}">Add new task</a> |
+        <a href="{{ path('app_task_category_new') }}">Add new category</a>
+        <a href="{{ path('app_task_category_show_list') }}">Category list</a>
     </p>
-
-    <table style="width: 800px;">
-        {% for task in tasks %}
-        <tr>
-            <td><input type="checkbox"></td>
-            <td>{{ task.id }}</td>
-            <td>{{ task.task }}</td>
-            <td>{{ task.dueDate|date("Y-m-d") }}</td>
-            <td>
-                <a href="{{ path('app_task_edit', {id: task.id}) }}"> edit </a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+    <form action="{{ path('app_task_checkbox_test') }}" method="post">
+        <input type="text" name="operation_type" value="">
+        <table style="width: 800px;">
+            {% for task in tasks %}
+            <tr>
+                <td><input type="checkbox" name="task[{{ task.id }}]" value="1"></td>
+                <td>{{ task.id }}</td>
+                <td>{{ task.task }}</td>
+                <td>{{ task.dueDate|date("Y-m-d") }}</td>
+                <td>
+                    <a href="{{ path('app_task_edit', {id: task.id}) }}">edit</a> |
+                    <a href="{{ path('app_task_remove', {id: task.id}) }}" class="text-danger">usuń</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <button type="submit" id="btn_group_action_delete" class="btn btn-danger">Usuń</button>
+        <button type="submit" id="btn_group_action_done" class="btn btn-primary">Wykonane</button>
+    </form>
 
 
 </div>

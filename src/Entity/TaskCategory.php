@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TaskCategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -15,7 +17,6 @@ class TaskCategory
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-	#[Assert\NotBlank(message: 'Podaj nazwe kategorii')]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -41,6 +42,14 @@ class TaskCategory
 
     #[ORM\Column(nullable: true)]
     private ?bool $hidden = null;
+
+    #[ORM\OneToMany(mappedBy: 'Category', targetEntity: Task::class)]
+    private Collection $tasks;
+
+    public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -151,6 +160,36 @@ class TaskCategory
     public function setHidden(?bool $hidden): self
     {
         $this->hidden = $hidden;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Task>
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    public function addTask(Task $task): self
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks->add($task);
+            $task->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTask(Task $task): self
+    {
+        if ($this->tasks->removeElement($task)) {
+            // set the owning side to null (unless already changed)
+            if ($task->getCategory() === $this) {
+                $task->setCategory(null);
+            }
+        }
 
         return $this;
     }

@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Entity\TaskCategory;
+use App\Form\TaskCategoryType;
 use App\Form\TaskType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -82,6 +84,29 @@ class TaskController extends AbstractController
 		return $this->renderForm('task/edit.html.twig', [
 			'form' => $form,
 		]);
+	}
+
+	#[Route('/task/remove/{id}', name: 'app_task_remove')]
+	public function remove(int $id)
+	{
+		$task = $this->taskRepository->findOneBy(['id' => $id]);
+		if ($task == null) {
+			$this->addFlash('error', 'Zadanie o ID: '.$id.' juz nie istnieje w bazie.');
+		} else {
+
+			$this->entityManager->remove($task);
+			$this->entityManager->flush();
+
+			$this->addFlash('error', 'Zadanie od ID: '.$id.' zostało usunięte');
+
+		}
+		return $this->redirectToRoute('app_task_show_list');
+	}
+
+	#[Route('/task/checkbox_test', name: 'app_task_checkbox_test', methods: 'POST')]
+	public function groupAction(Request $request)
+	{
+		dd($request->getContent(), $request->get('task'));
 	}
 
 }

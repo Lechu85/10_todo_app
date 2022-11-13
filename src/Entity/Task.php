@@ -61,6 +61,12 @@ class Task
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $remind = null;
 
+    #[ORM\ManyToOne(inversedBy: 'tasks')]
+    private ?TaskCategory $Category = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $wontDo = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -242,8 +248,32 @@ class Task
     }
 
 	public function toArray()
-	{
-		return get_object_vars($this);
-	}
+                  	{
+                  		return get_object_vars($this);
+                  	}
+
+    public function getCategory(): ?TaskCategory
+    {
+        return $this->Category;
+    }
+
+    public function setCategory(?TaskCategory $Category): self
+    {
+        $this->Category = $Category;
+
+        return $this;
+    }
+
+    public function isWontDo(): ?bool
+    {
+        return $this->wontDo;
+    }
+
+    public function setWontDo(?bool $wontDo): self
+    {
+        $this->wontDo = $wontDo;
+
+        return $this;
+    }
 
 }

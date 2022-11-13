@@ -34,6 +34,9 @@
                             <li class="nav-item active">
                                 <a class="nav-link" href="{{ path('totolotek_index') }}">Losuj</a>
                             </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="{{ path('app_task_show_list') }}">Zadania</a>
+                            </li>
 
                             {% if is_granted('ROLE_ADMIN') %}
                                 <li class="nav-item active">

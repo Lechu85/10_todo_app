@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block body %}
+
+    {{ parent() }}
+
+    <table style="width: 800px;">
+        {% for category in taskCategories %}
+            <tr>
+                <td>{{ category.id }}</td>
+                <td>{{ category.name }}</td>
+                <td>
+                    <a href="">edytuj</a> |
+                    <a href="">usuń</a>
+                </td>
+            </tr>
+
+        {% endfor %}
+    </table>
+
+{% endblock %}
+
