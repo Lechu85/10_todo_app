@@ -3,10 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Task;
-use App\Entity\TaskCategory;
-use App\Form\TaskCategoryType;
 use App\Form\TaskType;
-use DateTime;
+use App\Service\TaskCategoryMenu;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -14,7 +12,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use function PHPUnit\Framework\throwException;
 
 class TaskController extends AbstractController
 {
@@ -29,9 +26,18 @@ class TaskController extends AbstractController
 	}
 
 	#[Route('/tasks', name: 'app_task_show_list')]
-    public function showAll(): Response
+    public function showAll(TaskCategoryMenu $taskCategoryMenu): Response
     {
+
+
+
+	    $taskCategoryMenu->generateTaskCategoryMenu();
+
+
 		$tasks = $this->taskRepository->findAll();
+
+
+
 
         return $this->render('task/index.html.twig', [
             'tasks' => $tasks,

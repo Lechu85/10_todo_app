@@ -15,6 +15,7 @@ class TwigEventSubscriber implements EventSubscriberInterface
 
 	public function __construct(Environment $twig)
 	{
+		//info Enviroment jak chcemy dograc twiga
 
 		$this->twig = $twig;
 
