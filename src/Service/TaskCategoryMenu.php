@@ -21,6 +21,11 @@ class TaskCategoryMenu
 	{
 
 		$taskCategories = $this->entityManager->getRepository(TaskCategory::class)->findAll();
+
 		$this->twig->addGlobal('taskCategories', $taskCategories);
+
+		return $taskCategories;
+
+
 	}
 }

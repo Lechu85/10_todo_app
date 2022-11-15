@@ -29,6 +29,7 @@ class TaskType extends AbstractType
 	        ->add('user', EntityType::class, [
 		        // looks for choices from this entity
 		        'class' => User::class,
+				'placeholder' => 'Wszyscy użytkownicy',
 		        'choice_label' => 'email',
 	        ])
 	        ->add('important')

@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Form\TaskType;
-use App\Service\TaskCategoryMenu;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -12,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Twig\Environment;
 
 class TaskController extends AbstractController
 {
@@ -19,30 +19,36 @@ class TaskController extends AbstractController
 	private EntityManagerInterface $entityManager;
 	private $taskRepository;
 
-	public function __construct(EntityManagerInterface $entityManager)
+	public function __construct(EntityManagerInterface $entityManager, Environment $twig)
 	{
 		$this->entityManager = $entityManager;
 		$this->taskRepository = $entityManager->getRepository(Task::class);
+
+		$twig->addGlobal('current_controller', 'task');
 	}
 
 	#[Route('/tasks', name: 'app_task_show_list')]
-    public function showAll(TaskCategoryMenu $taskCategoryMenu): Response
+    public function showAll(): Response
     {
 
-
-
-	    $taskCategoryMenu->generateTaskCategoryMenu();
-
-
 		$tasks = $this->taskRepository->findAll();
-
-
-
 
         return $this->render('task/index.html.twig', [
             'tasks' => $tasks,
         ]);
     }
+
+	#[Route('/tasks/{cat}', name: 'app_task_show_list_from_cat')]
+	public function showFromCat(int $cat): Response
+	{
+		$tasks = $this->taskRepository->findBy(['Category' => $cat]);
+
+		return $this->render('task/index.html.twig', [
+			'tasks' => $tasks,
+		]);
+
+
+	}
 
 	#[Route('/task/new', name: 'app_task_new')]
 	public function new(Request $request): Response

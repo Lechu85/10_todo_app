@@ -27,8 +27,6 @@ class HomeController extends AbstractController
 
 	}
 
-
-
 	/**
 	 * @Route("/decorator", name="home_index_decorator")
 	 */
