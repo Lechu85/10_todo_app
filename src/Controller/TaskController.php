@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
 
 class TaskController extends AbstractController
@@ -36,12 +37,13 @@ class TaskController extends AbstractController
 
 	    $formTaskSearch = $this->createForm(TaskSearchType::class);
 
-		//info tymczasowo renderForme
+		//info renderForm podobnie dziala jak render()
         return $this->renderForm('task/list.html.twig', [
             'tasks' => $tasks,
 	        'search_phraze' => '',
 	        'search_in_description' => '',
-	        'form' => $formTaskSearch,
+	        'form' => $formTaskSearch
+
         ]);
     }
 
@@ -163,28 +165,32 @@ class TaskController extends AbstractController
 
 	}
 
-	#[Route('/task/checkbox_test', name: 'app_task_checkbox_test', methods: 'POST')]
-	public function groupAction(Request $request)
+	#[Route('/task/group_action', name: 'app_task_group_action')]//, methods: 'POST'
+	public function groupAction(Request $request, Security $security)
 	{
 
 		$group_action_name = $request->get('group_action_name');
+
+		//$request->get('id')
 		$checkedTask = $request->get('task');
 
 		if ($group_action_name == 'done') {
 
+			//todo przeniesc do repozytorium
 			$queryBuilder = $this->entityManager->createQueryBuilder();
 
 			$query = $queryBuilder->update('App:Task', 't')
 				->set('t.doneAt', ':doneAt')
-				->set('t.description', ':description')
+				->set('t.doneByUser', ':doneByUser')
 				->where('t.id IN ( :idList ) ')
 				->setParameter('doneAt', new \DateTime(), Types::DATETIME_MUTABLE)
+				->setParameter('doneByUser', $security->getUser()->getId())
 				->setParameter('idList', $checkedTask)
 				->getQuery();
 
 			$query->execute();
 
-			$this->addFlash('success', 'Zadania zostały wykonane');
+			$this->addFlash('success', 'Oznaczono jako wykonane.');
 
 		} else if ($group_action_name == 'delete') {
 

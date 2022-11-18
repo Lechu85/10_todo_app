@@ -12,10 +12,18 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class TaskSearchType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+	private Security $security;
+
+	public function __construct(Security $security)
+	{
+		$this->security = $security;
+	}
+
+	public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
 	        //->add('task')
@@ -39,14 +47,20 @@ class TaskSearchType extends AbstractType
             //->add('doneAt')
             //->add('doneByUser')
             ->add('remind')
-            ->add('wontDo')
-	        ->add('user', EntityType::class, [
-		        // looks for choices from this entity
-		        'class' => User::class,
-		        'placeholder' => 'Wszyscy użytkownicy',
-		        'choice_label' => 'email',
-	        ])
-	        ->add('category', EntityType::class,[
+            ->add('wontDo');
+
+	        if ($this->security->isGranted('ROLE_ADMIN')) {
+
+				$builder->add('user', EntityType::class, [
+					// looks for choices from this entity
+					//only for ROLE_ADMIN
+					'class' => User::class,
+					'placeholder' => 'Wszyscy użytkownicy',
+					'choice_label' => 'email',
+				]);
+			}
+
+	        $builder->add('category', EntityType::class,[
 		        'class' => TaskCategory::class,
 		        'placeholder' => 'Kategoria',
 		        'choice_label' => 'name'
@@ -73,7 +87,8 @@ class TaskSearchType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Task::class,
-	        'role' => 'ROLE_USER'
+	        'required' => false,
+
         ]);
     }
 }

@@ -267,9 +267,13 @@
                 </button>
                 <div class="collapse" id="account-collapse">
                     <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                        <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">New...</a></li>
-                        <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Profile</a></li>
-                        <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Settings</a></li>
+                        <li><a href="{{ path('app_profile') }}" class="link-dark d-inline-flex text-decoration-none rounded">Profile</a></li>
+
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li class="nav-item active">
+                            <li><a href="{{ path('app_admin') }}" class="link-dark d-inline-flex text-decoration-none rounded">Admin</a></li>
+                            <li><a href="{{ path('app_edit_profile') }}" class="link-dark d-inline-flex text-decoration-none rounded">Edytuj profil</a></li>
+                        {% endif %}
 
                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                             <li><a href="{{ path('app_logout') }}" class="link-dark d-inline-flex text-decoration-none rounded">Wyloguj się</a></li>

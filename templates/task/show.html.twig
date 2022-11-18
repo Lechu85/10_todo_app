@@ -12,6 +12,39 @@
             <span class="fs-5 fw-semibold">Podgląd zadania ID: {{ id }}</span>
         </p>
 
+
+
+        <div class="card" style="width: 100%;">
+
+            <div class="card-body">
+                <h5 class="card-title">{{ task.task }}</h5>
+                <p class="card-text">{{ task.description }}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    Termin wykonania: <b>{{ task.dueDate|date('Y-m-d H:i') }}</b>
+                </li>
+                <li class="list-group-item text-success">
+                    {% if task.doneAt != null %}
+                        Wykonano:  <b>{{ task.doneAt|date('Y-m-d H:i') }}</b> przez ({{ task.doneByUser }})
+                    {% else %}
+                        <a href="{{ path('app_task_group_action', {id: task.id, group_action_name: 'done'}) }}" class="btn btn-outline-success">Oznacz jako wykonane</a>
+                    {% endif %}
+                </li>
+                <li class="list-group-item">Dodano dnia: <b>{{ task.createdAt|date('Y-m-d H:i') }}</b></li>
+                <li class="list-group-item fw-bold">{{ task.category.name ?? 'Brak kategorii' }}</li>
+                <li class="list-group-item">A third item</li>
+            </ul>
+            <div class="card-body d-flex">
+                <a href="{{ path('app_task_edit', {id: task.id}) }}" class="btn btn-outline-secondary me-2">Edytuj zadanie</a>
+                <a href="{{ path('app_task_remove', {id: task.id}) }}" class="btn btn-outline-danger">Usuń zadanie</a>
+
+                <a href="{{ path('app_task_show_list') }}" class="btn btn-outline-primary ms-auto">Powrót do listy</a>
+            </div>
+        </div>
+
+
+
     </div>
 
 {% endblock %}

@@ -37,7 +37,7 @@
             Znajdź zadanie
         </div>
 
-        <div class="card-body">
+        <div class="card-body" style="background: #f7f7f7;">
 
             <div class="input-group mb-3">
                 <input type="search" class="form-control" placeholder="Znajdź zadanie" name="search_phraze" value="{{ search_phraze }}" aria-label="Recipient's username" aria-describedby="button-addon2">
@@ -50,17 +50,11 @@
                 <label for="search_in_description">Szukaj też w opisie</label>
             </div>
 
-
-
             <div class="collapse" id="collapseExample">
-
                 {{ form_start(form) }}
                 {{ form_widget(form) }}
                 {{ form_end(form) }}
-
             </div>
-
-
 
 
         </div>
@@ -68,7 +62,7 @@
     </form>
 
 
-    <form action="{{ path('app_task_checkbox_test') }}" method="post">
+    <form action="{{ path('app_task_group_action') }}" method="post">
         <input type="hidden" name="group_action_name" id="group_action_name" value="">
 
         <div class="list-group list-group-flush border-bottom scrollarea">
