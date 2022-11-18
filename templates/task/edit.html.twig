@@ -4,9 +4,21 @@
 
     {{ parent() }}
     <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white" style="width: 680px; border: 1px solid red; padding: 20px;">        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-            {{ form_widget(form) }}
+
+        <p class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
+            <span class="fs-5 fw-semibold">Edycja zadania ID: {{ id }}</span>
+        </p>
+
+        {{ form_widget(form) }}
         {{ form_end(form) }}
     </div>
+
+    <script>
+        document.addEventListener('click', function() {
+            window.location.href = '{{ path('app_task_show_list') }}'
+        });
+    </script>
+
 {% endblock %}
 
 {% block title %}

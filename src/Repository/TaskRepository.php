@@ -104,6 +104,41 @@ class TaskRepository extends ServiceEntityRepository
 		}
 	}
 
+	public function findTasksByTitle(string $searchPhraze, ?int $search_in_description): array
+	{
+
+
+//		$query = $this->entityManager->createQuery(
+//			'SELECT t
+//            FROM App:Task t
+//            WHERE t.task LIKE :title
+//            ORDER BY t.id DESC'
+//		)->setParameter('title', '%'.$searchPhraze.'%');
+//
+//		return $query->getResult();//getResult to alias dla executre(). w execute mozna podac parametry
+
+		$queryBuilder = $this->entityManager->createQueryBuilder();
+
+		$qb = $queryBuilder->select('t')
+			->from('App:Task', 't')
+			->where('t.task LIKE :searchPhraze')
+			//->orWhere('t.description LIKE :searchPhraze')
+			->orderBy('t.id', 'DESC')
+			->setParameter('searchPhraze', '%'.$searchPhraze.'%');
+
+
+		if (isset($search_in_description) && $search_in_description == 1) {
+			$qb->orWhere('t.description LIKE :searchPhraze');
+		}
+
+		//$query = $qb->getQuery();
+		//return $query->execute();
+
+		return $qb
+				->getQuery()
+				->execute();
+	}
+
 	// /**
 	//  * @return Task[] Returns an array of Task objects
 	//  */

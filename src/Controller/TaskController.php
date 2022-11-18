@@ -27,28 +27,29 @@ class TaskController extends AbstractController
 		$twig->addGlobal('current_controller', 'task');
 	}
 
+
 	#[Route('/tasks', name: 'app_task_show_list')]
     public function showAll(): Response
     {
-
 		$tasks = $this->taskRepository->findAll();
 
-        return $this->render('task/index.html.twig', [
+        return $this->render('task/list.html.twig', [
             'tasks' => $tasks,
+	        'search_phraze' => '',
         ]);
     }
+
 
 	#[Route('/tasks/{cat}', name: 'app_task_show_list_from_cat')]
 	public function showFromCat(int $cat): Response
 	{
 		$tasks = $this->taskRepository->findBy(['Category' => $cat]);
 
-		return $this->render('task/index.html.twig', [
+		return $this->render('task/list.html.twig', [
 			'tasks' => $tasks,
 		]);
-
-
 	}
+
 
 	#[Route('/task/new', name: 'app_task_new')]
 	public function new(Request $request): Response
@@ -77,8 +78,9 @@ class TaskController extends AbstractController
 		]);
 	}
 
+
 	#[Route('/task/edit/{id}', name: 'app_task_edit')]
-	public function edit(Task $task, Request $request): Response
+	public function edit(Task $task, Request $request, int $id): Response
 	{
 		$form = $this->createForm(TaskType::class,$task);
 
@@ -87,10 +89,8 @@ class TaskController extends AbstractController
 
 			$task = $form->getData();
 
-
 			$this->entityManager->persist($task);
 			$this->entityManager->flush();
-
 
 			$this->addFlash('success', 'Your form has been edit.');
 
@@ -99,8 +99,23 @@ class TaskController extends AbstractController
 
 		return $this->renderForm('task/edit.html.twig', [
 			'form' => $form,
+			'id' => $id,
 		]);
 	}
+
+
+	#[Route('/task/show/{id}', name: 'app_task_show')]
+	public function showOne(int $id): Response
+	{
+		$task = $this->taskRepository->findOneBy(['id' => $id]);
+
+		return $this->render('task/show.html.twig',[
+			'task' => $task,
+			'id' => $id
+		]);
+
+	}
+
 
 	#[Route('/task/remove/{id}', name: 'app_task_remove')]
 	public function remove(int $id)
@@ -117,6 +132,23 @@ class TaskController extends AbstractController
 
 		}
 		return $this->redirectToRoute('app_task_show_list');
+	}
+
+	#[Route('/task/search/', name: 'app_task_search')]
+	public function search(Request $request)
+	{
+		$search_phraze = $request->get('search_phraze');
+		$search_in_description = $request->get('search_in_description');
+
+		$tasks = $this->taskRepository->findTasksByTitle($search_phraze, $search_in_description);
+
+		return $this->render('task/list.html.twig', [
+			'tasks' => $tasks,
+			'header' => 'Szukaj: '.$search_phraze,
+			'search_phraze' => $search_phraze,
+			'search_in_description' => $search_in_description
+		]);
+
 	}
 
 	#[Route('/task/checkbox_test', name: 'app_task_checkbox_test', methods: 'POST')]
