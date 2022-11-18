@@ -8,13 +8,13 @@
             <span class="fs-5 fw-semibold">Nowe zadanie</span>
         </p>
 
-        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        {{ form_start(form) }}
             {{ form_widget(form) }}
         {{ form_end(form) }}
     </div>
 
     <script>
-        document.addEventListener('click', function() {
+        document.getElementById('task_back').addEventListener('click', function() {
             window.location.href = '{{ path('app_task_show_list') }}'
         });
     </script>

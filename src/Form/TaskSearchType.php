@@ -8,61 +8,72 @@ use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TaskType extends AbstractType
+class TaskSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-	        ->add('task', null, [
-				'label' => 'Task name',
-		        'help' => 'Podaj nazwe zadania',
-	        ])
-	        ->add('description', TextareaType::class,[
-				'label' => 'Opis zadania',
-		        'help' => 'Podaj dłuższy opis zadania'
-	        ])
+	        //->add('task')
 	        ->add('dueDate', DateType::class, [
-		        // renders it as a single text box
 		        'widget' => 'single_text',
+		        'label' => 'Termin realizacji'
 	        ])
+            ->add('important')
+            ->add('description')
+            ->add('status')
+            ->add('createdAt', DateType::class, [
+	            'widget' => 'single_text',
+	            'label' => 'Data utworzenia'
+            ])
+            //->add('updatedAt', DateType::class, [
+	        //    'widget' => 'single_text',
+            //])
+            ->add('deleted')
+            ->add('prioryty')
+            ->add('pinned')
+            //->add('doneAt')
+            //->add('doneByUser')
+            ->add('remind')
+            ->add('wontDo')
 	        ->add('user', EntityType::class, [
 		        // looks for choices from this entity
 		        'class' => User::class,
-				'placeholder' => 'Wszyscy użytkownicy',
+		        'placeholder' => 'Wszyscy użytkownicy',
 		        'choice_label' => 'email',
 	        ])
 	        ->add('category', EntityType::class,[
-				'class' => TaskCategory::class,
+		        'class' => TaskCategory::class,
 		        'placeholder' => 'Kategoria',
 		        'choice_label' => 'name'
 	        ])
-	        ->add('important')
-	        ->add('agreeTerms', CheckboxType::class, ['mapped' => false])
 	        ->add('save', SubmitType::class,[
-				'label' => 'Dodaj nowe zadanie'
-	        ])
-	        ->add('back', ButtonType::class, [
-				'label' => 'Powrót',
-		        'attr' => ['id' => 'btn_back']
-	        ])
+				'label' => 'Szukaj',
+		        'attr' => ['class' => 'btn btn-primary']
 
-	        ->setMethod('GET')
+	        ])
+	        ->add('hide', ButtonType::class, [
+				'label' => 'Ukryj wyszukiwarkę',
+		        'attr' => [
+					'class' => 'btn btn-danger',
+			        'data-bs-toggle' => 'collapse',
+			        'data-bs-target' => '#collapseExample',
+	                'aria-expanded' => 'false',
+	                'aria-controls' => 'collapseExample',
+		        ]
+	        ])
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-		//domyslna encja dla tego formularza
         $resolver->setDefaults([
             'data_class' => Task::class,
+	        'role' => 'ROLE_USER'
         ]);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Form\TaskSearchType;
 use App\Form\TaskType;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,9 +34,14 @@ class TaskController extends AbstractController
     {
 		$tasks = $this->taskRepository->findAll();
 
-        return $this->render('task/list.html.twig', [
+	    $formTaskSearch = $this->createForm(TaskSearchType::class);
+
+		//info tymczasowo renderForme
+        return $this->renderForm('task/list.html.twig', [
             'tasks' => $tasks,
 	        'search_phraze' => '',
+	        'search_in_description' => '',
+	        'form' => $formTaskSearch,
         ]);
     }
 
@@ -45,8 +51,14 @@ class TaskController extends AbstractController
 	{
 		$tasks = $this->taskRepository->findBy(['Category' => $cat]);
 
-		return $this->render('task/list.html.twig', [
+		$formTaskSearch = $this->createForm(TaskSearchType::class);
+
+		//info tytmczasoro renderForm
+		return $this->renderForm('task/list.html.twig', [
 			'tasks' => $tasks,
+			'search_phraze' => '',
+			'search_in_description' => '',
+			'form' => $formTaskSearch,
 		]);
 	}
 
@@ -134,7 +146,7 @@ class TaskController extends AbstractController
 		return $this->redirectToRoute('app_task_show_list');
 	}
 
-	#[Route('/task/search/', name: 'app_task_search')]
+	#[Route('/tasks/search/', name: 'app_task_search')]
 	public function search(Request $request)
 	{
 		$search_phraze = $request->get('search_phraze');
