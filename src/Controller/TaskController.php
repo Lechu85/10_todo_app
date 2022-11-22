@@ -42,27 +42,10 @@ class TaskController extends AbstractController
             'tasks' => $tasks,
 	        'search_phraze' => '',
 	        'search_in_description' => '',
-	        'form' => $formTaskSearch
+	        'formTaskSearch' => $formTaskSearch
 
         ]);
     }
-
-
-	#[Route('/tasks/{cat}', name: 'app_task_show_list_from_cat')]
-	public function showFromCat(int $cat): Response
-	{
-		$tasks = $this->taskRepository->findBy(['Category' => $cat]);
-
-		$formTaskSearch = $this->createForm(TaskSearchType::class);
-
-		//info tytmczasoro renderForm
-		return $this->renderForm('task/list.html.twig', [
-			'tasks' => $tasks,
-			'search_phraze' => '',
-			'search_in_description' => '',
-			'form' => $formTaskSearch,
-		]);
-	}
 
 
 	#[Route('/task/new', name: 'app_task_new')]
@@ -148,22 +131,40 @@ class TaskController extends AbstractController
 		return $this->redirectToRoute('app_task_show_list');
 	}
 
+
 	#[Route('/tasks/search/', name: 'app_task_search')]
 	public function search(Request $request)
 	{
+
 		$search_phraze = $request->get('search_phraze');
 		$search_in_description = $request->get('search_in_description');
 
+		$formTaskSearch = $this->createForm(TaskSearchType::class);
+		$formTaskSearch->handleRequest($request);
+
+		dump($request);
+
+		if ($formTaskSearch->isSubmitted() && $formTaskSearch->isValid()) {
+			// data is an array with "name", "email", and "message" keys
+			$data = $formTaskSearch->getData();
+			dump('gooo',$data);
+		}
+
+
+
 		$tasks = $this->taskRepository->findTasksByTitle($search_phraze, $search_in_description);
 
-		return $this->render('task/list.html.twig', [
+
+		return $this->renderForm('task/list.html.twig', [
 			'tasks' => $tasks,
 			'header' => 'Szukaj: '.$search_phraze,
 			'search_phraze' => $search_phraze,
-			'search_in_description' => $search_in_description
+			'search_in_description' => $search_in_description,
+			'formTaskSearch' => $formTaskSearch
 		]);
 
 	}
+
 
 	#[Route('/task/group_action', name: 'app_task_group_action')]//, methods: 'POST'
 	public function groupAction(Request $request, Security $security)
@@ -211,6 +212,23 @@ class TaskController extends AbstractController
 
 		return $this->redirectToRoute('app_task_show_list');
 
+	}
+
+
+	#[Route('/tasks/{cat}', name: 'app_task_show_list_from_cat')]
+	public function showFromCat(int $cat): Response
+	{
+		$tasks = $this->taskRepository->findBy(['Category' => $cat]);
+
+		$formTaskSearch = $this->createForm(TaskSearchType::class);
+
+		//info tytmczasoro renderForm
+		return $this->renderForm('task/list.html.twig', [
+			'tasks' => $tasks,
+			'search_phraze' => '',
+			'search_in_description' => '',
+			'formTaskSearch' => $formTaskSearch,
+		]);
 	}
 
 }

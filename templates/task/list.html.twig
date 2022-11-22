@@ -28,11 +28,12 @@
             <a href="{{ path('app_task_category_new') }}" class="btn btn-primary">New category</a>
             <a href="{{ path('app_task_category_show_list') }}" class="btn btn-primary">Category list</a>
         </div>
-
     </div>
 
-    <form action="{{ path('app_task_search') }}" method="get">
+    {{ form_start(formTaskSearch, {'action': path('app_task_search'), 'method': 'get'}) }}
+    {# <form action="{{ path('app_task_search') }}" method="get"> #}
     <div class="card">
+
         <div class="card-header">
             Znajdź zadanie
         </div>
@@ -40,7 +41,15 @@
         <div class="card-body" style="background: #f7f7f7;">
 
             <div class="input-group mb-3">
-                <input type="search" class="form-control" placeholder="Znajdź zadanie" name="search_phraze" value="{{ search_phraze }}" aria-label="Recipient's username" aria-describedby="button-addon2">
+                {{ form_widget(formTaskSearch.task, {'attr': {'class':'form-control', 'placeholder':'Znajdź zadanie', 'data': search_phraze, 'name':'search_phraze', 'aria-label': 'Task title','aria-describedby': 'button-addon2' }}) }}
+                {#  #}
+
+                <input type="search"
+                       class="form-control"
+                       name="QQQsearch_phraze"
+                       value="{{ search_phraze }}"
+                       aria-label="Recipient's username"
+                       aria-describedby="button-addon2">
 
                 <button type="submit" class="btn btn-outline-primary" id="button-addon2">Szukaj</button>
                 <button class="btn btn-outline-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Zaawansowana</button>
@@ -51,15 +60,13 @@
             </div>
 
             <div class="collapse" id="collapseExample">
-                {{ form_start(form) }}
-                {{ form_widget(form) }}
-                {{ form_end(form) }}
+                {{ form_rest(formTaskSearch) }}
             </div>
 
 
         </div>
     </div>
-    </form>
+    {{ form_end(formTaskSearch) }}
 
 
     <form action="{{ path('app_task_group_action') }}" method="post">

@@ -9,8 +9,12 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ResetType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
 
@@ -25,14 +29,17 @@ class TaskSearchType extends AbstractType
 
 	public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
         $builder
-	        //->add('task')
+	        ->add('task')
 	        ->add('dueDate', DateType::class, [
 		        'widget' => 'single_text',
 		        'label' => 'Termin realizacji'
 	        ])
             ->add('important')
-            ->add('description')
+            ->add('description', TextareaType::class, [
+				'data' => 'pierwszy tekst' //info domyślny tekst
+            ])
             ->add('status')
             ->add('createdAt', DateType::class, [
 	            'widget' => 'single_text',
@@ -44,8 +51,8 @@ class TaskSearchType extends AbstractType
             ->add('deleted')
             ->add('prioryty')
             ->add('pinned')
-            //->add('doneAt')
-            //->add('doneByUser')
+            ->add('doneAt')
+            ->add('doneByUser')
             ->add('remind')
             ->add('wontDo');
 
@@ -61,6 +68,7 @@ class TaskSearchType extends AbstractType
 			}
 
 	        $builder->add('category', EntityType::class,[
+				'required' => false,
 		        'class' => TaskCategory::class,
 		        'placeholder' => 'Kategoria',
 		        'choice_label' => 'name'
@@ -81,14 +89,34 @@ class TaskSearchType extends AbstractType
 		        ]
 	        ])
         ;
+
+	    foreach ($builder->all() as $field) {
+
+			/*
+		    if (
+			    ($field->getType() instanceof SubmitType::class) ||
+			    ($field->getType() instanceof ButtonType::class)
+		    ) {
+			    continue;
+		    }
+			*/
+		    if (
+			    ($field->getName() === 'save') ||
+			    ($field->getName() === 'hide')
+		    ) {
+			    continue;
+		    }
+			$field->setRequired(false);
+	    }
+
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => Task::class,
+	public function configureOptions(OptionsResolver $resolver): void
+	{
+	    $resolver->setDefaults([
+	        'data_class' => Task::class,
 	        'required' => false,
 
-        ]);
-    }
+	    ]);
+	}
 }
