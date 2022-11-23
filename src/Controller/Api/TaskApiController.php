@@ -31,7 +31,7 @@ class TaskApiController extends AbstractController
 		foreach ($tasks as $task) {
 			$data[] = [
 				'id' => $task->getId(),
-				'task' => $task->getTitle(),
+				'title' => $task->getTitle(),
 				'description' => $task->getDescription(),
 			];
 		}
@@ -49,7 +49,7 @@ class TaskApiController extends AbstractController
 		} else {
 			$data = [
 				'id' => $task->getId(),
-				'task' => $task->getTitle(),
+				'title' => $task->getTitle(),
 				'description' => $task->getDescription(),
 			];
 

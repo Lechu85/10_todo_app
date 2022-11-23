@@ -6,6 +6,7 @@ use App\Entity\Task;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -38,7 +39,7 @@ class TaskRepository extends ServiceEntityRepository
 
 		$task = new Task();
 
-		$task->setTask($data['task'])
+		$task->setTitle($data['title'])
 			->setDescription($data['description'])
 			->setStatus($data['status'])
 			->setCreatedAt(new \DateTimeImmutable());
@@ -87,7 +88,7 @@ class TaskRepository extends ServiceEntityRepository
 		} else {
 			$data = Json_decode($request->getContent(), true);
 
-			if (!empty($data['task'])) $task->setTask($data['task']);
+			if (!empty($data['title'])) $task->setTitle($data['title']);
 			if (!empty($data['description'])) $task->setDescription($data['description']);
 			if (!empty($data['status'])) $task->setStatus($data['status']);
 			$task->setUpdatedAt(new \DateTimeImmutable());
@@ -104,9 +105,14 @@ class TaskRepository extends ServiceEntityRepository
 		}
 	}
 
-	public function findTasksByTitle(string $searchPhraze, ?int $search_in_description): array
+	public function findTasksFromRequest(Request $request, ?int $search_in_description): array
 	{
 
+		$searchPhraze = $request->get('task_search')['title']; //info this input name is array
+
+
+
+		//dump($request->get('task_search'));
 
 //		$query = $this->entityManager->createQuery(
 //			'SELECT t
@@ -121,50 +127,54 @@ class TaskRepository extends ServiceEntityRepository
 
 		$qb = $queryBuilder->select('t')
 			->from('App:Task', 't')
-			->where('t.task LIKE :searchPhraze')
+			->where('t.title LIKE :searchPhraze')
 			//->orWhere('t.description LIKE :searchPhraze')
 			->orderBy('t.id', 'DESC')
 			->setParameter('searchPhraze', '%'.$searchPhraze.'%');
-
 
 		if (isset($search_in_description) && $search_in_description == 1) {
 			$qb->orWhere('t.description LIKE :searchPhraze');
 		}
 
-		//$query = $qb->getQuery();
-		//return $query->execute();
+		foreach($request->get('task_search') as $fieldName => $fieldValue) {
+			//dump($fieldName .' - '. $fieldValue);
 
+			if ($fieldName === 'dueDateFrom' && !empty($fieldValue)) {
+				$qb
+					->andWhere('t.dueDate <= :dueDateFrom')
+					->setParameter('dueDateFrom', $fieldValue);
+			}
+
+			else if ($fieldName === 'dueDateTo' && !empty($fieldValue)) {
+				$qb
+					->andWhere('t.dueDate >= :dueDateTo')
+					->setParameter('dueDateTo', $fieldValue);
+			}
+
+				//info createdAt
+			else if ($fieldName === 'createdAtFrom' && !empty($fieldValue)) {
+				$qb
+					->andWhere('t.createdAt <= :createdAtFrom')
+					->setParameter('createdAtFrom', $fieldValue);
+			}
+
+			else if ($fieldName === 'createdAtTo' && !empty($fieldValue)) {
+				$qb
+					->andWhere('t.createdAt >= :createdAtTo')
+					->setParameter('createdAtTo', $fieldValue);
+			}
+
+			else {
+				$qb
+					->andWhere('t.'.$fieldName.' <= :'.$fieldName)
+					->setParameter($fieldName, $fieldValue);
+			}
+
+
+		}//endforeach
+dd($qb->getQuery());
 		return $qb
 				->getQuery()
 				->execute();
 	}
-
-	// /**
-	//  * @return Task[] Returns an array of Task objects
-	//  */
-	/*
-	public function findByExampleField($value)
-	{
-		return $this->createQueryBuilder('t')
-			->andWhere('t.exampleField = :val')
-			->setParameter('val', $value)
-			->orderBy('t.id', 'ASC')
-			->setMaxResults(10)
-			->getQuery()
-			->getResult()
-		;
-	}
-	*/
-
-	/*
-	public function findOneBySomeField($value): ?Task
-	{
-		return $this->createQueryBuilder('t')
-			->andWhere('t.exampleField = :val')
-			->setParameter('val', $value)
-			->getQuery()
-			->getOneOrNullResult()
-		;
-	}
-	*/
 }

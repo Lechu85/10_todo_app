@@ -60,6 +60,11 @@
             </div>
 
             <div class="collapse" id="collapseExample">
+                {{ form_widget(formTaskSearch.dueDateFrom, {'attr': {'placeholder':'Znajdź zadanie', 'value': '05.11.2022', 'data':'06.11.2022', 'name':'search_phraze' }}) }}
+
+                <hr color="red">
+
+
                 {{ form_rest(formTaskSearch) }}
             </div>
 

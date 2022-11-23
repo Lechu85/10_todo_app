@@ -136,7 +136,7 @@ class TaskController extends AbstractController
 	public function search(Request $request)
 	{
 
-		$search_phraze = $request->get('task_search')['task']; //info this input name is array
+		$search_phraze = $request->get('task_search')['title']; //info this input name is array
 		$search_in_description = $request->get('search_in_description');
 
 		$formTaskSearch = $this->createForm(TaskSearchType::class);
@@ -150,7 +150,7 @@ class TaskController extends AbstractController
 			//todo dodac tutaJ WERYFIKACJE
 
 		}
-		$tasks = $this->taskRepository->findTasksByTitle($search_phraze, $search_in_description);
+		$tasks = $this->taskRepository->findTasksFromRequest($request, $search_in_description);
 
 
 

@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Task;
 use App\Entity\TaskCategory;
 use App\Entity\User;
+use Form\Type\TaskStatusType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
@@ -36,12 +37,16 @@ class TaskSearchType extends AbstractType
 	        ->add('title', SearchType::class)
 	        ->add('dueDateFrom', DateType::class, [
 		        'widget' => 'single_text',
-		        'label' => 'Termin realizacji od',
-		        'format' => 'yyyy-MM-dd'
+		        'label' => 'Termin realizacji od fffff',
+		        'format' => 'yyyy-MM-dd',
+		        'attr' => ['data' => '01.05.2011', 'class' => 'klasaaaaa'],
 	        ])
 	        ->add('dueDateTo', DateType::class, [
 		        'widget' => 'single_text',
-		        'label' => 'Termin realizacji do'
+		        'label' => 'Termin realizacji do',
+		        'attr' => [
+			        'name' => 'dueDateeeeeeeeeeTo'
+		        ]
 	        ])
             //todo usunac pole important
 	        // ->add('important', ch)
@@ -49,34 +54,10 @@ class TaskSearchType extends AbstractType
 				'label' => 'Opis'
 				//'data' => 'pierwszy tekst' //info domyślny tekst
             ])
-            ->add('status', ChoiceType::class,[
-				'choices' => [
-					'Nowe' => 0,
-					'Odczytane' => 1,
+            ->add('status', TaskStatusType::class,[
+				'label' => 'Status zadania'
 
-				]
             ])
-
-
-        /*
-	    <option value="0" selected="" style="background-color: red; color: #fff;"></option>
-
-        <option value="1" style="background-color: #d30203; color: #fff;">Odczytane</option>
-        <option value="15" style="background-color: #0489cb; color: #fff;">Oczekiwanie na odpowiedź</option>
-        <option value="13" style="background-color: #a417bd; color: #fff;">Oczekiwanie na dostawę</option>
-        <option value="14" style="background-color: #6ab11a; color: #fff;">W przygotowaniu</option>
-
-        <option value="16" style="background-color: orange; color: #fff; font-weight: bold">Finalizacja</option>
-
-        <option value="2" style="background-color: green; color: #fff;">Zakończone</option>
-        <option value="3" style="background-color: green; color: #fff;">Zakończone częściowo</option>
-
-        <option value="4" style="background-color: #050D7A; color: #fff;">Anulowane</option>
-
-        <option value="9" style="background-color: pink;">Wznowione</option>
-        <option value="10" style="background-color: pink;">Odłożone</option>
-*/
-
 
             ->add('createdAtFrom', DateType::class, [
 	            'widget' => 'single_text',
