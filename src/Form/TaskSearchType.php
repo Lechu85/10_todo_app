@@ -8,6 +8,8 @@ use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
@@ -31,36 +33,110 @@ class TaskSearchType extends AbstractType
     {
 
         $builder
-	        ->add('task')
-	        ->add('dueDate', DateType::class, [
+	        ->add('title', SearchType::class)
+	        ->add('dueDateFrom', DateType::class, [
 		        'widget' => 'single_text',
-		        'label' => 'Termin realizacji'
+		        'label' => 'Termin realizacji od',
+		        'format' => 'yyyy-MM-dd'
 	        ])
-            ->add('important')
+	        ->add('dueDateTo', DateType::class, [
+		        'widget' => 'single_text',
+		        'label' => 'Termin realizacji do'
+	        ])
+            //todo usunac pole important
+	        // ->add('important', ch)
             ->add('description', TextareaType::class, [
-				'data' => 'pierwszy tekst' //info domyślny tekst
+				'label' => 'Opis'
+				//'data' => 'pierwszy tekst' //info domyślny tekst
             ])
-            ->add('status')
-            ->add('createdAt', DateType::class, [
+            ->add('status', ChoiceType::class,[
+				'choices' => [
+					'Nowe' => 0,
+					'Odczytane' => 1,
+
+				]
+            ])
+
+
+        /*
+	    <option value="0" selected="" style="background-color: red; color: #fff;"></option>
+
+        <option value="1" style="background-color: #d30203; color: #fff;">Odczytane</option>
+        <option value="15" style="background-color: #0489cb; color: #fff;">Oczekiwanie na odpowiedź</option>
+        <option value="13" style="background-color: #a417bd; color: #fff;">Oczekiwanie na dostawę</option>
+        <option value="14" style="background-color: #6ab11a; color: #fff;">W przygotowaniu</option>
+
+        <option value="16" style="background-color: orange; color: #fff; font-weight: bold">Finalizacja</option>
+
+        <option value="2" style="background-color: green; color: #fff;">Zakończone</option>
+        <option value="3" style="background-color: green; color: #fff;">Zakończone częściowo</option>
+
+        <option value="4" style="background-color: #050D7A; color: #fff;">Anulowane</option>
+
+        <option value="9" style="background-color: pink;">Wznowione</option>
+        <option value="10" style="background-color: pink;">Odłożone</option>
+*/
+
+
+            ->add('createdAtFrom', DateType::class, [
 	            'widget' => 'single_text',
-	            'label' => 'Data utworzenia'
+	            'label' => 'Data utworzenia od:'
             ])
+	        ->add('createdAtTo', DateType::class, [
+		        'widget' => 'single_text',
+		        'label' => 'Data utworzenia do:'
+	        ])
             //->add('updatedAt', DateType::class, [
 	        //    'widget' => 'single_text',
             //])
-            ->add('deleted')
-            ->add('prioryty')
-            ->add('pinned')
-            ->add('doneAt')
-            ->add('doneByUser')
-            ->add('remind')
-            ->add('wontDo');
 
+            ->add('prioryty', ChoiceType::class, [
+	            'choices'  => [
+					'Krytyczne' => 4,
+		            'Ważne' => 3,
+		            'Zwykłe' => 2,
+		            'Mało ważne' => 1,
+	            ],
+	            'choice_attr' => [
+		            'Krytyczne' => ['data-color' => 'Red'],
+		            'Ważne' => ['data-color' => 'Yellow'],
+		            'Zwykłe' => ['data-color' => 'Green'],
+		            'Mało ważne' => ['data-color' => 'Green'],
+	            ],
+            ])
+
+            ->add('doneAtFrom', DateType::class, [
+	            'widget' => 'single_text',
+	            'label' => 'Wykonane od:'
+            ])
+	        ->add('doneAtTo', DateType::class, [
+		        'widget' => 'single_text',
+		        'label' => 'Wykonane do:'
+	        ])
+
+	        ->add('pinned', CheckboxType::class, [
+		        'label' => 'Przypięte'
+	        ])
+            ->add('wontDo', CheckboxType::class, [
+				'label' => 'Nie zrobię'
+            ])
+	        ->add('deleted', CheckboxType::class, [
+		        'label' => 'W koszu'
+	        ]);
+
+		//only for ROLE_ADMIN
 	        if ($this->security->isGranted('ROLE_ADMIN')) {
 
-				$builder->add('user', EntityType::class, [
-					// looks for choices from this entity
-					//only for ROLE_ADMIN
+		        $builder
+		        ->add('doneByUser', EntityType::class, [
+					'label' => 'Wykonane przez użytkownika',
+			        'class' => User::class,
+			        'placeholder' => 'Wszyscy użytkownicy',
+			        'choice_label' => 'email',
+		        ])
+				->add('user', EntityType::class, [
+
+					'label' => 'Przypisane do użytkownika',
 					'class' => User::class,
 					'placeholder' => 'Wszyscy użytkownicy',
 					'choice_label' => 'email',
@@ -68,6 +144,7 @@ class TaskSearchType extends AbstractType
 			}
 
 	        $builder->add('category', EntityType::class,[
+				'label' => 'Kategoria',
 				'required' => false,
 		        'class' => TaskCategory::class,
 		        'placeholder' => 'Kategoria',

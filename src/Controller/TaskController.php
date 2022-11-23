@@ -136,27 +136,26 @@ class TaskController extends AbstractController
 	public function search(Request $request)
 	{
 
-		$search_phraze = $request->get('search_phraze');
+		$search_phraze = $request->get('task_search')['task']; //info this input name is array
 		$search_in_description = $request->get('search_in_description');
 
 		$formTaskSearch = $this->createForm(TaskSearchType::class);
 		$formTaskSearch->handleRequest($request);
 
-		dump($request);
-
 		if ($formTaskSearch->isSubmitted() && $formTaskSearch->isValid()) {
 			// data is an array with "name", "email", and "message" keys
 			$data = $formTaskSearch->getData();
 			dump('gooo',$data);
+
+			//todo dodac tutaJ WERYFIKACJE
+
 		}
-
-
-
 		$tasks = $this->taskRepository->findTasksByTitle($search_phraze, $search_in_description);
 
 
+
 		return $this->renderForm('task/list.html.twig', [
-			'tasks' => $tasks,
+			'tasks' => $tasks ?? '',
 			'header' => 'Szukaj: '.$search_phraze,
 			'search_phraze' => $search_phraze,
 			'search_in_description' => $search_in_description,

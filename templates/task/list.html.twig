@@ -41,15 +41,15 @@
         <div class="card-body" style="background: #f7f7f7;">
 
             <div class="input-group mb-3">
-                {{ form_widget(formTaskSearch.task, {'attr': {'class':'form-control', 'placeholder':'Znajdź zadanie', 'data': search_phraze, 'name':'search_phraze', 'aria-label': 'Task title','aria-describedby': 'button-addon2' }}) }}
-                {#  #}
-
+                {{ form_widget(formTaskSearch.title, {'attr': {'placeholder':'Znajdź zadanie', 'value': search_phraze, 'name':'search_phraze', 'aria-label': 'Task title','aria-describedby': 'button-addon2' }}) }}
+                {#
+                    value vs data?
                 <input type="search"
                        class="form-control"
                        name="QQQsearch_phraze"
                        value="{{ search_phraze }}"
                        aria-label="Recipient's username"
-                       aria-describedby="button-addon2">
+                       aria-describedby="button-addon2"> #}
 
                 <button type="submit" class="btn btn-outline-primary" id="button-addon2">Szukaj</button>
                 <button class="btn btn-outline-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Zaawansowana</button>
@@ -62,7 +62,6 @@
             <div class="collapse" id="collapseExample">
                 {{ form_rest(formTaskSearch) }}
             </div>
-
 
         </div>
     </div>
@@ -78,7 +77,7 @@
                     <tr>
                         <td><input type="checkbox" name="task[]" value="{{ task.id }}"></td>
                         <td>{{ task.id }}</td>
-                        <td><a href="{{ path('app_task_show', {'id': task.id }) }}"><b>{{ task.task }}</b></a><br>
+                        <td><a href="{{ path('app_task_show', {'id': task.id }) }}"><b>{{ task.title }}</b></a><br>
                             {{ task.dueDate|date("Y-m-d") }}</td>
 
                         <td>
