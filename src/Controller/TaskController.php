@@ -35,7 +35,10 @@ class TaskController extends AbstractController
     {
 		$tasks = $this->taskRepository->findAll();
 
-	    $formTaskSearch = $this->createForm(TaskSearchType::class);
+	    $formTaskSearch = $this->createForm(TaskSearchType::class, null, [
+		    'action' => $this->generateUrl('app_task_search'),
+		    'method' => 'GET',
+	    ]);
 
 		//info renderForm podobnie dziala jak render()
         return $this->renderForm('task/list.html.twig', [
@@ -56,14 +59,8 @@ class TaskController extends AbstractController
 		$form->handleRequest($request);
 		if ($form->isSubmitted() && $form->isValid()) {
 
-			//dd($form->get('agreeTerms')->getData());
-
 			$data = $form->getData();
-
 			$result = $this->taskRepository->addTask($data);
-
-			//$this->entityManager->persist($task);
-			//$this->entityManager->flush();
 
 			$this->addFlash($result['flash_status'], $result['msg']);
 
@@ -139,17 +136,26 @@ class TaskController extends AbstractController
 		$search_phraze = $request->get('task_search')['title']; //info this input name is array
 		$search_in_description = $request->get('search_in_description');
 
-		$formTaskSearch = $this->createForm(TaskSearchType::class);
+		$formTaskSearch = $this->createForm(TaskSearchType::class, null, [
+			'action' => $this->generateUrl('app_task_search'),
+			'method' => 'GET',
+		]);
 		$formTaskSearch->handleRequest($request);
 
-		if ($formTaskSearch->isSubmitted() && $formTaskSearch->isValid()) {
-			// data is an array with "name", "email", and "message" keys
-			$data = $formTaskSearch->getData();
-			dump('gooo',$data);
 
+		//dd('handleRequest -> isSubmitted()', $formTaskSearch->isSubmitted(), $formTaskSearch);
+
+
+		if ($formTaskSearch->isSubmitted() && $formTaskSearch->isValid()) {
+			//todo nie funkcjonuje, formularz utworzony w innejh metodzie nie jest tutaj poprawnie odtwarzanyu
+
+			$data = $formTaskSearch->getData();
+			//dump('gooo',$data);
 			//todo dodac tutaJ WERYFIKACJE
 
 		}
+
+		dd($request);
 		$tasks = $this->taskRepository->findTasksFromRequest($request, $search_in_description);
 
 
@@ -219,7 +225,10 @@ class TaskController extends AbstractController
 	{
 		$tasks = $this->taskRepository->findBy(['Category' => $cat]);
 
-		$formTaskSearch = $this->createForm(TaskSearchType::class);
+		$formTaskSearch = $this->createForm(TaskSearchType::class, null, [
+			'action' => $this->generateUrl('app_task_search'),
+			'method' => 'GET',
+		]);
 
 		//info tytmczasoro renderForm
 		return $this->renderForm('task/list.html.twig', [

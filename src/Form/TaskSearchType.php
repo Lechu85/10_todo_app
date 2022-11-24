@@ -5,17 +5,17 @@ namespace App\Form;
 use App\Entity\Task;
 use App\Entity\TaskCategory;
 use App\Entity\User;
+use Form\Type\TaskPriorytyType;
 use Form\Type\TaskStatusType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -35,22 +35,32 @@ class TaskSearchType extends AbstractType
 
         $builder
 	        ->add('title', SearchType::class)
-	        ->add('dueDateFrom', DateType::class, [
+	        ->add('dueDateFrom', DateTimeType::class, [
 		        'widget' => 'single_text',
 		        'label' => 'Termin realizacji od fffff',
-		        'format' => 'yyyy-MM-dd',
-		        'attr' => ['data' => '01.05.2011', 'class' => 'klasaaaaa'],
+		        //'format' => 'yyyy-MM-dd',
+		        //'attr' => [
+			    //    'value' => '2022-11-02',
+		        //],
 	        ])
-	        ->add('dueDateTo', DateType::class, [
+	        ->add('dueDateTo', DateTimeType::class, [
 		        'widget' => 'single_text',
 		        'label' => 'Termin realizacji do',
+
+		        //'format' => 'yyyy-MM-dd',
 		        'attr' => [
-			        'name' => 'dueDateeeeeeeeeeTo'
-		        ]
+				    'value' => '2022-11-25 11:11',
+				    //'placeholder' => 'yyyy-mm-dd',
+			        //'format' => 'yyyy-MM-dd',
+			    ],
+				//'html5' => false,
+
+
+
 	        ])
             //todo usunac pole important
 	        // ->add('important', ch)
-            ->add('description', TextareaType::class, [
+            ->add('description', TextType::class, [
 				'label' => 'Opis'
 				//'data' => 'pierwszy tekst' //info domyślny tekst
             ])
@@ -59,11 +69,11 @@ class TaskSearchType extends AbstractType
 
             ])
 
-            ->add('createdAtFrom', DateType::class, [
+            ->add('createdAtFrom', DateTimeType::class, [
 	            'widget' => 'single_text',
 	            'label' => 'Data utworzenia od:'
             ])
-	        ->add('createdAtTo', DateType::class, [
+	        ->add('createdAtTo', DateTimeType::class, [
 		        'widget' => 'single_text',
 		        'label' => 'Data utworzenia do:'
 	        ])
@@ -71,26 +81,13 @@ class TaskSearchType extends AbstractType
 	        //    'widget' => 'single_text',
             //])
 
-            ->add('prioryty', ChoiceType::class, [
-	            'choices'  => [
-					'Krytyczne' => 4,
-		            'Ważne' => 3,
-		            'Zwykłe' => 2,
-		            'Mało ważne' => 1,
-	            ],
-	            'choice_attr' => [
-		            'Krytyczne' => ['data-color' => 'Red'],
-		            'Ważne' => ['data-color' => 'Yellow'],
-		            'Zwykłe' => ['data-color' => 'Green'],
-		            'Mało ważne' => ['data-color' => 'Green'],
-	            ],
-            ])
+            ->add('prioryty', TaskPriorytyType::class)
 
-            ->add('doneAtFrom', DateType::class, [
+            ->add('doneAtFrom', DateTimeType::class, [
 	            'widget' => 'single_text',
 	            'label' => 'Wykonane od:'
             ])
-	        ->add('doneAtTo', DateType::class, [
+	        ->add('doneAtTo', DateTimeType::class, [
 		        'widget' => 'single_text',
 		        'label' => 'Wykonane do:'
 	        ])
@@ -105,7 +102,7 @@ class TaskSearchType extends AbstractType
 		        'label' => 'W koszu'
 	        ]);
 
-		//only for ROLE_ADMIN
+			//only for ROLE_ADMIN
 	        if ($this->security->isGranted('ROLE_ADMIN')) {
 
 		        $builder
@@ -150,31 +147,30 @@ class TaskSearchType extends AbstractType
 
 	    foreach ($builder->all() as $field) {
 
-			/*
-		    if (
-			    ($field->getType() instanceof SubmitType::class) ||
-			    ($field->getType() instanceof ButtonType::class)
-		    ) {
-			    continue;
-		    }
-			*/
-		    if (
-			    ($field->getName() === 'save') ||
-			    ($field->getName() === 'hide')
-		    ) {
-			    continue;
-		    }
-			$field->setRequired(false);
-	    }
+		    //if (in_array($field->getName(), ['save', 'hide'], true)) {
+			//    continue;
+		    //}
 
+		    $fieldType = $field->getType()?->getInnerType();
+
+		    if (
+			    ($fieldType instanceof SubmitType) ||
+			    ($fieldType instanceof ButtonType) ||
+			    ($fieldType instanceof ResetType)
+		    ) {
+			    continue;
+		    }
+
+			$field->setRequired(false);
+
+	    }
     }
 
 	public function configureOptions(OptionsResolver $resolver): void
 	{
-	    $resolver->setDefaults([
+		//question czy potrzeba tutaj encji dla wyszukiwarki zaawansowanej? co mi to daje?
+	    /*$resolver->setDefaults([
 	        'data_class' => Task::class,
-	        'required' => false,
-
-	    ]);
+	    ]);*/
 	}
 }

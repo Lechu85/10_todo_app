@@ -30,8 +30,9 @@
         </div>
     </div>
 
-    {{ form_start(formTaskSearch, {'action': path('app_task_search'), 'method': 'get'}) }}
+    {{ form_start(formTaskSearch) }}
     {# <form action="{{ path('app_task_search') }}" method="get"> #}
+    {# , {'action': path('app_task_search'), 'method': 'get'} #}
     <div class="card">
 
         <div class="card-header">
@@ -41,31 +42,57 @@
         <div class="card-body" style="background: #f7f7f7;">
 
             <div class="input-group mb-3">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="checkbox" value="1" name="search_in_description" id="search_in_description" {% if search_in_description == 1 %}checked{% endif %} aria-label="Szukaj również w opisie">
+                    <label for="search_in_description"><span class="small ms-1">+ Opis</span></label>
+                </div>
+                {# <input type="text" class="form-control" aria-label="Text input with checkbox"> #}
                 {{ form_widget(formTaskSearch.title, {'attr': {'placeholder':'Znajdź zadanie', 'value': search_phraze, 'name':'search_phraze', 'aria-label': 'Task title','aria-describedby': 'button-addon2' }}) }}
-                {#
-                    value vs data?
-                <input type="search"
-                       class="form-control"
-                       name="QQQsearch_phraze"
-                       value="{{ search_phraze }}"
-                       aria-label="Recipient's username"
-                       aria-describedby="button-addon2"> #}
 
                 <button type="submit" class="btn btn-outline-primary" id="button-addon2">Szukaj</button>
-                <button class="btn btn-outline-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Zaawansowana</button>
+                <button class="btn btn-outline-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Zaawansowane</button>
             </div>
-            <div class="small text-secondary">
-                <input type="checkbox" name="search_in_description" id="search_in_description" value="1" {% if search_in_description == 1 %}checked{% endif %}>
-                <label for="search_in_description">Szukaj też w opisie</label>
+
+            <div>
+                <span class="badge text-bg-secondary"><span class="fw-normal">Utworzono:</span> 2022.11.24 <a href="" class="text-white">x</a></span>
+                <span class="badge text-bg-secondary"><span class="fw-normal">Status:</span> Nowe <a href="" class="text-white">x</a></span>
             </div>
+
 
             <div class="collapse" id="collapseExample">
-                {{ form_widget(formTaskSearch.dueDateFrom, {'attr': {'placeholder':'Znajdź zadanie', 'value': '05.11.2022', 'data':'06.11.2022', 'name':'search_phraze' }}) }}
 
-                <hr color="red">
+                <div class="row">
+                    <div class="col">
+                        {{ form_row(formTaskSearch.dueDateFrom, {'attr': {'value': '2024-11-24 12:00'}}) }}
+                    </div>
+                    <div class="col">
+                        {{ form_row(formTaskSearch.dueDateTo) }}
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col">
+                        {{ form_row(formTaskSearch.createdAtFrom) }}
+                    </div>
+                    <div class="col">
+                        {{ form_row(formTaskSearch.createdAtTo) }}
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col">
+                        {{ form_row(formTaskSearch.doneAtFrom) }}
+                    </div>
+                    <div class="col">
+                        {{ form_row(formTaskSearch.doneAtTo) }}
+                    </div>
+                </div>
 
 
                 {{ form_rest(formTaskSearch) }}
+
             </div>
 
         </div>
