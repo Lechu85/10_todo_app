@@ -42,7 +42,7 @@
         <div class="card-body" style="background: #f7f7f7;">
 
             <div class="input-group mb-3">
-                <div class="input-group-text">
+                <div class="input-group-text" id="addDescriptionWrapper">
                     <input class="form-check-input mt-0" type="checkbox" value="1" name="search_in_description" id="search_in_description" {% if search_in_description == 1 %}checked{% endif %} aria-label="Szukaj również w opisie">
                     <label for="search_in_description"><span class="small ms-1">+ Opis</span></label>
                 </div>
@@ -50,43 +50,45 @@
                 {{ form_widget(formTaskSearch.title, {'attr': {'placeholder':'Znajdź zadanie', 'value': search_phraze, 'name':'search_phraze', 'aria-label': 'Task title','aria-describedby': 'button-addon2' }}) }}
 
                 <button type="submit" class="btn btn-outline-primary" id="button-addon2">Szukaj</button>
-                <button class="btn btn-outline-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Zaawansowane</button>
+                <button class="btn btn-outline-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdvancedSearch" aria-expanded="false" aria-controls="collapseAdvancedSearch">Zaawansowane</button>
             </div>
 
-            <div>
-                <span class="badge text-bg-secondary"><span class="fw-normal">Utworzono:</span> 2022.11.24 <a href="" class="text-white">x</a></span>
-                <span class="badge text-bg-secondary"><span class="fw-normal">Status:</span> Nowe <a href="" class="text-white">x</a></span>
-            </div>
+            {% if searchBadgeList != '' %}
+                <div>
+                    {{ searchBadgeList|raw }}
+               </div>
+            {% endif %}
 
 
-            <div class="collapse" id="collapseExample">
+            <div class="collapse mt-3" id="collapseAdvancedSearch">
 
                 <div class="row">
                     <div class="col">
-                        {{ form_row(formTaskSearch.dueDateFrom, {'attr': {'value': '2024-11-24 12:00'}}) }}
+                      {#   {{ form_row(formTaskSearch.dueDateFrom, {'attr': {'value': '2024-11-24 12:00'}}) }}#}
+                        {{ form_row(formTaskSearch.dueDate.From) }}
                     </div>
                     <div class="col">
-                        {{ form_row(formTaskSearch.dueDateTo) }}
+                        {{ form_row(formTaskSearch.dueDate.To) }}
                     </div>
                 </div>
 
 
                 <div class="row">
                     <div class="col">
-                        {{ form_row(formTaskSearch.createdAtFrom) }}
+                        {{ form_row(formTaskSearch.createdAt.From) }}
                     </div>
                     <div class="col">
-                        {{ form_row(formTaskSearch.createdAtTo) }}
+                        {{ form_row(formTaskSearch.createdAt.To) }}
                     </div>
                 </div>
 
 
                 <div class="row">
                     <div class="col">
-                        {{ form_row(formTaskSearch.doneAtFrom) }}
+                        {{ form_row(formTaskSearch.doneAt.From) }}
                     </div>
                     <div class="col">
-                        {{ form_row(formTaskSearch.doneAtTo) }}
+                        {{ form_row(formTaskSearch.doneAt.To) }}
                     </div>
                 </div>
 
@@ -140,28 +142,51 @@
 
 
 
+
+
+
 <script>
+    {# info ukrywamy pole checkbox +Opis dla zaawansowanej wyszukiwarki #}
 
-function doGroupAction(event, type_action) {
+    const myCollapsible = document.getElementById('collapseAdvancedSearch')
 
-    const task_checkboxes = document.querySelectorAll('input[name="task[]"]:checked')
-
-    if (task_checkboxes.length === 0) {
-        alert('Zaznacz przynajmniej jedno zadanie');
-        event.preventDefault()
-
-    } else {
-        document.getElementById('group_action_name').value = type_action
+    {# question - czy tutaj zasaday SOLID zostałą złamana? jedna funkcja chowa i ukrywa? Zrobić dwie funkcje? #}
+    function toggleAddDescriptionBtn(hideOrShow){
+        btn_wrapper = document.getElementById('addDescriptionWrapper');
+        btn_wrapper.style.display = hideOrShow;
+        btn_wrapper.querySelector('input[type="checkbox"]').checked = false;
     }
 
-}
+    myCollapsible.addEventListener('hide.bs.collapse', event => {
+        toggleAddDescriptionBtn('flex');
+    })
 
-document.getElementById('btn_group_action_delete').addEventListener('click', function(event) {
-    doGroupAction(event, 'delete')
-});
-document.getElementById('btn_group_action_done').addEventListener('click', function(event) {
-    doGroupAction(event, 'done')
-});
+    myCollapsible.addEventListener('show.bs.collapse', event => {
+        toggleAddDescriptionBtn('none');
+    })
+
+
+    {# info wysylamy grupowe akcje #}
+    function doGroupAction(event, type_action) {
+
+        const task_checkboxes = document.querySelectorAll('input[name="task[]"]:checked')
+
+        if (task_checkboxes.length === 0) {
+            alert('Zaznacz przynajmniej jedno zadanie');
+            event.preventDefault()
+
+        } else {
+            document.getElementById('group_action_name').value = type_action
+        }
+
+    }
+
+    document.getElementById('btn_group_action_delete').addEventListener('click', function(event) {
+        doGroupAction(event, 'delete')
+    });
+    document.getElementById('btn_group_action_done').addEventListener('click', function(event) {
+        doGroupAction(event, 'done')
+    });
 </script>
 
 {% endblock %}

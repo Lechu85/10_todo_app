@@ -11,6 +11,7 @@ class TaskPriorytyType extends AbstractType
 	{
 		$resolver->setDefaults([
 			'choices'  => [
+				'Wszystkie' => 0,
 				'Krytyczne' => 4,
 				'Ważne' => 3,
 				'Zwykłe' => 2,

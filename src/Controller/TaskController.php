@@ -3,17 +3,20 @@
 namespace App\Controller;
 
 use App\Entity\Task;
-use App\Form\TaskSearchType;
 use App\Form\TaskType;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use App\Form\TaskSearchType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
+
+//question - nie podoba mi się, że trzeba generować wyszukiwarke w metodzie dla listy zadań i listy z kategorii
+// czy te metody jednak nie powinny być razem? jako kategorie podawać All?
 
 class TaskController extends AbstractController
 {
@@ -43,9 +46,9 @@ class TaskController extends AbstractController
 		//info renderForm podobnie dziala jak render()
         return $this->renderForm('task/list.html.twig', [
             'tasks' => $tasks,
+	        'formTaskSearch' => $formTaskSearch,
 	        'search_phraze' => '',
 	        'search_in_description' => '',
-	        'formTaskSearch' => $formTaskSearch
 
         ]);
     }
@@ -132,45 +135,30 @@ class TaskController extends AbstractController
 	#[Route('/tasks/search/', name: 'app_task_search')]
 	public function search(Request $request)
 	{
+		$searchBadgeList = '';
 
-		$search_phraze = $request->get('task_search')['title']; //info this input name is array
-		$search_in_description = $request->get('search_in_description');
-
-		$formTaskSearch = $this->createForm(TaskSearchType::class, null, [
-			'action' => $this->generateUrl('app_task_search'),
-			'method' => 'GET',
-		]);
+		$formTaskSearch = $this->createForm(TaskSearchType::class, null, ['action' => $this->generateUrl('app_task_search'), 'method' => 'GET']);
 		$formTaskSearch->handleRequest($request);
 
-
-		//dd('handleRequest -> isSubmitted()', $formTaskSearch->isSubmitted(), $formTaskSearch);
-
-
 		if ($formTaskSearch->isSubmitted() && $formTaskSearch->isValid()) {
-			//todo nie funkcjonuje, formularz utworzony w innejh metodzie nie jest tutaj poprawnie odtwarzanyu
+			$data = $formTaskSearch->getData(); //question - sprawdzic $data
+			$searchBadgeList = $this->taskRepository->generateSearchBadge($request);
 
-			$data = $formTaskSearch->getData();
-			//dump('gooo',$data);
-			//todo dodac tutaJ WERYFIKACJE
-
+			$tasks = $this->taskRepository->findTasksFromRequest($request);
 		}
-
-		dd($request);
-		$tasks = $this->taskRepository->findTasksFromRequest($request, $search_in_description);
-
-
 
 		return $this->renderForm('task/list.html.twig', [
 			'tasks' => $tasks ?? '',
-			'header' => 'Szukaj: '.$search_phraze,
-			'search_phraze' => $search_phraze,
-			'search_in_description' => $search_in_description,
+			'search_phraze' => $request->get('task_search')['title'] ??  '',
+			'search_in_description' => $request->get('search_in_description') ?? '',
+			'searchBadgeList' => $searchBadgeList,
 			'formTaskSearch' => $formTaskSearch
 		]);
 
 	}
 
 
+	//question - zasady SOLID w tejh metodzie zostyały złamane? dla każdej akcji grupowej osobna metoda?
 	#[Route('/task/group_action', name: 'app_task_group_action')]//, methods: 'POST'
 	public function groupAction(Request $request, Security $security)
 	{
@@ -221,7 +209,7 @@ class TaskController extends AbstractController
 
 
 	#[Route('/tasks/{cat}', name: 'app_task_show_list_from_cat')]
-	public function showFromCat(int $cat): Response
+	public function showAllFromCat(int $cat): Response
 	{
 		$tasks = $this->taskRepository->findBy(['Category' => $cat]);
 

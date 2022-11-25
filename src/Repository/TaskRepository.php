@@ -105,30 +105,19 @@ class TaskRepository extends ServiceEntityRepository
 		}
 	}
 
-	public function findTasksFromRequest(Request $request, ?int $search_in_description): array
+	public function findTasksFromRequest(Request $request): array
 	{
 
 		$searchPhraze = $request->get('task_search')['title']; //info this input name is array
-
-
-
-		//dump($request->get('task_search'));
-
-//		$query = $this->entityManager->createQuery(
-//			'SELECT t
-//            FROM App:Task t
-//            WHERE t.task LIKE :title
-//            ORDER BY t.id DESC'
-//		)->setParameter('title', '%'.$searchPhraze.'%');
-//
-//		return $query->getResult();//getResult to alias dla executre(). w execute mozna podac parametry
+		$taskSearchRequest = $request->get('task_search');
+		$search_in_description = $request->get('search_in_description');
 
 		$queryBuilder = $this->entityManager->createQueryBuilder();
 
+		//todo Title nie zawszejest podane
 		$qb = $queryBuilder->select('t')
 			->from('App:Task', 't')
 			->where('t.title LIKE :searchPhraze')
-			//->orWhere('t.description LIKE :searchPhraze')
 			->orderBy('t.id', 'DESC')
 			->setParameter('searchPhraze', '%'.$searchPhraze.'%');
 
@@ -136,45 +125,110 @@ class TaskRepository extends ServiceEntityRepository
 			$qb->orWhere('t.description LIKE :searchPhraze');
 		}
 
-		foreach($request->get('task_search') as $fieldName => $fieldValue) {
-			//dump($fieldName .' - '. $fieldValue);
+		foreach($taskSearchRequest as $fieldName => $fieldValue) {
 
-			if ($fieldName === 'dueDateFrom' && !empty($fieldValue)) {
-				$qb
-					->andWhere('t.dueDate <= :dueDateFrom')
-					->setParameter('dueDateFrom', $fieldValue);
+			if (!empty($fieldValue) && $fieldName !== '_token') {
+
+				if (is_array($fieldValue)) {//pole DateTimeFromToType
+
+					if (!empty($fieldValue['From']) && !empty($fieldValue['To'])) {
+						$qb
+							->andWhere('t.' . $fieldName . ' <= :' . $fieldName . 'From AND t.' . $fieldName . ' >= :' . $fieldName . 'To')
+							->setParameter($fieldName . 'From', $fieldValue['From'])
+							->setParameter($fieldName . 'To', $fieldValue['To']);;
+
+					} else if (!empty($fieldValue['To'])) {
+						$qb
+							->andWhere('t.' . $fieldName . ' >= :' . $fieldName . 'To')
+							->setParameter($fieldName . 'To', $fieldValue['To']);
+
+					} else if (!empty($fieldValue['From'])) {
+						$qb
+							->andWhere('t.' . $fieldName . ' <= :' . $fieldName . 'From')
+							->setParameter($fieldName . 'From', $fieldValue['From']);
+					}
+
+				} else if ((isset($search_in_description) && $search_in_description == 1) && $fieldName === 'title' ) {
+					//todo dla zaawansowanej wyszukiwarki, chowamy pole +Opis w głównej cześci
+					$qb
+						->andWhere('t.title LIKE :title OR t.description LIKE :title')
+						->setParameter('title', '%'.$fieldValue.'%');
+
+				} else { //Pozostałe pola
+
+					$qb
+						->andWhere('t.'.$fieldName.' LIKE :'.$fieldName)
+						->setParameter($fieldName, '%'.$fieldValue.'%');
+
+				}
+
 			}
-
-			else if ($fieldName === 'dueDateTo' && !empty($fieldValue)) {
-				$qb
-					->andWhere('t.dueDate >= :dueDateTo')
-					->setParameter('dueDateTo', $fieldValue);
-			}
-
-				//info createdAt
-			else if ($fieldName === 'createdAtFrom' && !empty($fieldValue)) {
-				$qb
-					->andWhere('t.createdAt <= :createdAtFrom')
-					->setParameter('createdAtFrom', $fieldValue);
-			}
-
-			else if ($fieldName === 'createdAtTo' && !empty($fieldValue)) {
-				$qb
-					->andWhere('t.createdAt >= :createdAtTo')
-					->setParameter('createdAtTo', $fieldValue);
-			}
-
-			else {
-				$qb
-					->andWhere('t.'.$fieldName.' <= :'.$fieldName)
-					->setParameter($fieldName, $fieldValue);
-			}
-
 
 		}//endforeach
-dd($qb->getQuery());
+
 		return $qb
 				->getQuery()
 				->execute();
+	}
+
+	/**
+	 * Metoda generuje liste wstążek z parametrami, które użytkownik aktualnie wyszukuje.
+	 * @return array
+	 */
+	public function generateSearchBadge(Request $request): string
+	{
+		$generatedHtml = '';
+		$taskSearchRequest = $request->get('task_search');
+
+		foreach($taskSearchRequest as $fieldName => $fieldValue ) {
+
+			if ($fieldName === 'title' ||
+				$fieldName === '_token' ||
+				empty($fieldValue)) {
+				continue;
+			}
+
+			//question - czy taki zapis nazw pól jest ok? jak z tłumaczneiem? czy można pobrać z klasy formularza*/
+			// jak najlepiej pobrac tutaj docelowe wartosci. naz\wa kategorii , priorytet itd?
+			// czy mozna utworzyć tablice ze statusami czy priorytetami?
+
+			$fieldLabel = [
+				"dueDate" => 'Realizacja',
+				"createdAt" =>  'Utworzono',
+				"doneAt" =>  'Wykonane',
+				"description" => 'Opis',
+				"status" => 'Status',
+				"prioryty" => 'Priorytet',
+				"category" => 'Kategoria',
+			];
+
+			//DateTimeFromToType
+			if (is_array($fieldValue)) {
+				$generatedHtml .= '<span class="badge text-bg-secondary"><span class="fw-normal">'.$fieldLabel[$fieldName].'</span>';
+
+				if (!empty($fieldValue['From'])) {
+					$generatedHtml .= '<span class="fw-normal"> od: </span>'.date('Y-m-d', strtotime($fieldValue['From']));
+				}
+				if (!empty($fieldValue['To'])) {
+					$generatedHtml .= '<span class="fw-normal"> do: </span>'.date('Y-m-d', strtotime($fieldValue['To']));
+				}
+
+				$generatedHtml .= ' <a href="#" onClick="alert(\'Soon :) \'); return false;" class="text-white">x</a></span> ';
+
+			//zwykłe pole
+			} else {
+
+				if (strlen($fieldValue) > 15) {
+					$fieldValue = substr($fieldValue, 0,  15).'...';
+				}
+
+				$generatedHtml .= '<span class="badge text-bg-secondary"><span class="fw-normal">'.$fieldLabel[$fieldName].':</span> '.$fieldValue.' <a href="#" onClick="alert(\'Soon :) \'); return false;" class="text-white">x</a></span> ';
+
+			}
+
+
+		}
+
+		return $generatedHtml;
 	}
 }

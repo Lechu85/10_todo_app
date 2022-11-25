@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Form;
+namespace App\Form; //question dlaczego było tutaj App\Form ?
 
 use App\Entity\Task;
 use App\Entity\TaskCategory;
 use App\Entity\User;
+use Form\Type\DateTimeFromToType;
 use Form\Type\TaskPriorytyType;
 use Form\Type\TaskStatusType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -17,7 +18,6 @@ use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
 
@@ -35,28 +35,12 @@ class TaskSearchType extends AbstractType
 
         $builder
 	        ->add('title', SearchType::class)
-	        ->add('dueDateFrom', DateTimeType::class, [
-		        'widget' => 'single_text',
-		        'label' => 'Termin realizacji od fffff',
-		        //'format' => 'yyyy-MM-dd',
-		        //'attr' => [
-			    //    'value' => '2022-11-02',
-		        //],
-	        ])
-	        ->add('dueDateTo', DateTimeType::class, [
-		        'widget' => 'single_text',
-		        'label' => 'Termin realizacji do',
 
-		        //'format' => 'yyyy-MM-dd',
-		        'attr' => [
-				    'value' => '2022-11-25 11:11',
-				    //'placeholder' => 'yyyy-mm-dd',
-			        //'format' => 'yyyy-MM-dd',
-			    ],
-				//'html5' => false,
-
-
-
+	        ->add('dueDate', DateTimeFromToType::class, [
+		        'label' => 'Termin realizacji ',
+				'attr' => [
+					'name' => 'dueDate'
+				]
 	        ])
             //todo usunac pole important
 	        // ->add('important', ch)
@@ -66,31 +50,22 @@ class TaskSearchType extends AbstractType
             ])
             ->add('status', TaskStatusType::class,[
 				'label' => 'Status zadania'
-
             ])
 
-            ->add('createdAtFrom', DateTimeType::class, [
-	            'widget' => 'single_text',
-	            'label' => 'Data utworzenia od:'
-            ])
-	        ->add('createdAtTo', DateTimeType::class, [
-		        'widget' => 'single_text',
-		        'label' => 'Data utworzenia do:'
+	        ->add('createdAt', DateTimeFromToType::class, [
+		        'label' => 'Data utworzenia ',
+		        'attr' => [
+			        'name' => 'createdAt'
+		        ]
 	        ])
-            //->add('updatedAt', DateType::class, [
-	        //    'widget' => 'single_text',
-            //])
+	        ->add('doneAt', DateTimeFromToType::class, [
+		        'label' => 'Wykonane',
+                'attr' => [
+				    'name' => 'doneAt'
+			    ]
+	        ])
 
             ->add('prioryty', TaskPriorytyType::class)
-
-            ->add('doneAtFrom', DateTimeType::class, [
-	            'widget' => 'single_text',
-	            'label' => 'Wykonane od:'
-            ])
-	        ->add('doneAtTo', DateTimeType::class, [
-		        'widget' => 'single_text',
-		        'label' => 'Wykonane do:'
-	        ])
 
 	        ->add('pinned', CheckboxType::class, [
 		        'label' => 'Przypięte'
