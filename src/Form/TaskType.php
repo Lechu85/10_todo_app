@@ -34,14 +34,13 @@ class TaskType extends AbstractType
 		        'widget' => 'single_text',
 	        ])
 	        ->add('user', EntityType::class, [
-		        // looks for choices from this entity
+		        'placeholder' => ' : Wszyscy użytkownicy : ',
 		        'class' => User::class,
-				'placeholder' => 'Wszyscy użytkownicy',
 		        'choice_label' => 'email',
 	        ])
 	        ->add('category', EntityType::class,[
+		        'placeholder' => ' : Wszystkie kategorie : ',
 				'class' => TaskCategory::class,
-		        'placeholder' => 'Kategoria',
 		        'choice_label' => 'name'
 	        ])
 	        ->add('important')

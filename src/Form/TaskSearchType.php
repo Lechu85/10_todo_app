@@ -113,9 +113,9 @@ class TaskSearchType extends AbstractType
 		        'attr' => [
 					'class' => 'btn btn-danger',
 			        'data-bs-toggle' => 'collapse',
-			        'data-bs-target' => '#collapseExample',
+			        'data-bs-target' => '#collapseAdvancedSearch',
 	                'aria-expanded' => 'false',
-	                'aria-controls' => 'collapseExample',
+	                'aria-controls' => 'collapseAdvancedSearch',
 		        ]
 	        ])
         ;

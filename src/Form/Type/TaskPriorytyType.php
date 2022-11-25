@@ -11,7 +11,7 @@ class TaskPriorytyType extends AbstractType
 	{
 		$resolver->setDefaults([
 			'choices'  => [
-				'Wszystkie' => 0,
+				' : Wszystkie : ' => 0,//question tak się robi czy lepiej placeholder?
 				'Krytyczne' => 4,
 				'Ważne' => 3,
 				'Zwykłe' => 2,

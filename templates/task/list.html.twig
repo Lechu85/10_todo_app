@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    {{ form_start(formTaskSearch) }}
+    {{ form_start(form_task_search) }}
     {# <form action="{{ path('app_task_search') }}" method="get"> #}
     {# , {'action': path('app_task_search'), 'method': 'get'} #}
     <div class="card">
@@ -47,15 +47,15 @@
                     <label for="search_in_description"><span class="small ms-1">+ Opis</span></label>
                 </div>
                 {# <input type="text" class="form-control" aria-label="Text input with checkbox"> #}
-                {{ form_widget(formTaskSearch.title, {'attr': {'placeholder':'Znajdź zadanie', 'value': search_phraze, 'name':'search_phraze', 'aria-label': 'Task title','aria-describedby': 'button-addon2' }}) }}
+                {{ form_widget(form_task_search.title, {'attr': {'placeholder':'Znajdź zadanie', 'value': search_phraze, 'name':'search_phraze', 'aria-label': 'Task title','aria-describedby': 'button-addon2' }}) }}
 
                 <button type="submit" class="btn btn-outline-primary" id="button-addon2">Szukaj</button>
                 <button class="btn btn-outline-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdvancedSearch" aria-expanded="false" aria-controls="collapseAdvancedSearch">Zaawansowane</button>
             </div>
 
-            {% if searchBadgeList != '' %}
+            {% if search_badge_list != '' %}
                 <div>
-                    {{ searchBadgeList|raw }}
+                    {{ search_badge_list|raw }}
                </div>
             {% endif %}
 
@@ -64,76 +64,109 @@
 
                 <div class="row">
                     <div class="col">
-                      {#   {{ form_row(formTaskSearch.dueDateFrom, {'attr': {'value': '2024-11-24 12:00'}}) }}#}
-                        {{ form_row(formTaskSearch.dueDate.From) }}
+                      {#   {{ form_row(form_task_search.dueDateFrom, {'attr': {'value': '2024-11-24 12:00'}}) }}#}
+                        {{ form_row(form_task_search.dueDate.From) }}
                     </div>
                     <div class="col">
-                        {{ form_row(formTaskSearch.dueDate.To) }}
+                        {{ form_row(form_task_search.dueDate.To) }}
                     </div>
                 </div>
 
 
                 <div class="row">
                     <div class="col">
-                        {{ form_row(formTaskSearch.createdAt.From) }}
+                        {{ form_row(form_task_search.createdAt.From) }}
                     </div>
                     <div class="col">
-                        {{ form_row(formTaskSearch.createdAt.To) }}
+                        {{ form_row(form_task_search.createdAt.To) }}
                     </div>
                 </div>
 
 
                 <div class="row">
                     <div class="col">
-                        {{ form_row(formTaskSearch.doneAt.From) }}
+                        {{ form_row(form_task_search.doneAt.From) }}
                     </div>
                     <div class="col">
-                        {{ form_row(formTaskSearch.doneAt.To) }}
+                        {{ form_row(form_task_search.doneAt.To) }}
                     </div>
                 </div>
 
+                {{ form_rest(form_task_search) }}
 
-                {{ form_rest(formTaskSearch) }}
 
             </div>
 
         </div>
     </div>
-    {{ form_end(formTaskSearch) }}
+    {{ form_end(form_task_search) }}
 
 
     <form action="{{ path('app_task_group_action') }}" method="post">
         <input type="hidden" name="group_action_name" id="group_action_name" value="">
 
         <div class="list-group list-group-flush border-bottom scrollarea">
-            <table>
+            <table class="table table-striped table-hover table-bordered mt-2">
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>Id</th>
+                    <th>Tytuł zadania</th>
+                    <th>Termin</th>
+                    <th>Akcja</th>
+                </tr>
                 {% for task in tasks %}
                     <tr>
                         <td><input type="checkbox" name="task[]" value="{{ task.id }}"></td>
                         <td>{{ task.id }}</td>
-                        <td><a href="{{ path('app_task_show', {'id': task.id }) }}"><b>{{ task.title }}</b></a><br>
-                            {{ task.dueDate|date("Y-m-d") }}</td>
-
+                        <td><a href="{{ path('app_task_show', {'id': task.id }) }}"><b>{{ task.title }}</b></a></td>
+                        <td>{{ task.dueDate|date("Y-m-d") }}</td>
                         <td>
-                            <a href="{{ path('app_task_edit', {id: task.id}) }}">edit</a> |
-                            <a href="{{ path('app_task_remove', {id: task.id}) }}" class="text-danger">usuń</a>
+
+                            <div class="dropdown">
+                                <a class="btn btn-light btn-sm dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="{{ asset('img/ico_action.svg') }}" alt="" class="action_ico">
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{{ path('app_task_edit', {id: task.id}) }}">Edytuj</a></li>
+                                    <li><a class="dropdown-item text-danger confirm-delete" href="{{ path('app_task_remove', {id: task.id}) }}">Usuń</a></li>
+                                </ul>
+                            </div>
+
                         </td>
                     </tr>
                 {% endfor %}
             </table>
 
+            {% if tasks|length == 0 %}
+                <div class="alert alert-primary mt-2" role="alert">
+                    {% if search_badge_list is not empty %}
+                        Brak zadań spełniających podane kryteria.
+                        {# todo Jeżeli podano kategorie to przekierowujemy na strona z tąkategoriuą #}
 
-            <div class="card">
-                <div class="card-body">
-                    <button type="submit" id="btn_group_action_delete" class="btn btn-danger">Usuń</button>
-                    <button type="submit" id="btn_group_action_done" class="btn btn-primary">Wykonane</button>
+                        <a class="btn btn-danger btn-sm" href="{{ path('app_task_show_list') }}" >Wyczyść filtr</a>
+
+                    {% else %}
+                        Brak zadań.
+                    {% endif %}
                 </div>
-            </div>
+            {% else  %}
+
+
+                <div class="card mt-2">
+                    <div class="card-header">
+                        Znaleziono zadań: {{ tasks|length }}
+                    </div>
+                    <div class="card-body">
+                        <button type="submit" id="btn_group_action_delete" class="btn btn-danger">Usuń</button>
+                        <button type="submit" id="btn_group_action_done" class="btn btn-primary">Wykonane</button>
+                    </div>
+                </div>
+            {% endif %}
+
 
 
         </div>
     </form>
-
 
 
 
@@ -145,7 +178,16 @@
 
 
 
+
+
+
+
 <script>
+    /*document.querySelector('.confirm-delete').addEventListener('click', event => {
+        return confirm('Are you sure to delete?');
+
+    });*/
+
     {# info ukrywamy pole checkbox +Opis dla zaawansowanej wyszukiwarki #}
 
     const myCollapsible = document.getElementById('collapseAdvancedSearch')

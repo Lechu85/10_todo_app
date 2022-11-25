@@ -46,9 +46,10 @@ class TaskController extends AbstractController
 		//info renderForm podobnie dziala jak render()
         return $this->renderForm('task/list.html.twig', [
             'tasks' => $tasks,
-	        'formTaskSearch' => $formTaskSearch,
+	        'form_task_search' => $formTaskSearch,
 	        'search_phraze' => '',
 	        'search_in_description' => '',
+	        'search_badge_list' => '',
 
         ]);
     }
@@ -151,8 +152,8 @@ class TaskController extends AbstractController
 			'tasks' => $tasks ?? '',
 			'search_phraze' => $request->get('task_search')['title'] ??  '',
 			'search_in_description' => $request->get('search_in_description') ?? '',
-			'searchBadgeList' => $searchBadgeList,
-			'formTaskSearch' => $formTaskSearch
+			'search_badge_list' => $searchBadgeList,
+			'form_task_search' => $formTaskSearch
 		]);
 
 	}
@@ -223,7 +224,8 @@ class TaskController extends AbstractController
 			'tasks' => $tasks,
 			'search_phraze' => '',
 			'search_in_description' => '',
-			'formTaskSearch' => $formTaskSearch,
+			'form_task_search' => $formTaskSearch,
+			'search_badge_list' => '',
 		]);
 	}
 
