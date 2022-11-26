@@ -1,0 +1,87 @@
+
+<div class="flex-shrink-0 p-3" id="middle_menu">
+    <a href="/" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
+        <span class="fs-5 fw-semibold">Grupy zadań</span>
+    </a>
+
+    <ul class="list-unstyled ps-0">
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ path('app_admin') }}">Admin</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ path('app_edit_profile') }}">Edytuj profil</a>
+            </li>
+        {% endif %}
+
+    </ul>
+
+    <ul class="list-unstyled ps-0">
+        <li class="mb-1">
+            <a href="{{ path('home_index') }}" class="btn btn-text d-inline-flex align-items-center rounded border-0">
+                Główna
+            </a>
+        </li>
+        <li class="mb-1">
+            <a href="{{ path('about_index', {'firstName' : 'Kamil'}) }}" class="btn d-inline-flex align-items-center rounded border-0">
+                O nas</a>
+        </li>
+
+        <li class="mb-1">
+            <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" {% if current_controller == 'task' %} aria-expanded="true" {% else %} aria-expanded="false" {% endif %}>
+                Zadania
+            </button>
+            <div class="collapse {% if current_controller == 'task' %}show{% endif %}" id="dashboard-collapse">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li><a href="{{ path('app_task_show_list') }}" class="link-dark d-inline-flex text-decoration-none rounded">Wszystkie</a></li>
+
+                    {% for category in taskCategories %}
+                        <li><a href="{{ path('app_task_show_list') }}/{{ category.id }}" class="link-dark d-inline-flex text-decoration-none rounded">{{ category.name }}</a></li>
+                    {% endfor %}
+
+                </ul>
+            </div>
+        </li>
+        <li class="mb-1">
+            <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+                Orders
+            </button>
+            <div class="collapse" id="orders-collapse">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">New</a></li>
+                    <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Processed</a></li>
+                    <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Shipped</a></li>
+                    <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Returned</a></li>
+                </ul>
+            </div>
+        </li>
+        <li class="border-top my-3"></li>
+        <li class="mb-1">
+            <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+                Account
+            </button>
+            <div class="collapse" id="account-collapse">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li><a href="{{ path('app_profile') }}" class="link-dark d-inline-flex text-decoration-none rounded">Profile</a></li>
+
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item active">
+                        <li><a href="{{ path('app_admin') }}" class="link-dark d-inline-flex text-decoration-none rounded">Admin</a></li>
+                        <li><a href="{{ path('app_edit_profile') }}" class="link-dark d-inline-flex text-decoration-none rounded">Edytuj profil</a></li>
+                    {% endif %}
+
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <li><a href="{{ path('app_logout') }}" class="link-dark d-inline-flex text-decoration-none rounded">Wyloguj się</a></li>
+                    {% else %}
+                        <li><a href="{{ path('app_login') }}" class="link-dark d-inline-flex text-decoration-none rounded">Zaloguj się</a></li>
+                        <li><a href="{{ path('app_register') }}" class="link-dark d-inline-flex text-decoration-none rounded">Zarejestruj</a></li>
+                    {% endif %}
+
+                </ul>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div class="b-example-divider b-example-vr"></div>

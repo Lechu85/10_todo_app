@@ -23,10 +23,11 @@
     <div class="border-bottom d-flex align-items-center p-3 mb-2">
         <div class="fs-5 fw-semibold me-auto">Lista zadań</div>
 
+        <a href="{{ path('app_task_new') }}" class="btn btn-primary active me-1" aria-current="page">Nowe zadanie</a>
+
         <div class="btn-group">
-            <a href="{{ path('app_task_new') }}" class="btn btn-primary active" aria-current="page">New task</a>
-            <a href="{{ path('app_task_category_new') }}" class="btn btn-primary">New category</a>
-            <a href="{{ path('app_task_category_show_list') }}" class="btn btn-primary">Category list</a>
+            <a href="{{ path('app_task_category_new') }}" class="btn btn-primary">Nowa kategoria</a>
+            <a href="{{ path('app_task_category_show_list') }}" class="btn btn-primary">Lista kategorii</a>
         </div>
     </div>
 
@@ -102,10 +103,11 @@
     {{ form_end(form_task_search) }}
 
 
-    <form action="{{ path('app_task_group_action') }}" method="post">
-        <input type="hidden" name="group_action_name" id="group_action_name" value="">
+    <div class="list-group list-group-flush border-bottom scrollarea">
 
-        <div class="list-group list-group-flush border-bottom scrollarea">
+        <form action="{{ path('app_task_group_action') }}" method="post">
+            <input type="hidden" name="group_action_name" id="group_action_name" value="">
+
             <table class="table table-striped table-hover table-bordered mt-2">
                 <tr>
                     <th>&nbsp;</th>
@@ -118,17 +120,24 @@
                     <tr>
                         <td><input type="checkbox" name="task[]" value="{{ task.id }}"></td>
                         <td>{{ task.id }}</td>
-                        <td><a href="{{ path('app_task_show', {'id': task.id }) }}"><b>{{ task.title }}</b></a></td>
+                        <td>
+                            <a href="{{ path('app_task_show', {'id': task.id }) }}"><b>{{ task.title }}</b></a>
+                            {% if task.prioryty is not empty %}
+                            <span class="badge text-bg-{{ prioryty_bg_array[task.prioryty] }}">{{ prioryty_array[task.prioryty] }}</span>
+                            {% endif %}
+                        </td>
                         <td>{{ task.dueDate|date("Y-m-d") }}</td>
                         <td>
-
                             <div class="dropdown">
                                 <a class="btn btn-light btn-sm dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <img src="{{ asset('img/ico_action.svg') }}" alt="" class="action_ico">
                                 </a>
                                 <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{{ path('app_task_show', {id: task.id}) }}">Podglądnij</a></li>
                                     <li><a class="dropdown-item" href="{{ path('app_task_edit', {id: task.id}) }}">Edytuj</a></li>
-                                    <li><a class="dropdown-item text-danger confirm-delete" href="{{ path('app_task_remove', {id: task.id}) }}">Usuń</a></li>
+                                    <li><a class="dropdown-item text-success" href="{{ path('app_task_group_action', {id: task.id, group_action_name: 'done'}) }}"">Wykonane</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger confirmDelete" href="{{ path('app_task_remove', {id: task.id}) }}">Usuń</a></li>
                                 </ul>
                             </div>
 
@@ -151,22 +160,68 @@
                 </div>
             {% else  %}
 
-
                 <div class="card mt-2">
                     <div class="card-header">
                         Znaleziono zadań: {{ tasks|length }}
                     </div>
                     <div class="card-body">
-                        <button type="submit" id="btn_group_action_delete" class="btn btn-danger">Usuń</button>
+                        <button type="submit" id="btn_group_action_delete" class="btn btn-danger confirmDelete">Usuń</button>
                         <button type="submit" id="btn_group_action_done" class="btn btn-primary">Wykonane</button>
                     </div>
                 </div>
+
             {% endif %}
 
 
+           {# <button type="button" class="btn btn-primary confirmDelete">live toast</button> #}
 
-        </div>
-    </form>
+            <div class="toast-container position-fixed top-50 start-50 translate-middle p-3">
+                {#
+                <div id="liveToast" class="toast align-items-center text-bg-success bg-opacity-75" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            Hello, world! This is a toast message 2.
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+                #}
+
+                <div id="confirmDeleteToast" class="toast bg-white border-1" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-body">
+                        Usunąć wybrane pozycje?
+                        <div class="mt-2 pt-2 border-top">
+                            <button type="button" class="btn btn-danger btn-sm" onClick="JavaScript: function(event) {return true;}">Usuń</button>
+                            <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="toast">Anuluj</button>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <script>
+
+                const confirmBtn = document.querySelectorAll('.confirmDelete')
+                const confirmAlertWrapper = document.getElementById('confirmDeleteToast')
+
+                confirmBtn.forEach(btn => {
+                    btn.addEventListener('click', (event) => {
+                        const toast = new bootstrap.Toast(confirmAlertWrapper)
+
+                        event.preventDefault();
+
+                        toast.show()
+
+                    })
+                })
+
+            </script>
+
+        </form>
+    </div>
+
+
 
 
 
@@ -194,17 +249,17 @@
 
     {# question - czy tutaj zasaday SOLID zostałą złamana? jedna funkcja chowa i ukrywa? Zrobić dwie funkcje? #}
     function toggleAddDescriptionBtn(hideOrShow){
-        btn_wrapper = document.getElementById('addDescriptionWrapper');
-        btn_wrapper.style.display = hideOrShow;
-        btn_wrapper.querySelector('input[type="checkbox"]').checked = false;
+        btn_wrapper = document.getElementById('addDescriptionWrapper')
+        btn_wrapper.style.display = hideOrShow
+        btn_wrapper.querySelector('input[type="checkbox"]').checked = false
     }
 
     myCollapsible.addEventListener('hide.bs.collapse', event => {
-        toggleAddDescriptionBtn('flex');
+        toggleAddDescriptionBtn('flex')
     })
 
     myCollapsible.addEventListener('show.bs.collapse', event => {
-        toggleAddDescriptionBtn('none');
+        toggleAddDescriptionBtn('none')
     })
 
 
@@ -214,7 +269,7 @@
         const task_checkboxes = document.querySelectorAll('input[name="task[]"]:checked')
 
         if (task_checkboxes.length === 0) {
-            alert('Zaznacz przynajmniej jedno zadanie');
+            alert('Zaznacz przynajmniej jedno zadanie')
             event.preventDefault()
 
         } else {

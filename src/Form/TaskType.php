@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Task;
 use App\Entity\TaskCategory;
 use App\Entity\User;
+use Form\Type\TaskPriorytyType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
@@ -21,7 +22,7 @@ class TaskType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-	        ->add('task', null, [
+	        ->add('title', null, [
 				'label' => 'Task name',
 		        'help' => 'Podaj nazwe zadania',
 	        ])
@@ -39,11 +40,12 @@ class TaskType extends AbstractType
 		        'choice_label' => 'email',
 	        ])
 	        ->add('category', EntityType::class,[
-		        'placeholder' => ' : Wszystkie kategorie : ',
+		        //'placeholder' => ' : Wszystkie kategorie : ',
 				'class' => TaskCategory::class,
 		        'choice_label' => 'name'
 	        ])
-	        ->add('important')
+	        ->add('prioryty', TaskPriorytyType::class)
+
 	        ->add('agreeTerms', CheckboxType::class, ['mapped' => false])
 	        ->add('save', SubmitType::class,[
 				'label' => 'Dodaj nowe zadanie'

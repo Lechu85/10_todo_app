@@ -17,7 +17,7 @@ class BlogController extends AbstractController
         $blogs = $entityManager->getRepository(Blog::class)->findAll();
 		dd($blogs);
 
-		//return new Response();
+		return new Response();
 
     }
 

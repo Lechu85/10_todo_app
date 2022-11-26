@@ -23,13 +23,30 @@ class TaskController extends AbstractController
 
 	private EntityManagerInterface $entityManager;
 	private $taskRepository;
+	public array $prioryty_array; //lista priorytetow
+	public array $prioryty_bg_array;
 
 	public function __construct(EntityManagerInterface $entityManager, Environment $twig)
 	{
+
 		$this->entityManager = $entityManager;
 		$this->taskRepository = $entityManager->getRepository(Task::class);
 
 		$twig->addGlobal('current_controller', 'task');
+
+		$this->prioryty_array = [
+			3 => 'Bardzo ważne',
+			2 => 'Ważne',
+			0 => 'Zwykłe',
+			1 => 'Mało ważne'
+		];
+
+		$this->prioryty_bg_array = [
+			3 => 'danger',
+			2 => 'danger',
+			0 => '',
+			1 => 'light'
+		];
 	}
 
 
@@ -40,12 +57,14 @@ class TaskController extends AbstractController
 
 	    $formTaskSearch = $this->createForm(TaskSearchType::class, null, [
 		    'action' => $this->generateUrl('app_task_search'),
-		    'method' => 'GET',
+		    'method' => 'GET'
 	    ]);
 
 		//info renderForm podobnie dziala jak render()
         return $this->renderForm('task/list.html.twig', [
             'tasks' => $tasks,
+			'prioryty_array' => $this->prioryty_array,
+	        'prioryty_bg_array' => $this->prioryty_bg_array,
 	        'form_task_search' => $formTaskSearch,
 	        'search_phraze' => '',
 	        'search_in_description' => '',

@@ -7,6 +7,7 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
 
 class TwigEventSubscriber implements EventSubscriberInterface
@@ -17,7 +18,6 @@ class TwigEventSubscriber implements EventSubscriberInterface
 
 	public function __construct(Environment $twig, TaskCategoryMenu $taskCategoryMenu)
 	{
-
 		$taskCategoryMenu->generateTaskCategoryMenu();
 		//info Enviroment jak chcemy dograc twiga
 
@@ -32,16 +32,13 @@ class TwigEventSubscriber implements EventSubscriberInterface
 
 		//todo as admin array_push(); - dolaczyc linki adminas
 
-		$this->taskCategoryMenu = $taskCategoryMenu;
 	}
 
 	public function onKernelController(ControllerEvent $event): void
     {
-	    //info Teraz możesz dodać dowolną liczbę kontrolerów: zmienna conferences będzie zawsze dostępna w szablonach Twig.
+
 	    $this->twig->addGlobal('cms_menu', $this->cms_menu);
 
-
-	    //$this->getParameter('current_controller');;
 		//info tymczasowe rozwiazanie
 	    $globals = $this->twig->getGlobals();
 		if (!isset($globals['current_controller'])) {

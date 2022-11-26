@@ -11,14 +11,14 @@ class TaskPriorytyType extends AbstractType
 	{
 		$resolver->setDefaults([
 			'choices'  => [
-				' : Wszystkie : ' => 0,//question tak się robi czy lepiej placeholder?
-				'Krytyczne' => 4,
-				'Ważne' => 3,
-				'Zwykłe' => 2,
+				' : Wszystkie : ' => '',//question tak się robi czy lepiej placeholder?
+				'Bardzo ważne' => 3,
+				'Ważne' => 2,
+				'Zwykłe' => 0,
 				'Mało ważne' => 1,
 			],
 			'choice_attr' => [
-				'Krytyczne' => ['data-color' => 'Red'],
+				'Bardzo ważne' => ['data-color' => 'Red'],
 				'Ważne' => ['data-color' => 'Yellow'],
 				'Zwykłe' => ['data-color' => 'Green'],
 				'Mało ważne' => ['data-color' => 'Green'],

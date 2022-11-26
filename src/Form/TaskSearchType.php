@@ -2,7 +2,6 @@
 
 namespace App\Form; //question dlaczego było tutaj App\Form ?
 
-use App\Entity\Task;
 use App\Entity\TaskCategory;
 use App\Entity\User;
 use Form\Type\DateTimeFromToType;
@@ -12,7 +11,6 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
