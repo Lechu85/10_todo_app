@@ -75,6 +75,8 @@ class TaskRepository extends ServiceEntityRepository
 		);
 
 	}
+
+
 	public function updateTask(?Task $task, $request): array
 	{
 
@@ -104,6 +106,7 @@ class TaskRepository extends ServiceEntityRepository
 
 		}
 	}
+
 
 	public function findTasksFromRequest(Request $request): array
 	{
@@ -155,7 +158,6 @@ class TaskRepository extends ServiceEntityRepository
 						->setParameter('title', '%'.$fieldValue.'%');
 
 				} else { //Pozostałe pola
-
 					$qb
 						->andWhere('t.'.$fieldName.' LIKE :'.$fieldName)
 						->setParameter($fieldName, '%'.$fieldValue.'%');
@@ -171,9 +173,10 @@ class TaskRepository extends ServiceEntityRepository
 				->execute();
 	}
 
+
 	/**
 	 * Metoda generuje liste wstążek z parametrami, które użytkownik aktualnie wyszukuje.
-	 * @return array
+	 * @return string
 	 */
 	public function generateSearchBadge(Request $request): string
 	{
@@ -182,13 +185,14 @@ class TaskRepository extends ServiceEntityRepository
 
 		foreach($taskSearchRequest as $fieldName => $fieldValue ) {
 
+
 			if ($fieldName === 'title' ||
 				$fieldName === '_token' ||
 				empty($fieldValue)) {
 				continue;
 			}
 
-			//question - czy taki zapis nazw pól jest ok? jak z tłumaczneiem? czy można pobrać z klasy formularza*/
+			//question   czy taki zapis nazw pól jest ok? jak z tłumaczneiem? czy można pobrać z klasy formularza*/
 			// jak najlepiej pobrac tutaj docelowe wartosci. naz\wa kategorii , priorytet itd?
 			// czy mozna utworzyć tablice ze statusami czy priorytetami?
 
@@ -203,17 +207,21 @@ class TaskRepository extends ServiceEntityRepository
 			];
 
 			//DateTimeFromToType
-			if (is_array($fieldValue)) {
-				$generatedHtml .= '<span class="badge text-bg-secondary"><span class="fw-normal">'.$fieldLabel[$fieldName].'</span>';
+			//if (is_array($fieldValue)) {
+			if ($fieldName == 'dueDate' || $fieldName == 'createdAt' || $fieldName == 'doneAt') {
 
-				if (!empty($fieldValue['From'])) {
-					$generatedHtml .= '<span class="fw-normal"> od: </span>'.date('Y-m-d', strtotime($fieldValue['From']));
-				}
-				if (!empty($fieldValue['To'])) {
-					$generatedHtml .= '<span class="fw-normal"> do: </span>'.date('Y-m-d', strtotime($fieldValue['To']));
-				}
+				if (!empty($fieldValue['From']) && !empty($fieldValue['To'])) {
+					$generatedHtml .= '<span class="badge text-bg-secondary"><span class="fw-normal">' . $fieldLabel[$fieldName] . '</span>';
 
-				$generatedHtml .= ' <a href="#" onClick="alert(\'Soon :) \'); return false;" class="text-white">x</a></span> ';
+					if (!empty($fieldValue['From'])) {
+						$generatedHtml .= '<span class="fw-normal"> od: </span>' . date('Y-m-d', strtotime($fieldValue['From']));
+					}
+					if (!empty($fieldValue['To'])) {
+						$generatedHtml .= '<span class="fw-normal"> do: </span>' . date('Y-m-d', strtotime($fieldValue['To']));
+					}
+
+					$generatedHtml .= ' <a href="#" onClick="alert(\'Soon :) \'); return false;" class="text-white">x</a></span> ';
+				}
 
 			//zwykłe pole
 			} else {
@@ -223,12 +231,30 @@ class TaskRepository extends ServiceEntityRepository
 				}
 
 				$generatedHtml .= '<span class="badge text-bg-secondary"><span class="fw-normal">'.$fieldLabel[$fieldName].':</span> '.$fieldValue.' <a href="#" onClick="alert(\'Soon :) \'); return false;" class="text-white">x</a></span> ';
-
 			}
-
-
 		}
 
 		return $generatedHtml;
+	}
+
+	/**
+	 * Metoda przelicza ilości zadań w poszczególnych kategoriach i uaktualnia taskCount
+	 * @return bool
+	 */
+	public function countTasksInCategory(): bool
+	{
+
+		$query = $this->entityManager->createQuery('
+			UPDATE App:TaskCategory tc 
+			SET tc.taskCount = 
+				(SELECT COUNT (t.id) 
+				FROM App:Task t
+				WHERE t.Category = tc.id) 
+			');
+
+		$query->execute();
+
+		return true;
+
 	}
 }

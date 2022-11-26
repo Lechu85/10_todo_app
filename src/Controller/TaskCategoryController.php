@@ -14,33 +14,79 @@ class TaskCategoryController extends AbstractController
 {
 
 	private EntityManagerInterface $entityManager;
+	private $taskRepository;
 
 	public function __construct(EntityManagerInterface $entityManager)
 	{
 		$this->entityManager = $entityManager;
+		$this->taskCategoryRepository = $entityManager->getRepository(TaskCategory::class);
 	}
 
 	#[Route('/task/new_category', name: 'app_task_category_new')]
 	public function newCategory(Request $request): Response
 	{
-		$taskCategory = new TaskCategory();
+		$category = new TaskCategory();
 
-		$form = $this->createForm(TaskCategoryType::class, $taskCategory);
+		$form = $this->createForm(TaskCategoryType::class, $category);
 
 		$form->handleRequest($request);
 		if ($form->isSubmitted() && $form->isValid()) {
 
 
-			$this->entityManager->persist($taskCategory);
+			$this->entityManager->persist($category);
 			$this->entityManager->flush();
 
 			$this->addFlash('success', 'Kategoria zostala dodana');
 
-			return $this->redirectToRoute('app_task_show_list');
+			return $this->redirectToRoute('app_task_category_show_list');
 		}
 
-		return $this->renderForm('task/new_category.html.twig', [
+		return $this->renderForm('task/category_form.html.twig', [
 			'form' => $form,
+		]);
+	}
+
+	//todo usuniecie kategorii, powodujue usuniecie zadania -
+	#[Route('/task/remove_category/{id}', name: 'app_task_category_remove')]
+	public function remove(int $id)
+	{
+		$category = $this->taskCategoryRepository->findOneBy(['id' => $id]);
+		if ($category == null) {
+			$this->addFlash('error', 'Grupa o ID: '.$id.' juz nie istnieje w bazie.');
+		} else {
+
+			$this->entityManager->remove($category);
+			$this->entityManager->flush();
+
+			$this->addFlash('error', 'Grupa od ID: '.$id.' została usunięta');
+
+		}
+		return $this->redirectToRoute('app_task_category_show_list');
+	}
+
+
+	#[Route('/task/edit_category/{id}', name: 'app_task_category_edit')]
+	public function editCategory(TaskCategory $category, Request $request, int $id): Response
+	{
+
+		$form = $this->createForm(TaskCategoryType::class, $category);
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+
+			$category = $form->getData();
+
+			$this->entityManager->persist($category);
+			$this->entityManager->flush();
+
+			$this->addFlash('success', 'Kategoria została zapisana');
+
+			return $this->redirectToRoute('app_task_category_show_list');
+		}
+
+		return $this->renderForm('task/category_form.html.twig', [
+			'form' => $form,
+			'id' => $id,
 		]);
 	}
 

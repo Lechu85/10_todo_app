@@ -85,6 +85,8 @@ class TaskController extends AbstractController
 			$data = $form->getData();
 			$result = $this->taskRepository->addTask($data);
 
+			$this->taskRepository->countTasksInCategory();//update taskCount
+
 			$this->addFlash($result['flash_status'], $result['msg']);
 
 			return $this->redirectToRoute('app_task_show_list');
@@ -99,7 +101,10 @@ class TaskController extends AbstractController
 	#[Route('/task/edit/{id}', name: 'app_task_edit')]
 	public function edit(Task $task, Request $request, int $id): Response
 	{
-		$form = $this->createForm(TaskType::class,$task);
+		//todo - sprawdzamy czy istnieje obiekt
+		// $this->taskRepository->findOneBy(['id' => $id]);
+
+		$form = $this->createForm(TaskType::class, $task);
 
 		$form->handleRequest($request);
 		if ($form->isSubmitted() && $form->isValid()) {
@@ -109,7 +114,9 @@ class TaskController extends AbstractController
 			$this->entityManager->persist($task);
 			$this->entityManager->flush();
 
-			$this->addFlash('success', 'Your form has been edit.');
+			$this->taskRepository->countTasksInCategory();//update taskCount
+
+			$this->addFlash('success', 'Zadanie o ID:<strong>' . $task->getId() . '</strong> zostało zapisane');
 
 			return $this->redirectToRoute('app_task_show_list');
 		}
@@ -145,6 +152,8 @@ class TaskController extends AbstractController
 			$this->entityManager->remove($task);
 			$this->entityManager->flush();
 
+			$this->taskRepository->countTasksInCategory();//update taskCount
+
 			$this->addFlash('error', 'Zadanie od ID: '.$id.' zostało usunięte');
 
 		}
@@ -169,6 +178,8 @@ class TaskController extends AbstractController
 
 		return $this->renderForm('task/list.html.twig', [
 			'tasks' => $tasks ?? '',
+			'prioryty_array' => $this->prioryty_array,
+			'prioryty_bg_array' => $this->prioryty_bg_array,
 			'search_phraze' => $request->get('task_search')['title'] ??  '',
 			'search_in_description' => $request->get('search_in_description') ?? '',
 			'search_badge_list' => $searchBadgeList,
@@ -241,6 +252,9 @@ class TaskController extends AbstractController
 		//info tytmczasoro renderForm
 		return $this->renderForm('task/list.html.twig', [
 			'tasks' => $tasks,
+			'prioryty_array' => $this->prioryty_array,
+			'prioryty_bg_array' => $this->prioryty_bg_array,
+			'category_id' => $cat,
 			'search_phraze' => '',
 			'search_in_description' => '',
 			'form_task_search' => $formTaskSearch,

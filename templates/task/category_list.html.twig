@@ -8,19 +8,46 @@
 
     {{ parent() }}
 
-    <table style="width: 800px;">
-        {% for category in taskCategories %}
-            <tr>
-                <td>{{ category.id }}</td>
-                <td>{{ category.name }}</td>
-                <td>
-                    <a href="">edytuj</a> |
-                    <a href="">usuń</a>
-                </td>
-            </tr>
+    <div class="mx-auto card my-2 p-2" style=" width: 98%; max-width: 1300px;">
 
-        {% endfor %}
-    </table>
+        <div class="border-bottom d-flex align-items-center p-3 mb-2">
+            <div class="fs-5 fw-semibold me-auto">Lista grup zadań</div>
+             <a href="{{ path('app_task_category_new') }}" class="btn btn-primary me-1">Nowa grupa</a>
+        </div>
+
+
+        <table class="table table-striped table-hover table-bordered">
+            <tr>
+                <th>Id</th>
+                <th>Nazwa grupy</th>
+                <th>Ilość zadań</th>
+                <th style="width: 75px;"></th>
+            </tr>
+            {% for category in taskCategories %}
+                <tr>
+                    <td>{{ category.id }}</td>
+                    <td>{{ category.name }}</td>
+                    <td>{{ category.taskCount }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <a class="btn btn-light btn-sm dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="{{ asset('img/ico_action.svg') }}" alt="" class="action_ico">
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ path('app_task_category_edit', {'id': category.id}) }}">Edytuj</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger confirmDelete" href="#" onClick="alert('Soon :)'); return false;">Usuń</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+            {% endfor %}
+        </table>
+
+    </div>
+
+
 
 {% endblock %}
 

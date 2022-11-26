@@ -6,6 +6,7 @@ use App\Entity\Task;
 use App\Entity\TaskCategory;
 use App\Entity\User;
 use Form\Type\TaskPriorytyType;
+use Form\Type\TaskStatusType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
@@ -13,7 +14,6 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -21,38 +21,79 @@ class TaskType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
+		if (!empty($options['data'])) {
+			$btnText = 'Zapisz zmiany';
+		} else {
+			$btnText = 'Dodaj zadanie';
+		}
+
         $builder
 	        ->add('title', null, [
-				'label' => 'Task name',
-		        'help' => 'Podaj nazwe zadania',
+				'label' => 'Tytuł zadania',
+		        'help' => 'Skrócona treśc zadania',
 	        ])
 	        ->add('description', TextareaType::class,[
 				'label' => 'Opis zadania',
-		        'help' => 'Podaj dłuższy opis zadania'
+		        'help' => 'Rozwinięty opis zadania',
+	        ])
+	        ->add('status', TaskStatusType::class,[
+				'placeholder' => ' : Wybierz status : ',
+		        'label' => 'Status zadania',
+		        'attr' => [
+				    'class' => 'w-50'
+			    ],
 	        ])
 	        ->add('dueDate', DateType::class, [
-		        // renders it as a single text box
+				'label' => 'Termin realizacji',
+				'required' => false,
 		        'widget' => 'single_text',
+		        'attr' => [
+			        'class' => 'w-50'
+		        ],
 	        ])
 	        ->add('user', EntityType::class, [
-		        'placeholder' => ' : Wszyscy użytkownicy : ',
+				'label' => 'Przypisz do użytkownika',
+		        'placeholder' => ' : Wybierz użytkownika : ',
 		        'class' => User::class,
-		        'choice_label' => 'email',
+		        'choice_label' => 'name',
+		        'attr' => [
+					'class' => 'w-50'
+		        ],
 	        ])
 	        ->add('category', EntityType::class,[
-		        //'placeholder' => ' : Wszystkie kategorie : ',
+				'label' => 'Kategoria',
+				'placeholder' => ' : Wybierz kategorie : ',
 				'class' => TaskCategory::class,
-		        'choice_label' => 'name'
+		        'choice_label' => 'name',
+		        'attr' => [
+					'class' => 'w-50'
+		        ],
 	        ])
-	        ->add('prioryty', TaskPriorytyType::class)
 
-	        ->add('agreeTerms', CheckboxType::class, ['mapped' => false])
+	        ->add('prioryty', TaskPriorytyType::class, [
+				'data' => 0,
+		        'attr' => [
+			        'class' => 'w-50'
+		        ],
+	        ])
+	        ->add('pinned', CheckboxType::class, [
+		        'label' => 'Przypięte',
+	        ])
+	        ->add('wontDo', CheckboxType::class, [
+				'required' => false,
+		        'label' => 'Nie zrobię',
+	        ])
+
 	        ->add('save', SubmitType::class,[
-				'label' => 'Dodaj nowe zadanie'
+				'label' => $btnText
 	        ])
 	        ->add('back', ButtonType::class, [
-				'label' => 'Powrót',
-		        'attr' => ['id' => 'btn_back']
+		        'label' => 'Powrót do listy zadań',
+		        'attr' => [
+			        'id' => 'btn_back',
+			        'class' => 'btn-link',
+		        ]
 	        ])
 
 	        ->setMethod('GET')

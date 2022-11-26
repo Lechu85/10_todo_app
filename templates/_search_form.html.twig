@@ -1,0 +1,66 @@
+{{ form_start(form_task_search) }}
+
+<div class="card">
+
+    <div class="card-body" style="background: #f7f7f7;">
+
+        <p class="small text-black-50">Wyszukaj zadanie, podaj Tytuł, ID zadania</p>
+        <div class="input-group mb-3">
+            <div class="input-group-text" id="addDescriptionWrapper">
+                <input class="form-check-input mt-0" type="checkbox" value="1" name="search_in_description" id="search_in_description" {% if search_in_description == 1 %}checked{% endif %} aria-label="Szukaj również w opisie">
+                <label for="search_in_description"><span class="small ms-1">+ Opis</span></label>
+            </div>
+            {# <input type="text" class="form-control" aria-label="Text input with checkbox"> #}
+            {{ form_widget(form_task_search.title, {'attr': {'placeholder':'Znajdź zadanie', 'value': search_phraze, 'name':'search_phraze', 'aria-label': 'Task title','aria-describedby': 'button-addon2' }}) }}
+
+            <button type="submit" class="btn btn-outline-primary" id="button-addon2">Szukaj</button>
+            <button class="btn btn-outline-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdvancedSearch" aria-expanded="false" aria-controls="collapseAdvancedSearch">Zaawansowane</button>
+        </div>
+
+        {% if search_badge_list != '' %}
+            <div>
+                {{ search_badge_list|raw }}
+            </div>
+        {% endif %}
+
+
+        <div class="collapse mt-3" id="collapseAdvancedSearch">
+
+            <div class="row">
+                <div class="col">
+                    {#   {{ form_row(form_task_search.dueDateFrom, {'attr': {'value': '2024-11-24 12:00'}}) }}#}
+                    {{ form_row(form_task_search.dueDate.From) }}
+                </div>
+                <div class="col">
+                    {{ form_row(form_task_search.dueDate.To) }}
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form_task_search.createdAt.From) }}
+                </div>
+                <div class="col">
+                    {{ form_row(form_task_search.createdAt.To) }}
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form_task_search.doneAt.From) }}
+                </div>
+                <div class="col">
+                    {{ form_row(form_task_search.doneAt.To) }}
+                </div>
+            </div>
+
+            {{ form_rest(form_task_search) }}
+
+
+        </div>
+
+    </div>
+</div>
+{{ form_end(form_task_search) }}

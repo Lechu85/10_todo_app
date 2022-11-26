@@ -11,8 +11,8 @@ class TaskStatusType extends AbstractType
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
+			'label' => 'Status zadania',
 			'choices' => [
-				' : Wszystkie : ' => 0,
 				'Nowe' => 1,
 				'Odczytane' => 2,
 				'Oczekiwanie na odpowiedź' => 3,

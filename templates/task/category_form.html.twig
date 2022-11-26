@@ -2,9 +2,15 @@
 
 {% block body %}
 
+    {{ parent() }}
+
     <div class="mx-auto card my-2" style=" width: 100%; max-width: 850px;">
         <div class="card-body">
-            <h5 class="card-title border-bottom pb-2 mb-3">Edycja zadania ID: {{ id }}</h5>
+            {% if id is not defined %}
+                <h5 class="card-title border-bottom pb-2 mb-3">Dodaj nową grupę zadań</h5>
+            {% else %}
+                <h5 class="card-title border-bottom pb-2 mb-3">Edycja grupy ID: {{ id }} </h5>
+            {% endif %}
 
             {{ form_start(form) }}
             {{ form_widget(form) }}

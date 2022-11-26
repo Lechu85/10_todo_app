@@ -33,21 +33,20 @@ class TaskSearchType extends AbstractType
 
         $builder
 	        ->add('title', SearchType::class)
-
 	        ->add('dueDate', DateTimeFromToType::class, [
 		        'label' => 'Termin realizacji ',
 				'attr' => [
 					'name' => 'dueDate'
 				]
 	        ])
-            //todo usunac pole important
-	        // ->add('important', ch)
             ->add('description', TextType::class, [
-				'label' => 'Opis'
-				//'data' => 'pierwszy tekst' //info domyślny tekst
+				'label' => 'Opis zadania'
             ])
-            ->add('status', TaskStatusType::class,[
-				'label' => 'Status zadania'
+            ->add('status', TaskStatusType::class, [
+				'placeholder' => ' : Wszystkie : ',
+	            'attr' => [
+		            'class' => 'w-50'
+	            ],
             ])
 
 	        ->add('createdAt', DateTimeFromToType::class, [
@@ -63,7 +62,12 @@ class TaskSearchType extends AbstractType
 			    ]
 	        ])
 
-            ->add('prioryty', TaskPriorytyType::class)
+            ->add('prioryty', TaskPriorytyType::class, [
+				'placeholder' => ' : Wszystkie priorytety : ',
+	            'attr' => [
+					'class' => 'w-50'
+	            ]
+            ])
 
 	        ->add('pinned', CheckboxType::class, [
 		        'label' => 'Przypięte'
@@ -82,15 +86,20 @@ class TaskSearchType extends AbstractType
 		        ->add('doneByUser', EntityType::class, [
 					'label' => 'Wykonane przez użytkownika',
 			        'class' => User::class,
-			        'placeholder' => 'Wszyscy użytkownicy',
+			        'placeholder' => ' : Wszyscy użytkownicy : ',
 			        'choice_label' => 'email',
+			        'attr' => [
+				        'class' => 'w-50'
+			        ],
 		        ])
 				->add('user', EntityType::class, [
-
 					'label' => 'Przypisane do użytkownika',
 					'class' => User::class,
-					'placeholder' => 'Wszyscy użytkownicy',
+					'placeholder' => ' : Wszyscy użytkownicy : ',
 					'choice_label' => 'email',
+					'attr' => [
+						'class' => 'w-50'
+					],
 				]);
 			}
 
@@ -99,7 +108,10 @@ class TaskSearchType extends AbstractType
 				'required' => false,
 		        'class' => TaskCategory::class,
 		        'placeholder' => 'Kategoria',
-		        'choice_label' => 'name'
+		        'choice_label' => 'name',
+		        'attr' => [
+				    'class' => 'w-50'
+			    ],
 	        ])
 	        ->add('save', SubmitType::class,[
 				'label' => 'Szukaj',

@@ -10,8 +10,8 @@ class TaskPriorytyType extends AbstractType
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
+			'label' => 'Priorytet',
 			'choices'  => [
-				' : Wszystkie : ' => '',//question tak się robi czy lepiej placeholder?
 				'Bardzo ważne' => 3,
 				'Ważne' => 2,
 				'Zwykłe' => 0,

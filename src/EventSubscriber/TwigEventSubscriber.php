@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
+use Twig\TwigFunction;
 
 class TwigEventSubscriber implements EventSubscriberInterface
 {

@@ -2,20 +2,14 @@
 
 {% block body %}
 
-
-    <div class="d-flex flex-column flex-fill align-items-stretch flex-shrink-0 overflow-auto" style="background: #f2f5f7;">
-
-        <div class="mx-auto" style=" width: 100%; max-width: 850px;">
-            <p class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
-                <span class="fs-5 fw-semibold">Nowe zadanie</span>
-            </p>
+    <div class="mx-auto card my-2" style=" width: 100%; max-width: 850px;">
+        <div class="card-body">
+            <h5 class="card-title border-bottom pb-2 mb-3">Dodaj nowe zadanie</h5>
 
             {{ form_start(form) }}
                 {{ form_widget(form) }}
             {{ form_end(form) }}
         </div>
-
-
     </div>
 
     <script>
