@@ -2,16 +2,17 @@
 
 namespace App\Form;
 
+use App\Config\TaskStatus;
 use App\Entity\Task;
 use App\Entity\TaskCategory;
 use App\Entity\User;
 use Form\Type\TaskPriorytyType;
-use Form\Type\TaskStatusType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -37,12 +38,20 @@ class TaskType extends AbstractType
 				'label' => 'Opis zadania',
 		        'help' => 'Rozwinięty opis zadania',
 	        ])
-	        ->add('status', TaskStatusType::class,[
+	        /*->add('status', TaskStatusType::class,[
 				'placeholder' => ' : Wybierz status : ',
 		        'label' => 'Status zadania',
 		        'attr' => [
 				    'class' => 'w-50'
 			    ],
+	        ])*/
+	        ->add('status', EnumType::class,[
+				'class' => TaskStatus::class,
+		        'placeholder' => ' : Wybierz status : ',
+		        'label' => 'Status zadania',
+		        'attr' => [
+			        'class' => 'w-50'
+		        ],
 	        ])
 	        ->add('dueDate', DateType::class, [
 				'label' => 'Termin realizacji',
@@ -78,6 +87,7 @@ class TaskType extends AbstractType
 		        ],
 	        ])
 	        ->add('pinned', CheckboxType::class, [
+		        'required' => false,
 		        'label' => 'Przypięte',
 	        ])
 	        ->add('wontDo', CheckboxType::class, [

@@ -34,6 +34,7 @@ class TaskController extends AbstractController
 
 		$twig->addGlobal('current_controller', 'task');
 
+		//zmienic na enum
 		$this->prioryty_array = [
 			3 => 'Bardzo ważne',
 			2 => 'Ważne',

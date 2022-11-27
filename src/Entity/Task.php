@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Config\TaskStatus;
 use App\Repository\TaskRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -32,8 +33,11 @@ class Task
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $status = null;
+    //#[ORM\Column(type: Types::SMALLINT)]
+    //private ?int $status = null;
+
+	#[ORM\Column(type: Types::INTEGER, enumType: TaskStatus::class)]
+	private ?TaskStatus $status = null;
 
 	//todo z automatu wstawiac
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -140,21 +144,37 @@ class Task
         return $this;
     }
 
-    public function getStatus(): ?int
-    {
-        return $this->status;
-    }
+	public function getStatus(): ?TaskStatus
+	{
+		return $this->status;
+	}
 
-    public function setStatus(?int $status): self
-    {
+	public function setStatus(?TaskStatus $status): self
+	{
 		if ($status == null) {
-			$this->status = 1;
+			$this->status = TaskStatus::Nowe;
 		} else {
 			$this->status = $status;
 		}
 
-        return $this;
-    }
+		return $this;
+	}
+
+//    public function getStatus(): ?int
+//    {
+//        return $this->status;
+//    }
+//
+//    public function setStatus(?int $status): self
+//    {
+//		if ($status == null) {
+//			$this->status = 1;
+//		} else {
+//			$this->status = $status;
+//		}
+//
+//        return $this;
+//    }
 
     public function getCreatedAt(): ?\DateTimeInterface
     {

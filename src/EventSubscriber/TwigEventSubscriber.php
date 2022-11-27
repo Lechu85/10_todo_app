@@ -26,7 +26,7 @@ class TwigEventSubscriber implements EventSubscriberInterface
 
 		$this->cms_menu = [
 			'home_index' => 'Główna',
-			'app_task_show_list' => 'Zadania',
+			'app_task_show_list' => 'Inne',
 			'totolotek_index' => 'Losuj',
 			//'link3' => 'Dział 3'
 		];
