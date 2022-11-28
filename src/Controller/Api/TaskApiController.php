@@ -60,11 +60,50 @@ class TaskApiController extends AbstractController
     #[Route('/api/task', name: 'api_task_add', methods: 'POST')]
     public function create(Request $request): JsonResponse
     {
-		$data = json_decode($request->getContent(), true);
-        $result = $this->taskRepository->addTask($data);
+	    $data = json_decode($request->getContent(), true);
+	    $error_json = $this->jsonLastErrorMsg();
 
-        return new JsonResponse(['status' => $result['msg']], $result['status']);
+		if (empty($error_json)) {
+			$result = $this->taskRepository->addTask($data);
+			return new JsonResponse(['status' => $result['msg']], $result['status']);
+
+		} else {
+			return new JsonResponse(['status' => $error_json], 400);//bad request
+		}
     }
+
+	//question GDZIE umieścic tą walidacje JSON? osobny servis?
+	private function jsonLastErrorMsg() {
+
+		//todo zamienic na match - php 8.1
+
+		switch (json_last_error()) {
+			case JSON_ERROR_NONE:
+				$error_json = ''; //'No errors';
+				break;
+			case JSON_ERROR_DEPTH:
+				$error_json = 'Maximum stack depth exceeded';
+				break;
+			case JSON_ERROR_STATE_MISMATCH:
+				$error_json = 'Underflow or the modes mismatch';
+				break;
+			case JSON_ERROR_CTRL_CHAR:
+				$error_json = 'Unexpected control character found';
+				break;
+			case JSON_ERROR_SYNTAX:
+				$error_json = 'Syntax error, malformed JSON';
+				break;
+			case JSON_ERROR_UTF8:
+				$error_json = 'Malformed UTF-8 characters, possibly incorrectly encoded';
+				break;
+			default:
+				$error_json = 'Unknown error';
+				break;
+		}
+
+		return $error_json;
+
+	}
 
 	#[Route('/api/task/{id}', name: 'api_task_edit', methods: 'PUT')]
 	public function edit(Request $request, int $id): JsonResponse
@@ -84,6 +123,8 @@ class TaskApiController extends AbstractController
         } else {
             $this->entityManager->remove($task);
             $this->entityManager->flush();
+
+	        $this->taskRepository->countTasksInCategory();//update taskCount
 
             return new JsonResponse(['status' => 'Zadanie zostalo usuniete.'], Response::HTTP_OK);
         }

@@ -2,9 +2,12 @@
 
 namespace App\Repository;
 
+use App\Config\TaskStatus;
 use App\Entity\Task;
+use App\Entity\TaskCategory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -27,7 +30,16 @@ class TaskRepository extends ServiceEntityRepository
 		$this->validator = $validator;
 	}
 
+	public function createTaskListQueryBuilder(string $sort): QueryBuilder
+	{
+		//Rozbijamy na elementy
+		$sort_explode = explode(' ', $sort);
 
+        return $this->createQueryBuilder('t')
+	        ->orderBy('t.'.$sort_explode[0], $sort_explode[1]);
+
+	}
+	
 	public function addTask($data): array
 	{
 		//z formularza leci objekt, zapi tablica
@@ -35,14 +47,27 @@ class TaskRepository extends ServiceEntityRepository
 			$data = $data->toArray();
 		}
 
-		//dump('po przetworzeniu', $data);
-
 		$task = new Task();
 
-		$task->setTitle($data['title'])
-			->setDescription($data['description'])
-			->setStatus($data['status'])
-			->setCreatedAt(new \DateTimeImmutable());
+		$task->setTitle($data['title']);
+
+		if (!empty($data['description']))
+			$task->setDescription($data['description']);
+
+		if (!empty($data['status'])) {
+			$task->setStatus($data['status']);
+		} else {
+			$task->setStatus(TaskStatus::Nowe);//tymczasowo
+		}
+
+		if (!empty($data['category'])) {
+			$task->setCategory($data['category']);
+		} else {
+			//todo Przemysleć, skonsultować
+			$taskCategory = $this->entityManager->getRepository(TaskCategory::class)->findOneBy(['id' => 1]);
+			$task->setCategory($taskCategory);
+		}
+		$task->setCreatedAt(new \DateTimeImmutable());
 
 		$errors = $this->validator->validate($task);
 
@@ -67,6 +92,9 @@ class TaskRepository extends ServiceEntityRepository
 
 		$this->entityManager->persist($task);
 		$this->entityManager->flush();
+
+		//todo return bool is it correct?
+		$this->countTasksInCategory();
 
 		return array(
 			'msg' => 'Zadanie zostalo utworzone! ID:'.$task->getId(),
@@ -98,6 +126,9 @@ class TaskRepository extends ServiceEntityRepository
 			$this->entityManager->persist($task);
 			$this->entityManager->flush();
 
+			//todo return bool is it correct?
+			$this->countTasksInCategory();//update taskCount
+
 			return array(
 				'msg' => 'Zadanie ID: '.$task->getId().' zostalo uaktualnione',
 				'status' => 200,
@@ -105,6 +136,8 @@ class TaskRepository extends ServiceEntityRepository
 			);
 
 		}
+
+
 	}
 
 

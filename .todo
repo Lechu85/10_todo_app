@@ -7,15 +7,17 @@
 
 
 
-Jako użytkownik mogę się zarejestrować (e-mail i hasło). Po rejestracji przychodzi na e-mail link aktywacyjny.
-Jako użytkownik mogę się zalogować.
+done - Jako użytkownik mogę się zarejestrować (e-mail i hasło). Po rejestracji przychodzi na e-mail link aktywacyjny.
+done - Jako użytkownik mogę się zalogować.
 
-Jako użytkownik mogę dodać zadanie w postaci tekstu do listy TO DO
+done - Jako użytkownik mogę dodać zadanie w postaci tekstu do listy TO DO
 
-Jako użytkownik mogę zobaczyć listę wszystkich dodanych zadań.
+done - Jako użytkownik mogę zobaczyć listę wszystkich dodanych zadań.
 Jako użytkownik mogę odznaczyć zadanie za zakończone które znika z listy po upływanie kilku sekund od kliknięcia.
-Jako użytkownik mogę edytować treść każdego z zadań
-Jako użytkownik mogę usunąć każde zadanie)
+
+done - Jako użytkownik mogę edytować treść każdego z zadań
+done - Jako użytkownik mogę usunąć każde zadanie)
+
 Jako użytkownik każdego dnia chcę otrzymywać informację mailową z liczbą zamkniętych zadań ("Brawo! udało Ci się zrobić dzisiaj X zadań). Pod tym powinna sie znajdować lista zamkniętych zadań. E-mail wychodzi tylko jeśli są jakieś zadanie.
 Jako użytkownik mogę zobaczyć archiwum zakończonych zadań (stronicowane, posortowane odwrotnie chronologicznie po dacie zamknięcia, na samym początku ostatnio zamknięte)
 
@@ -25,3 +27,19 @@ Dodatkowe części:
 listy i pokazanie tylko tych zadań opatrzonych tym tagiem.
 3. Jako użytkownik mogę rozpocząć treść zadania od jednego do trzech wykrzyników co zdefiniuje priorytet zadania. Zadania z wyższym priorytetem pojawia się na liście wyżej od tych z niższym. Wykrzyniki zamieniane są na "labele": [Medium] [High] [ Urgent] Zadanie bez wykrzynika jest traktowane poniżej Medium.
 4. Testy automatyczne.
+
+
+
+//fixtures :)
+https://symfonycasts.com/screencast/symfony-doctrine/foundry#play
+
+
+/Sluggable
+https://symfonycasts.com/screencast/symfony-doctrine/sluggable
+
+//Pagerfanta for API
+https://symfonycasts.com/screencast/symfony-rest3/pagerfanta-pagination
+
+//Forever scroll JavaScript
+https://symfonycasts.com/screencast/symfony-doctrine/forever-scroll
+

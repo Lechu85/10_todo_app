@@ -25,7 +25,7 @@
 
         {{ include('_search_form.html.twig') }}
 
-        {% if tasks|length == 0 %}
+        {% if tasksPager|length == 0 %}
 
             {% set current_path = app.request.get('_route') %}
             <div class="alert alert-primary mt-4" role="alert">
@@ -46,11 +46,33 @@
 
         {% else  %}
 
-            <div class="card mt-2 border-0">
-                <div class="card-body text-end">
-                    Ilość zadań: {{ tasks|length }}
+
+
+            <form method="get">
+                <div class="m-3">
+
+                    <label for="sort" style="display: inline-block;">Sortuj wg:</label>
+                    <select class="form-select" id="sort" name="sort" style="width: 220px; display: inline-block;" onChange="this.form.submit();">
+                        <option value="id DESC" {% if sort == 'id DESC' %} selected {% endif %}>ID: od najnowszych</option>
+                        <option value="id ASC" {% if sort == 'id ASC' %} selected {% endif %}>ID: od najstarszych</option>
+                        <option value="dueDate ASC" {% if sort == 'dueDate ASC' %} selected {% endif %}>Termin: od najstarszych</option>
+                        <option value="dueDate DESC" {% if sort == 'dueDate DESC' %} selected {% endif %}>Termin: od najnowszych</option>
+                        <option value="title ASC" {% if sort == 'title ASC' %} selected {% endif %}>Tytuł: od A do Z</option>
+                        <option value="title DESC" {% if sort == 'title DESC' %} selected {% endif %}>Tytuł: od Z do A</option>
+                        <option value="Category_id ASC" {% if sort == 'Category_id ASC' %} selected {% endif %}>Kategoria</option>
+                    </select>
+
+                    <label for="per-page" class="ms-2" style="display: inline-block;">Zadań na stronie:</label>
+                    <select class="form-select" id="per-page" name="per-page" style="width: 70px; display: inline-block;" onChange="this.form.submit();">
+                        <option value="10" {% if per_page == 10 %} selected {% endif %}>10</option>
+                        <option value="25" {% if per_page == 25 %} selected {% endif %}>25</option>
+                        <option value="50" {% if per_page == 50 %} selected {% endif %}>50</option>
+                        <option value="100" {% if per_page == 100 %} selected {% endif %}>100</option>
+                        <option value="200" {% if per_page == 200 %} selected {% endif %}>200</option>
+                    </select>
+
                 </div>
-            </div>
+            </form>
 
             <form action="{{ path('app_task_group_action') }}" method="post">
                 <input type="hidden" name="group_action_name" id="group_action_name" value="">
@@ -63,7 +85,7 @@
                         <th>Termin</th>
                         <th style="width: 75px;"></th>
                     </tr>
-                    {% for task in tasks %}
+                    {% for task in tasksPager %}
                         <tr>
                             <td class="text-center">
                                 <label style="display: inline-block; width: 100%; padding: 8px; margin: -8px;">
@@ -86,7 +108,7 @@
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="{{ path('app_task_show', {id: task.id}) }}">Podglądnij</a></li>
                                         <li><a class="dropdown-item" href="{{ path('app_task_edit', {id: task.id}) }}">Edytuj</a></li>
-                                        <li><a class="dropdown-item text-success" href="{{ path('app_task_group_action', {id: task.id, group_action_name: 'done'}) }}"">Wykonane</a></li>
+                                        <li><a class="dropdown-item text-success" href="{{ path('app_task_group_action', {id: task.id, group_action_name: 'done'}) }}"">Zamknij</a></li>
                                         <li><hr class="dropdown-divider"></li>
                                         <li><a class="dropdown-item text-danger confirmDelete" href="{{ path('app_task_remove', {id: task.id}) }}">Usuń</a></li>
                                     </ul>
@@ -97,11 +119,23 @@
                 </table>
 
 
+                <div class="row mt-2">
+                    <div class="col">
+                        {% if haveToPaginate == true %}
+                            {{ pagerfanta(tasksPager) }}
+                        {% endif %}
+                    </div>
+                    <div class="col text-end">
+                        Ilość zadań: {{ tasksPager|length }}
+                    </div>
+                </div>
+
+
 
                 <div class="card mt-2">
                     <div class="card-body">
                         <button type="submit" id="btn_group_action_delete" class="btn btn-danger confirmDelete">Usuń</button>
-                        <button type="submit" id="btn_group_action_done" class="btn btn-primary">Wykonane</button>
+                        <button type="submit" id="btn_group_action_done" class="btn btn-success">Zamknij</button>
                     </div>
                 </div>
 

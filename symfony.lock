@@ -1,4 +1,7 @@
 {
+    "babdev/pagerfanta-bundle": {
+        "version": "v3.7.0"
+    },
     "dama/doctrine-test-bundle": {
         "version": "7.1",
         "recipe": {

@@ -180,13 +180,17 @@
                     <div class="collapse {% if current_controller == 'task' %}show{% endif %}" id="dashboard-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                             <li><a href="{{ path('app_task_new') }}" class="d-inline-flex text-decoration-none rounded">Nowe zadanie</a></li>
-                            <li><a href="{{ path('app_task_show_list') }}" class="d-inline-flex text-decoration-none rounded">Lista zadań</a></li>
+                            <li><a href="{{ path('app_task_show_list') }}" class="d-inline-flex text-decoration-none rounded">Lista aktywnych zadań</a></li>
 
                             <ul class="list-unstyled ms-1">
                                 {% for category in taskCategories %}
                                     <li><a href="{{ path('app_task_show_list') }}/{{ category.id }}" class="d-inline-flex text-decoration-none rounded"> - {{ category.name }} ({{ category.taskCount }})</a></li>
                                 {% endfor %}
+                                <li><a href="{{ path('app_task_show_list') }}" class="d-inline-flex text-decoration-none rounded"> - Zamknięte zadania</a></li>
+
                             </ul>
+
+
                         </ul>
                     </div>
 

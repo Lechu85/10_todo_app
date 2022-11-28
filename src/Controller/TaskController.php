@@ -8,6 +8,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use App\Form\TaskSearchType;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,12 +27,18 @@ class TaskController extends AbstractController
 	private $taskRepository;
 	public array $prioryty_array; //lista priorytetow
 	public array $prioryty_bg_array;
+	private int $defaultPerPage;
+	private string $defaultSort;
 
 	public function __construct(EntityManagerInterface $entityManager, Environment $twig)
 	{
 
 		$this->entityManager = $entityManager;
 		$this->taskRepository = $entityManager->getRepository(Task::class);
+
+		//domyslna ilosc zadan na jednej stronie
+		$this->defaultPerPage = 20;
+		$this->defaultSort = 'id DESC';
 
 		$twig->addGlobal('current_controller', 'task');
 
@@ -52,9 +60,19 @@ class TaskController extends AbstractController
 
 
 	#[Route('/tasks', name: 'app_task_show_list')]
-    public function showAll(): Response
+    public function showAll(Request $request): Response
     {
-		$tasks = $this->taskRepository->findAll();
+
+	    $perPage = $request->query->getInt('per-page', $this->defaultPerPage);
+	    $sort = $request->query->get('sort') ?? $this->defaultSort;
+
+	    $queryBuilder = $this->taskRepository->createTaskListQueryBuilder($sort);
+
+	    $pagerfanta = Pagerfanta::createForCurrentPageWithMaxPerPage(
+		    new QueryAdapter($queryBuilder),
+		    $request->query->getInt('page', 1),
+		    $perPage
+	    );
 
 	    $formTaskSearch = $this->createForm(TaskSearchType::class, null, [
 		    'action' => $this->generateUrl('app_task_search'),
@@ -63,14 +81,20 @@ class TaskController extends AbstractController
 
 		//info renderForm podobnie dziala jak render()
         return $this->renderForm('task/list.html.twig', [
-            'tasks' => $tasks,
+	        'tasksPager' => $pagerfanta,
+			'haveToPaginate' => $pagerfanta->haveToPaginate(),
+
+			'sort' => $sort,
+			'per_page' => $perPage,
+
 			'prioryty_array' => $this->prioryty_array,
 	        'prioryty_bg_array' => $this->prioryty_bg_array,
+
 	        'form_task_search' => $formTaskSearch,
 	        'search_phraze' => '',
 	        'search_in_description' => '',
-	        'search_badge_list' => '',
 
+	        'search_badge_list' => '',
         ]);
     }
 
@@ -85,8 +109,6 @@ class TaskController extends AbstractController
 
 			$data = $form->getData();
 			$result = $this->taskRepository->addTask($data);
-
-			$this->taskRepository->countTasksInCategory();//update taskCount
 
 			$this->addFlash($result['flash_status'], $result['msg']);
 
@@ -114,8 +136,6 @@ class TaskController extends AbstractController
 
 			$this->entityManager->persist($task);
 			$this->entityManager->flush();
-
-			$this->taskRepository->countTasksInCategory();//update taskCount
 
 			$this->addFlash('success', 'Zadanie o ID:<strong>' . $task->getId() . '</strong> zostało zapisane');
 
