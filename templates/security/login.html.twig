@@ -2,37 +2,71 @@
 
 {% block title %}Log in!{% endblock %}
 
+{# todo nie poamiętam hasła  #}
+
 {% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
 
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+    {{ parent() }}
+    <div class="w-100 h-100 d-flex" style="background: #162234;">
+
+        <div class="form-signin m-auto" style="position: relative; top: -40px;">
+
+            <div class="m-auto text-white p-3 text-center">
+                <img class="bi pe-none me-2" src="{{ asset('/img/app_logo.png') }}" width="28" height="28" alt="ToDo App">
+                <span class="fs-4">ToDo :)</span>
+            </div>
+
+            {% if error %}
+                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+
+            <div class="card p-3 shadow">
+
+                <h1 class="h4 mb-3 font-weight-normal">Zaloguj się</h1>
+
+                {% if app.user %}
+                    <div class="mb-3">
+                        Jesteś zalogowany jako {{ app.user.userIdentifier }}.<br>
+                        Aby zalogować się ponownie, <a href="{{ path('app_logout') }}">Wyloguj się</a>
+                    </div>
+                {% else %}
+
+                    <form method="post">
+
+                        <div class="form-floating">
+                            <input type="email" value="{{ last_username }}" name="email"  class="form-control" id="floatingInput" autocomplete="email" required autofocus>
+                            <label for="floatingInput">Adres email</label>
+                        </div>
+
+
+                        <div class="form-floating">
+                            <input type="password" name="password" class="form-control" id="floatingPassword" autocomplete="current-password" required>
+                            <label for="floatingPassword">Hasło</label>
+                        </div>
+
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                        <div class="checkbox mb-3 ms-1 mt-3">
+                            <label>
+                                <input type="checkbox" name="_remember_me"> Zapamiętaj mnie
+                            </label>
+                        </div>
+
+                        <button class="btn btn-primary" type="submit">
+                            Zaloguj się
+                        </button>
+
+                    </form>
+                {% endif %}
+            </div>
+
+            <div class="m-auto text-white p-3" style="color: #9ea9b4; text-align: center;">
+                Nie masz konta?
+                <a href="{{ path('app_register') }}" class="special-link">Zarejestruj się</a>
+            </div>
+
         </div>
-    {% endif %}
 
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+    </div>
 
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
-
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" name="_remember_me"> Remember me
-            </label>
-        </div>
-
-
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-</form>
 {% endblock %}

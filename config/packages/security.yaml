@@ -46,8 +46,11 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
          - { path: ^/admin, roles: ROLE_ADMIN }
-         #- { path: ^/profile, roles: ROLE_USER }
+         - { path: ^/tasks, roles: ROLE_USER }
+         - { path: ^/task, roles: ROLE_USER }
+         - { path: ^/login, roles: PUBLIC_ACCESS }
 
+        #for all users PUBLIC_ACCESS
 when@test:
     security:
         password_hashers:

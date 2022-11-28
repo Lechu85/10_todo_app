@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 class HomeController extends AbstractController
 {
@@ -17,13 +18,18 @@ class HomeController extends AbstractController
 	/**
 	 * @Route("/", name="home_index")
 	 */
-	public function index(AddHelper $addHelper, MessageBusInterface $bus): Response
+	public function index(AddHelper $addHelper, MessageBusInterface $bus, Security $security): Response
 	{
 
 		//dd($addHelper->add(2, 3));
 		//zapisuje plik na dysku komputera. asynchronciznie
 		//$bus->dispatch(new SmsNotification('Look! I created a message!', 2));
-		return $this->render('home.html.twig');
+
+		if($security->getUser()) {
+			return $this->render('dashboard.html.twig');
+		} else {
+			return $this->render('home.html.twig');
+		}
 
 	}
 

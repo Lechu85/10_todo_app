@@ -31,9 +31,7 @@
     {% endblock %}
 
 
-
     <style>
-
         .bd-placeholder-img {
             font-size: 1.125rem;
             text-anchor: middle;
@@ -87,7 +85,7 @@
     </style>
 
     </head>
-<body class="h-100">
+<body>
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <symbol id="bootstrap" viewBox="0 0 118 94">
@@ -148,86 +146,91 @@
         <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z"/>
     </symbol>
 
+
+    {# my ovn #}
+    <symbol id="text-page" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path fill-rule="evenodd" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline>
+    </symbol>
+
 </svg>
 
-<main class="d-flex flex-nowrap">
+<main class="d-flex flex-nowrap w-100 h-100">
 
-    <div class="d-flex flex-column flex-shrink-0 p-3" id="left_menu">
-        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-            <img class="bi pe-none me-2" src="{{ asset('/img/app_logo.png') }}" width="28" height="28">
-            <span class="fs-4">ToDo :)</span>
-        </a>
-        <hr>
-        <ul class="nav nav-pills flex-column mb-auto">
-            <li class="nav-item">
-                <a href="{{ path('home_index') }}" class="nav-link" aria-current="page">
-                    <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"/></svg>
-                    Główna
-                </a>
-            </li>
-            <li>
-                <button class="nav-link collapsed  {% if current_controller == 'task' %}active{% endif %}" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" {% if current_controller == 'task' %} aria-expanded="true" {% else %} aria-expanded="false" {% endif %}>
-                    <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#task_sybol"/></svg>
-                    Zadania
-                </button>
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
-                <div class="collapse {% if current_controller == 'task' %}show{% endif %}" id="dashboard-collapse">
-                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                        <li><a href="{{ path('app_task_new') }}" class="d-inline-flex text-decoration-none rounded">Nowe zadanie</a></li>
-                        <li><a href="{{ path('app_task_show_list') }}" class="d-inline-flex text-decoration-none rounded">Lista zadań</a></li>
+        <div class="d-flex flex-column flex-shrink-0 p-3" id="left_menu">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                <img class="bi pe-none me-2" src="{{ asset('/img/app_logo.png') }}" width="28" height="28" alt="ToDo App">
+                <span class="fs-4">ToDo :)</span>
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="{{ path('home_index') }}" class="nav-link" aria-current="page">
+                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"/></svg>
+                        Główna
+                    </a>
+                </li>
+                <li>
+                    <button class="nav-link collapsed  {% if current_controller == 'task' %}active{% endif %}" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" {% if current_controller == 'task' %} aria-expanded="true" {% else %} aria-expanded="false" {% endif %}>
+                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#task_sybol"/></svg>
+                        Zadania
+                    </button>
 
-                        <ul class="list-unstyled ms-1">
-                            {% for category in taskCategories %}
-                                <li><a href="{{ path('app_task_show_list') }}/{{ category.id }}" class="d-inline-flex text-decoration-none rounded"> - {{ category.name }} ({{ category.taskCount }})</a></li>
-                            {% endfor %}
+                    <div class="collapse {% if current_controller == 'task' %}show{% endif %}" id="dashboard-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="{{ path('app_task_new') }}" class="d-inline-flex text-decoration-none rounded">Nowe zadanie</a></li>
+                            <li><a href="{{ path('app_task_show_list') }}" class="d-inline-flex text-decoration-none rounded">Lista zadań</a></li>
+
+                            <ul class="list-unstyled ms-1">
+                                {% for category in taskCategories %}
+                                    <li><a href="{{ path('app_task_show_list') }}/{{ category.id }}" class="d-inline-flex text-decoration-none rounded"> - {{ category.name }} ({{ category.taskCount }})</a></li>
+                                {% endfor %}
+                            </ul>
                         </ul>
-                    </ul>
-                </div>
+                    </div>
 
-            </li>
-            <li>
-                <a href="#" class="nav-link">
-                    <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#table"/></svg>
-                    Orders
-                </a>
-            </li>
-            <li>
-                <a href="{{ path('app_products_list') }}" class="nav-link">
-                    <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
-                    Products
-                </a>
-            </li>
-            <li>
-                <a href="#" class="nav-link">
-                    <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#people-circle"/></svg>
-                    Customers
-                </a>
-            </li>
+                </li>
+                <li>
+                    <a href="#" class="nav-link">
+                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#table"/></svg>
+                        Orders
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('app_products_list') }}" class="nav-link">
+                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+                        Products
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link">
+                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#people-circle"/></svg>
+                        Customers
+                    </a>
+                </li>
 
-            {% for link, text in cms_menu %}
-            <li>
-                <a href="{{ path(link) }}" class="nav-link">
-                    <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#people-circle"/></svg>
-                    {{ text }}
-                </a>
-            </li>
-            {% endfor %}
+                {% for link, text in cms_menu %}
+                <li>
+                    <a href="{{ path(link) }}" class="nav-link">
+                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#text-page"/></svg>
+                        {{ text }}
+                    </a>
+                </li>
+                {% endfor %}
 
-
-
-        </ul>
-        <hr>
-        <div class="dropdown">
-            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            </ul>
+            <hr>
+            <div class="dropdown">
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle ms-3" data-bs-toggle="dropdown" aria-expanded="false">
                     <strong>{{ app.user.name }}
-                        {% if is_granted('ROLE_SUPER_ADMIN') %}
-                            - <span class="text-danger">SuperAdmin</span>
-                        {% elseif is_granted('ROLE_ADMIN') %}
-                            - <span class="text-danger">Admin</span>
-                        {% elseif is_granted('ROLE_MODER') %}
-                            - <span class="text-success">Moder</span>
-                        {% endif %}</strong>
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        - <span class="text-danger">SuperAdmin</span>
+                    {% elseif is_granted('ROLE_ADMIN') %}
+                        - <span class="text-danger">Admin</span>
+                    {% elseif is_granted('ROLE_MODER') %}
+                        - <span class="text-success">Moder</span>
+                    {% endif %}</strong>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                     <li><a class="dropdown-item" href="{{ path('app_task_new') }}">Nowe zadanie</a></li>
@@ -235,12 +238,12 @@
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="{{ path('app_logout') }}">Wyloguj się</a></li>
                 </ul>
-            {% endif %}
+            </div>
         </div>
-    </div>
 
+    {% endif %}
 
-    <div class="d-flex flex-column flex-fill align-items-stretch flex-shrink-0 overflow-auto" style="background: #f2f5f7;">
+    <div class="d-flex flex-column flex-fill align-items-stretch flex-shrink-0 overflow-auto h-100" style="background: #f2f5f7;">
 
     {% block body %}
 
@@ -265,4 +268,3 @@
 {% endblock %}
 </body>
 </html>
-

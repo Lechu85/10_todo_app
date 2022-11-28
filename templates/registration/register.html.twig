@@ -4,19 +4,56 @@
 
 {% block body %}
     {{ parent() }}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
 
-    <h1>Register</h1>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+    <div class="w-100 h-100 d-flex" style="background: #162234;">
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+        <div class="form-register m-auto" style="position: relative;">
+
+            <div class="m-auto text-white p-3 text-center">
+                <img class="bi pe-none me-2" src="{{ asset('/img/app_logo.png') }}" width="28" height="28" alt="ToDo App">
+                <span class="fs-4">ToDo :)</span>
+            </div>
+
+            {% for flash_error in app.flashes('verify_email_error') %}
+                <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+            {% endfor %}
+
+            <div class="card p-3 shadow">
+
+                <h1 class="h4 mb-3 font-weight-normal">Zarejestruj się</h1>
+
+                {% if app.user %}
+                    <div class="mb-3">
+                        Jesteś zalogowany jako {{ app.user.userIdentifier }}.<br>
+                        Aby zarejestrować się ponownie, <a href="{{ path('app_logout') }}">Wyloguj się</a>
+                    </div>
+
+                {% else %}
+                    {{ form_start(registrationForm) }}
+
+                        {{ form_row(registrationForm.name) }}
+
+                        {{ form_row(registrationForm.email) }}
+
+                        {{ form_row(registrationForm.plainPassword) }}
+
+                        {{form_row(registrationForm.agreeTerms) }}
+
+                        <button class="btn btn-primary" type="submit">
+                            Zarejestruj się
+                        </button>
+                    {{ form_end(registrationForm) }}
+
+                {% endif %}
+            </div>
+
+            <div class="m-auto text-white p-3" style="color: #9ea9b4; text-align: center;">
+                Masz już konto?
+                <a href="{{ path('app_login') }}" class="special-link">Zaloguj się</a>
+            </div>
+
+        </div>
+
+    </div>
 {% endblock %}

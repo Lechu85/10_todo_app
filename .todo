@@ -3,3 +3,25 @@
 3. Odbieranie poczty imap
 4. Konfig dokończyć.
 . Paginator zadań
+
+
+
+
+Jako użytkownik mogę się zarejestrować (e-mail i hasło). Po rejestracji przychodzi na e-mail link aktywacyjny.
+Jako użytkownik mogę się zalogować.
+
+Jako użytkownik mogę dodać zadanie w postaci tekstu do listy TO DO
+
+Jako użytkownik mogę zobaczyć listę wszystkich dodanych zadań.
+Jako użytkownik mogę odznaczyć zadanie za zakończone które znika z listy po upływanie kilku sekund od kliknięcia.
+Jako użytkownik mogę edytować treść każdego z zadań
+Jako użytkownik mogę usunąć każde zadanie)
+Jako użytkownik każdego dnia chcę otrzymywać informację mailową z liczbą zamkniętych zadań ("Brawo! udało Ci się zrobić dzisiaj X zadań). Pod tym powinna sie znajdować lista zamkniętych zadań. E-mail wychodzi tylko jeśli są jakieś zadanie.
+Jako użytkownik mogę zobaczyć archiwum zakończonych zadań (stronicowane, posortowane odwrotnie chronologicznie po dacie zamknięcia, na samym początku ostatnio zamknięte)
+
+Dodatkowe części:
+1. Włączmy easy admin bundle i zróbmy za jego pomocę panel administracyjny użytkowników (dostępny tylko dla userów z rolą administratora)
+2. Jako użytkownik mogę oznaczyć zadanie "tagiem projektu" np. #test. Wszystkie aktywne (= takie z istniejącymi otwartymi zadaniami) projekty pojawiają się nad listą. Mogę kliknąć na dowolny tag co spowoduje przefiltrowanie. Tagi zamieniane są na labele
+listy i pokazanie tylko tych zadań opatrzonych tym tagiem.
+3. Jako użytkownik mogę rozpocząć treść zadania od jednego do trzech wykrzyników co zdefiniuje priorytet zadania. Zadania z wyższym priorytetem pojawia się na liście wyżej od tych z niższym. Wykrzyniki zamieniane są na "labele": [Medium] [High] [ Urgent] Zadanie bez wykrzynika jest traktowane poniżej Medium.
+4. Testy automatyczne.

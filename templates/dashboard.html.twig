@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+    <div class="card m-auto p-2" style="min-width: 500px; min-height: 280px;">
+        <strong>
+            Witaj
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <span class="text-danger">Super Administratorze</span>
+            {% elseif is_granted('ROLE_ADMIN') %}
+                <span class="text-danger">Administratorze</span>
+            {% elseif is_granted('ROLE_MODER') %}
+                <span class="text-success">Moderatorze</span>
+            {% elseif is_granted('ROLE_USER') %}
+                Użytkowniku
+            {% endif %}
+        </strong>
+    </div>
+{% endblock %}
+
+
+
