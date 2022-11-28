@@ -187,6 +187,10 @@ class TaskController extends AbstractController
 	{
 		$searchBadgeList = '';
 
+		$perPage = $request->query->getInt('per-page', $this->defaultPerPage);
+		$sort = $request->query->get('sort') ?? $this->defaultSort;
+
+
 		$formTaskSearch = $this->createForm(TaskSearchType::class, null, ['action' => $this->generateUrl('app_task_search'), 'method' => 'GET']);
 		$formTaskSearch->handleRequest($request);
 
@@ -198,7 +202,13 @@ class TaskController extends AbstractController
 		}
 
 		return $this->renderForm('task/list.html.twig', [
-			'tasks' => $tasks ?? '',
+			'tasksPager' => $tasks ?? '',
+			'haveToPaginate' => false,
+
+			'sort' => $sort,
+			'per_page' => $perPage,
+
+
 			'prioryty_array' => $this->prioryty_array,
 			'prioryty_bg_array' => $this->prioryty_bg_array,
 			'search_phraze' => $request->get('task_search')['title'] ??  '',
@@ -261,8 +271,11 @@ class TaskController extends AbstractController
 
 
 	#[Route('/tasks/{cat}', name: 'app_task_show_list_from_cat')]
-	public function showAllFromCat(int $cat): Response
+	public function showAllFromCat(Request $request, int $cat): Response
 	{
+		$perPage = $request->query->getInt('per-page', $this->defaultPerPage);
+		$sort = $request->query->get('sort') ?? $this->defaultSort;
+
 		$tasks = $this->taskRepository->findBy(['Category' => $cat]);
 
 		$formTaskSearch = $this->createForm(TaskSearchType::class, null, [
@@ -272,7 +285,12 @@ class TaskController extends AbstractController
 
 		//info tytmczasoro renderForm
 		return $this->renderForm('task/list.html.twig', [
-			'tasks' => $tasks,
+			'tasksPager' => $tasks,
+			'haveToPaginate' => false,
+
+			'sort' => $sort,
+			'per_page' => $perPage,
+
 			'prioryty_array' => $this->prioryty_array,
 			'prioryty_bg_array' => $this->prioryty_bg_array,
 			'category_id' => $cat,
