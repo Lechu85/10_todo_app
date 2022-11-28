@@ -25,10 +25,8 @@ class TwigEventSubscriber implements EventSubscriberInterface
 		$this->twig = $twig;
 
 		$this->cms_menu = [
-			'home_index' => 'Główna',
-			'app_task_show_list' => 'Inne',
-			'totolotek_index' => 'Losuj',
-			//'link3' => 'Dział 3'
+			'totolotek_index' => 'Dział 1',
+			'home_index' => 'Dział 2',
 		];
 
 		//todo as admin array_push(); - dolaczyc linki adminas

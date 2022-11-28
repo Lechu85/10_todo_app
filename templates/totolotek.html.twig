@@ -5,8 +5,19 @@
 {% block body %}
     {{ parent() }}
 
-    <h2 class="mt-4">Wylosowano liczbę: {{ number }}</h2>
+    <div class="w-100 h-100 d-flex" style="background: #162234;">
 
+        <div class="blank-page m-auto" style="position: relative; top: -20px;">
+
+            <div class="card p-3 shadow">
+                <p class="mb-3">Wylosowano liczbę: <strong>{{ number }}</strong></p>
+
+            </div>
+
+
+        </div>
+
+    </div>
 
 {% endblock %}
 

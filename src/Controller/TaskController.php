@@ -37,7 +37,7 @@ class TaskController extends AbstractController
 		$this->taskRepository = $entityManager->getRepository(Task::class);
 
 		//domyslna ilosc zadan na jednej stronie
-		$this->defaultPerPage = 20;
+		$this->defaultPerPage = 25;
 		$this->defaultSort = 'id DESC';
 
 		$twig->addGlobal('current_controller', 'task');

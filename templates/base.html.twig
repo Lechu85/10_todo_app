@@ -195,24 +195,26 @@
                     </div>
 
                 </li>
-                <li>
+                {#<li>
                     <a href="#" class="nav-link">
                         <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#table"/></svg>
                         Orders
                     </a>
-                </li>
+                </li> #}
                 <li>
                     <a href="{{ path('app_products_list') }}" class="nav-link">
                         <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
                         Products
                     </a>
                 </li>
+                {% if is_granted('ROLE_ADMIN') %}
                 <li>
                     <a href="#" class="nav-link">
                         <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#people-circle"/></svg>
-                        Customers
+                        Users
                     </a>
                 </li>
+                {% endif %}
 
                 {% for link, text in cms_menu %}
                 <li>
