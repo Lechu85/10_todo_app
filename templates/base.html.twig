@@ -186,7 +186,14 @@
                                 {% for category in taskCategories %}
                                     <li><a href="{{ path('app_task_show_list') }}/{{ category.id }}" class="d-inline-flex text-decoration-none rounded"> - {{ category.name }} ({{ category.taskCount }})</a></li>
                                 {% endfor %}
-                                <li><a href="{{ path('app_task_show_list') }}" class="d-inline-flex text-decoration-none rounded"> - Zamknięte zadania</a></li>
+                                <li><a href="{{ path('app_task_search') }}?task_search%5Bstatus%5D%5B%5D=2&task_search%5Bstatus%5D%5B%5D=3&task_search%5Bstatus%5D%5B%5D=4" class="d-inline-flex text-decoration-none rounded"> - Zamknięte zadania</a></li>
+
+
+
+
+
+
+
 
                             </ul>
 

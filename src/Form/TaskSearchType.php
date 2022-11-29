@@ -43,10 +43,12 @@ class TaskSearchType extends AbstractType
 				'label' => 'Opis zadania'
             ])
             ->add('status', TaskStatusType::class, [
+				'multiple' => true,
 				'placeholder' => ' : Wszystkie : ',
 	            'attr' => [
 		            'class' => 'w-50'
 	            ],
+	            'help' => 'Przytrzymaj klawisz CTRL aby zaznaczyć kilka pozycji.'
             ])
 
 	        ->add('createdAt', DateTimeFromToType::class, [

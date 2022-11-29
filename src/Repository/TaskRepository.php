@@ -165,34 +165,49 @@ class TaskRepository extends ServiceEntityRepository
 
 			if (!empty($fieldValue) && $fieldName !== '_token') {
 
-				if (is_array($fieldValue)) {//pole DateTimeFromToType
+				if ($fieldName == 'dueDate' || $fieldName == 'createdAt' || $fieldName == 'doneAt') {
+					//if (is_array($fieldValue)) {//pole DateTimeFromToType
 
 					if (!empty($fieldValue['From']) && !empty($fieldValue['To'])) {
-						$qb
-							->andWhere('t.' . $fieldName . ' <= :' . $fieldName . 'From AND t.' . $fieldName . ' >= :' . $fieldName . 'To')
+						$qb->andWhere('t.' . $fieldName . ' <= :' . $fieldName . 'From AND t.' . $fieldName . ' >= :' . $fieldName . 'To')
 							->setParameter($fieldName . 'From', $fieldValue['From'])
 							->setParameter($fieldName . 'To', $fieldValue['To']);;
 
 					} else if (!empty($fieldValue['To'])) {
-						$qb
-							->andWhere('t.' . $fieldName . ' >= :' . $fieldName . 'To')
+						$qb->andWhere('t.' . $fieldName . ' >= :' . $fieldName . 'To')
 							->setParameter($fieldName . 'To', $fieldValue['To']);
 
 					} else if (!empty($fieldValue['From'])) {
-						$qb
-							->andWhere('t.' . $fieldName . ' <= :' . $fieldName . 'From')
+						$qb->andWhere('t.' . $fieldName . ' <= :' . $fieldName . 'From')
 							->setParameter($fieldName . 'From', $fieldValue['From']);
 					}
 
+				} else if ($fieldName == 'status') {//status wysyłamy jako tablice
+
+					$andwhere = '';
+					if (is_array($fieldValue) && count($fieldValue)>0) {
+						foreach ($fieldValue as $fieldValueFromArray) {
+							$andwhere .= 't.' . $fieldName . ' LIKE :' . $fieldName.$fieldValueFromArray.' OR ';
+
+							//czy mozna najpierw parametr, pozniej kod?
+							$qb->setParameter($fieldName.$fieldValueFromArray, '%' . $fieldValueFromArray . '%');
+						}
+
+						$qb->andWhere(rtrim($andwhere, 'OR '));
+
+					}
+
+
+
+
+
 				} else if ((isset($search_in_description) && $search_in_description == 1) && $fieldName === 'title' ) {
 					//todo dla zaawansowanej wyszukiwarki, chowamy pole +Opis w głównej cześci
-					$qb
-						->andWhere('t.title LIKE :title OR t.description LIKE :title')
+					$qb->andWhere('t.title LIKE :title OR t.description LIKE :title')
 						->setParameter('title', '%'.$fieldValue.'%');
 
 				} else { //Pozostałe pola
-					$qb
-						->andWhere('t.'.$fieldName.' LIKE :'.$fieldName)
+					$qb->andWhere('t.'.$fieldName.' LIKE :'.$fieldName)
 						->setParameter($fieldName, '%'.$fieldValue.'%');
 
 				}
@@ -257,6 +272,8 @@ class TaskRepository extends ServiceEntityRepository
 				}
 
 			//zwykłe pole
+			} else if ($fieldName == 'status') {//status wysyłamy jako tablice
+				//
 			} else {
 
 				if (strlen($fieldValue) > 15) {

@@ -190,11 +190,10 @@ class TaskController extends AbstractController
 		$perPage = $request->query->getInt('per-page', $this->defaultPerPage);
 		$sort = $request->query->get('sort') ?? $this->defaultSort;
 
-
 		$formTaskSearch = $this->createForm(TaskSearchType::class, null, ['action' => $this->generateUrl('app_task_search'), 'method' => 'GET']);
 		$formTaskSearch->handleRequest($request);
 
-		if ($formTaskSearch->isSubmitted() && $formTaskSearch->isValid()) {
+		if ($formTaskSearch->isSubmitted()) {// && $formTaskSearch->isValid()
 			$data = $formTaskSearch->getData(); //question - sprawdzic $data
 			$searchBadgeList = $this->taskRepository->generateSearchBadge($request);
 
