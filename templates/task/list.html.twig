@@ -1,6 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TaskController!{% endblock %}
+{% block title %}ToDo App - Tasks{% endblock %}
+
+    {% block stylesheets %}
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('tasks') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('tasks') }}
+    {% endblock %}
+
 
 {% block body %}
 
@@ -197,7 +210,7 @@
     /* document.querySelector('.confirm-delete').addEventListener('click', event => {
         return confirm('Are you sure to delete?');
     }); */
-
+/*
     {# info ukrywamy pole checkbox +Opis dla zaawansowanej wyszukiwarki #}
 
     const myCollapsible = document.getElementById('collapseAdvancedSearch')
@@ -240,7 +253,7 @@
         doGroupAction(event, 'done')
     });
 
-
+*/
 
 
 

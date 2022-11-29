@@ -144,7 +144,7 @@ class TaskRepository extends ServiceEntityRepository
 	public function findTasksFromRequest(Request $request): array
 	{
 
-		$searchPhraze = $request->get('task_search')['title']; //info this input name is array
+		$searchPhraze = $request->get('task_search')['title'] ?? ''; //info this input name is array
 		$taskSearchRequest = $request->get('task_search');
 		$search_in_description = $request->get('search_in_description');
 

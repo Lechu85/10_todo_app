@@ -11,7 +11,9 @@ import 'bootstrap';
 
 //import { Tooltip, Toast, Popover } from 'bootstrap'
 
-const getNiceMessage = require('./js/get_nice_message')
+//const getNiceMessage = require('./js/components/get_nice_message')
+
+import getNiceMessage from './js/components/get_nice_message';
 
 //import $ from 'jquery' (package name)
 //jeżeli nie ma ./ albo ../ to jest moduł, inaczej szuka relatywnioe to tego pliku

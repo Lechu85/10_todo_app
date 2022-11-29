@@ -4,13 +4,12 @@
 
 @import 'helper/variables';
 
-@import '~bootstrap/dist/css/bootstrap.css';
-
 @import '~bootstrap';
 
 //nie dodajesz podkreślnika i rozszerzenia do nazwy, to dodatek sass :)
 @import './layout/header';
 @import './layout/footer';
+@import './layout/menu';
 
 @import './components/form';
 @import './components/login';
