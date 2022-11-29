@@ -34,7 +34,7 @@ class AppFixtures extends Fixture
 	    $manager->persist($user);
 
 	    $user = new User();
-		$user->setEmail('leszek@todo_app.pl');
+		$user->setEmail('leszek@todoapp.pl');
 		$user->setPassword($this->passwordHasher->hashPassword($user,'test123'));
 	    $user->setName('Leszek ');
 	    $user->setRoles(["ROLE_ADMIN"]);
@@ -92,7 +92,7 @@ class AppFixtures extends Fixture
 
 
 	    $user = new User();
-	    $user->setEmail('dawid@todo_app.pl');
+	    $user->setEmail('dawid@todoapp.pl');
 	    $user->setPassword($this->passwordHasher->hashPassword($user,'test123'));
 	    $user->setName('Dawid');
 	    $user->setRoles([]);
@@ -102,7 +102,7 @@ class AppFixtures extends Fixture
 
 
 	    $user = new User();
-	    $user->setEmail('andrzej@todo_app.pl');
+	    $user->setEmail('andrzej@todoapp.pl');
 	    $user->setPassword($this->passwordHasher->hashPassword($user,'test123'));
 	    $user->setName('Andrzej');
 	    $user->setRoles(["ROLE_USER"]);
