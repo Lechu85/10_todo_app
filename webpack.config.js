@@ -22,8 +22,10 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .addEntry('tasks', './assets/js/tasks.js')
-    //.addEntry('admin_article_form', './assets/js/admin_srticle_form.js')
-    //dla admina osobny zrobimy
+    //.addEntry('admin_article_form', './assets/js/admin_srticle_form.js') //dla admina osobny zrobimy
+    .addStyleEntry('login_and_register', './assets/styles/login_and_register.scss')
+    //info osobne stytle dla loginu
+    //.addStyleEntry('account', './assets/styles/plik.scss')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
@@ -33,8 +35,8 @@ Encore
 
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app
-    //.enableSingleRuntimeChunk()
-    .disableSingleRuntimeChunk()
+    .enableSingleRuntimeChunk()
+    //.disableSingleRuntimeChunk()
     /*
      * FEATURE CONFIG
      *

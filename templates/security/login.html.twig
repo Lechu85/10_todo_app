@@ -1,9 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %} {{ parent() }} - Zaloguj się{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('login_and_register') }}
+{% endblock %}
 
 {# todo nie poamiętam hasła  #}
-
 {% block body %}
 
     {{ parent() }}

@@ -2,6 +2,11 @@
 
 {% block title %}{{ parent() }} {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('login_and_register') }}
+{% endblock %}
+
 {% block body %}
 
     <div class="w-100 h-100 d-flex" style="background: #162234;">
