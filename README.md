@@ -73,6 +73,21 @@ Have fun!
 
 
 
+
+
+## Webpack setup: 
+```
+yarn install
+```
+
+And for watching changes use: 
+
+```
+yarn watch
+```
+
+
+
 ## Have Ideas, Feedback or an Issue?
 
 If you have suggestions or questions, let me know. Please feel free to

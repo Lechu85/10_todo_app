@@ -1,0 +1,23 @@
+// Jeżeli chcesz zaimportować pliki css z modułu webpack trzeba dodać na poczatku ~ wtedy importujesz z tego moduły pliki.
+// W encore jest wbudowana unkcja któa pozwala skrócic zapis do poniższego pobioera ściezke zz parametru main: w pliku bootstrap/packages.json jesttam też klucz styles i sass. wtedyu tylko podajeszz tylda i nazwa pakietu i to wszystko.
+// Jak dodajesz np fontawesome sprawdzasz paczke w katalogu node_modules/font_awesome/packages.json i tam jak jest klucz style to nie musimy podawać całej ścieżki, tylko ~font_awesome i to wystarczy do zaimportowania
+
+@import 'helper/variables';
+
+@import '~bootstrap/dist/css/bootstrap.css';
+
+@import '~bootstrap';
+
+//nie dodajesz podkreślnika i rozszerzenia do nazwy, to dodatek sass :)
+@import './layout/header';
+@import './layout/footer';
+
+@import './components/form';
+@import './components/login';
+@import './components/profile';
+@import './components/tasks';
+
+//background: url(../../images/ico_action.svg);
+
+
+

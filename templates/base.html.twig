@@ -8,11 +8,11 @@
     <meta name="generator" content="Hugo 0.104.2">
     <title>{% block title %}ToTo App :) {% endblock %}</title>
 
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('img/favicon/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/favicon/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ asset('img/favicon/site.webmanifest') }}">
-    <link rel="mask-icon" href="{{ asset('img/favicon/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('build/images/favicon/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('build/images/favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('build/images/favicon/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('build/images/favicon/site.webmanifest') }}">
+    <link rel="mask-icon" href="{{ asset('build/images/favicon/safari-pinned-tab.svg') }}" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
 
@@ -20,14 +20,11 @@
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
 
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
         <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
     {% endblock %}
 
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
     {% endblock %}
 
 
@@ -160,7 +157,7 @@
 
         <div class="d-flex flex-column flex-shrink-0 p-3" id="left_menu">
             <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                <img class="bi pe-none me-2" src="{{ asset('/img/app_logo.png') }}" width="28" height="28" alt="ToDo App">
+                <img class="bi pe-none me-2" src="{{ asset('build/images/app_logo.png') }}" width="28" height="28" alt="ToDo App">
                 <span class="fs-4">ToDo :)</span>
             </a>
             <hr>

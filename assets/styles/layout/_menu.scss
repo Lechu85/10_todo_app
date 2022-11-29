@@ -1,0 +1,75 @@
+
+.dropdown-toggle { outline: 0; }
+
+#left_menu {
+	background: #132236;
+	width: 280px;
+	color: #9ea9b4;
+
+}
+
+#left_menu .btn-toggle-nav button,
+#left_menu .btn-toggle-nav a {
+	padding: .1875rem .5rem;
+	margin-top: .125rem;
+	margin-left: 1.25rem;
+	color: #9ea9b4 !important;
+}
+
+#left_menu button,
+#left_menu a {
+	color: #9ea9b4;
+}
+
+/* moj wlasny link :) */
+.special-link {
+	color: #00bac7;
+}
+
+.special-link:hover {
+	color: #458ef7;
+}
+
+#left_menu button:hover,
+#left_menu button:focus,
+#left_menu button.active,
+#left_menu a:hover,
+#left_menu a:focus,
+#left_menu a.active{
+	color: #00bac7 !important;
+}
+
+
+#left_menu .nav-link.active {
+	background: #1b3447;
+}
+
+#left_menu .btn-toggle-nav a:hover,
+#left_menu .btn-toggle-nav a:focus {
+	background-color: #1b3447;
+
+}
+
+.scrollarea {
+	overflow-y: auto;
+}
+
+
+
+/* LOGOWQANIE*/
+
+
+
+/*
+body {
+    display: flex;
+    align-items: center;
+}
+*/
+.blank-page,
+.form-register,
+.form-signin {
+	max-width: 450px;
+	width: 98%;
+	padding: 15px;
+}
