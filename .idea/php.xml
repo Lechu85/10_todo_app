@@ -122,6 +122,10 @@
       <path value="$PROJECT_DIR$/vendor/pagerfanta/core" />
       <path value="$PROJECT_DIR$/vendor/babdev/pagerfanta-bundle" />
       <path value="$PROJECT_DIR$/vendor/pagerfanta/twig" />
+      <path value="$PROJECT_DIR$/vendor/fakerphp/faker" />
+      <path value="$PROJECT_DIR$/vendor/zenstruck/foundry" />
+      <path value="$PROJECT_DIR$/vendor/zenstruck/callback" />
+      <path value="$PROJECT_DIR$/vendor/zenstruck/assert" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1">

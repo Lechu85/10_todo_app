@@ -125,6 +125,10 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/pagerfanta/core" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/babdev/pagerfanta-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/pagerfanta/twig" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/fakerphp/faker" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/zenstruck/foundry" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/zenstruck/callback" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/zenstruck/assert" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
