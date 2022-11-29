@@ -33,6 +33,7 @@ class AppFixtures extends Fixture
 	    $user->agreeToTerms();
 	    $manager->persist($user);
 
+
 	    $user = new User();
 		$user->setEmail('leszek@todoapp.pl');
 		$user->setPassword($this->passwordHasher->hashPassword($user,'test123'));
@@ -42,11 +43,13 @@ class AppFixtures extends Fixture
 		$user->agreeToTerms();
 	    $manager->persist($user);
 
+
 		$category = new TaskCategory();
 		$category->setName('Zadania firmowe');
 		$category->setDescription('Główne zadania do wykonania w pracy.');
 		$category->setTaskCount(30);
 		$manager->persist($category);
+
 
 	    // create 20 products! Bam!
 	    for ($i = 0; $i < 30; $i++) {
@@ -63,11 +66,13 @@ class AppFixtures extends Fixture
 		    $manager->persist($task);
 	    }
 
+
 	    $category = new TaskCategory();
 	    $category->setName('Zakupy do domu');
 		$category->setDescription('Zadania do wykonania po pracy');
 		$category->setTaskCount(8);
 	    $manager->persist($category);
+
 
 	    // create 20 products! Bam!
 	    for ($i = 0; $i < 8; $i++) {
@@ -83,6 +88,7 @@ class AppFixtures extends Fixture
 
 		    $manager->persist($task);
 	    }
+
 
 	    $category = new TaskCategory();
 	    $category->setName('Załatwić po pracy');
