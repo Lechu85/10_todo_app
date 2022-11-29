@@ -178,10 +178,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->agreedTermsAt;
     }
 
-    public function setAgreedTermsAt(?\DateTimeInterface $agreedTermsAt): self
+	//?\DateTimeInterface $agreedTermsAt
+    public function agreeToTerms(): self
     {
-        $this->agreedTermsAt = $agreedTermsAt;
-
+	    $this->agreedTermsAt = new \DateTime();
         return $this;
     }
 }
