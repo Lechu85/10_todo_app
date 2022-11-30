@@ -1,6 +1,7 @@
 <?php
 namespace App\Config;
 
+
 enum TaskStatus: int
 {
 	case Nowe = 1;
