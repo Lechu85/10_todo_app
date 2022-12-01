@@ -36,7 +36,7 @@
             </div>
         </div>
 
-        {{ include('_search_form.html.twig') }}
+        {{ include('task/_search_form.html.twig') }}
 
         {% if tasksPager|length == 0 %}
 
@@ -86,14 +86,15 @@
             </form>
 
 
-            <div class="mt-2 border-top pt-2 ps-2">
-
-                    <button type="submit" id="btn_group_action_delete" class="btn btn-outline-danger confirmDelete">Usuń</button>
-                    <button type="submit" id="btn_group_action_done" class="btn btn-outline-success">Zamknij</button>
-
-            </div>
-
             <form action="{{ path('app_task_group_action') }}" method="post">
+
+                <div class="mt-2 border-top pt-2 ps-2">
+
+                        <button type="submit" id="btn_group_action_delete" class="btn btn-outline-danger confirmDelete">Usuń</button>
+                        <button type="submit" id="btn_group_action_done" class="btn btn-outline-success">Zamknij</button>
+
+                </div>
+
                 <input type="hidden" name="group_action_name" id="group_action_name" value="">
 
                       {#  onclick="zaznacz_pozycje('frm', $(this).is(':checked'), 'zaznacz_mnie[]');#}

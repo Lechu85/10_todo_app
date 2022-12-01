@@ -291,7 +291,7 @@ class TaskRepository extends ServiceEntityRepository
 	 * Metoda przelicza ilości zadań w poszczególnych kategoriach i uaktualnia taskCount
 	 * @return bool
 	 */
-	public function countTasksInCategory(): bool
+	public function countTasksInCategory(): void
 	{
 
 		$query = $this->entityManager->createQuery('
@@ -304,7 +304,9 @@ class TaskRepository extends ServiceEntityRepository
 
 		$query->execute();
 
-		return true;
+		//return $this->doctrine->getRepository(Auto::class)
+		//	->count(['dealer' => $dealerId]);
+
 
 	}
 }

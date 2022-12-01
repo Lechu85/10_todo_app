@@ -1,30 +1,45 @@
 
-body {
-	height: 100%;
-	background: #fff;
+
+/* this is needed to make the content scrollable on larger screens */
+@media (min-width: 576px) {
+	.h-sm-100 {
+		height: 100%;
+	}
 }
+
+
+body {
+	min-height: 100vh;
+	//min-height: -webkit-fill-available;
+
+	main {
+		min-height: 100vh;
+	}
+}
+
+
+/*
+
 
 .action_ico {
 	height: 18px;
 	width: 18px;
 }
 
-body {
-	min-height: 100vh;
-	min-height: -webkit-fill-available;
-}
+
 
 html {
-	height: -webkit-fill-available;
+	//height: -webkit-fill-available;
 }
 
 main {
-	height: 100vh;
-	height: -webkit-fill-available;
-	max-height: 100vh;
+	//height: 100vh;
+	//height: -webkit-fill-available;
+	//max-height: 100vh;
 	overflow-x: auto;
 	overflow-y: hidden;
 }
 
 //.form-signin { background: url(../../images/ico_action.svg); }
 
+*/

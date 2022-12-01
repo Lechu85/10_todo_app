@@ -2,13 +2,39 @@
 
 {% block body %}
 
-    <div class="mx-auto card my-2" style=" width: 100%; max-width: 850px;">
+    <div class="task-edit-form mx-auto card my-2">
         <div class="card-body">
-            <h5 class="card-title border-bottom pb-2 mb-3">Edycja zadania ID: {{ id }}</h5>
 
-            {{ form_start(form) }}
-            {{ form_widget(form) }}
-            {{ form_end(form) }}
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Edycja zadania ID: <strong>{{ id }}</strong></button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="details-tab" data-bs-toggle="tab" data-bs-target="#details-tab-pane" type="button" role="tab" aria-controls="details-tab-pane" aria-selected="false">Szczegóły</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="notes-tab" data-bs-toggle="tab" data-bs-target="#notes-tab-pane" type="button" role="tab" aria-controls="notes-tab-pane" aria-selected="false">Notatki</button>
+                </li>
+
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="email-tab" data-bs-toggle="tab" data-bs-target="#email-tab-pane" type="button" role="tab" aria-controls="email-tab-pane" aria-selected="false">Poczta</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="p-2 pt-3  tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                    {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    {{ form_end(form) }}
+                </div>
+                <div class="p-2 pt-4 tab-pane fade" id="notes-tab-pane" role="tabpanel" aria-labelledby="notes-tab" tabindex="0">
+                    Wkrótce notatki do zadania.</div>
+                <div class="p-2 pt-4 tab-pane fade" id="details-tab-pane" role="tabpanel" aria-labelledby="details-tab" tabindex="0">
+                    Wkrótce szczegóły zadania.<br>Powiadomienia, tagi</div>
+                <div class="tp-2 ab-pane fade" id="email-tab-pane" role="tabpanel" aria-labelledby="email-tab" tabindex="0">
+                    Wkrótce emaile do zadania</div>
+            </div>
+
+
         </div>
     </div>
 
