@@ -1,7 +1,7 @@
 <?php
 namespace App\Config;
 
-enum TaskStatus: int
+enum TaskStatus:int implements TaskStatusInterface
 {
 	case Nowe = 1;
 	case Odczytane = 2;
@@ -14,4 +14,24 @@ enum TaskStatus: int
 	case Anulowane = 9;
 	case Wznowione = 10;
 	case Odlozone = 11;
+
+	public function getName():string
+	{
+
+		return match ($this) {
+			self::Nowe => 'Nowe',
+			self::Odczytane => 'Odczytane',
+			self::Oczekiwanie_na_odpowiedz => 'Oczekiwanie na odpowiedź',
+			self::Oczekiwanie_na_dostawe => 'Oczekiwanie na dostawę',
+			self::W_przygotowaniu => 'W przygotowaniu',
+			self::Finalizacja => 'Finalizacja',
+			self::Zakonczone => 'Zakonczone',
+			self::Zakonczone_czesciowo => 'Zakończone częściowo',
+			self::Anulowane => 'Anulowane',
+			self::Wznowione => 'Wznowione',
+			self::Odlozone => 'Odlozone',
+
+		};
+	}
+
 }
