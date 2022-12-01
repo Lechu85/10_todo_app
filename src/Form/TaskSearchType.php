@@ -4,9 +4,9 @@ namespace App\Form; //question dlaczego było tutaj App\Form ?
 
 use App\Entity\TaskCategory;
 use App\Entity\User;
-use Form\Type\DateTimeFromToType;
-use Form\Type\TaskPriorytyType;
-use Form\Type\TaskStatusType;
+use App\Form\Type\DateTimeFromToType;
+use App\Form\Type\TaskPriorytyType;
+use App\Form\Type\TaskStatusType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;

@@ -122,7 +122,7 @@
                             <td>
                                 <a href="{{ path('app_task_show', {'id': task.id }) }}"><b>{{ task.title }}</b></a>
                                 {% if task.prioryty is not empty and task.prioryty != 0 %}
-                                    <span class="badge text-bg-{{ prioryty_bg_array[task.prioryty] }}">{{ prioryty_array[task.prioryty] }}</span>
+                                    <span class="badge text-bg-{{ priorityBgArray[task.prioryty] }}">{{ priorityArray[task.prioryty] }}</span>
                                 {% endif %}
                             </td>
                             <td>{{ task.dueDate|date("Y-m-d") }}</td>

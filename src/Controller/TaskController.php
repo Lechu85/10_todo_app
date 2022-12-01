@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Form\TaskType;
+use App\Repository\TaskRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -22,35 +23,29 @@ use Twig\Environment;
 
 class TaskController extends AbstractController
 {
-
 	private EntityManagerInterface $entityManager;
-	private $taskRepository;
-	public array $prioryty_array; //lista priorytetow
-	public array $prioryty_bg_array;
-	private int $defaultPerPage;
-	private string $defaultSort;
+	private TaskRepository $taskRepository;
+	public array $priorityArray;                    //lista priorytetow
+	public array $priorityBgArray;
+	private int $defaultPerPage = 25;               //domyślna ilość zadań na stronie
+	private string $defaultSort = 'id DESC';        //domyślne sortowanie
 
 	public function __construct(EntityManagerInterface $entityManager, Environment $twig)
 	{
-
 		$this->entityManager = $entityManager;
 		$this->taskRepository = $entityManager->getRepository(Task::class);
-
-		//domyslna ilosc zadan na jednej stronie
-		$this->defaultPerPage = 25;
-		$this->defaultSort = 'id DESC';
 
 		$twig->addGlobal('current_controller', 'task');
 
 		//zmienic na enum
-		$this->prioryty_array = [
+		$this->priorityArray = [
 			3 => 'Bardzo ważne',
 			2 => 'Ważne',
 			0 => 'Zwykłe',
 			1 => 'Mało ważne'
 		];
 
-		$this->prioryty_bg_array = [
+		$this->priorityBgArray = [
 			3 => 'danger',
 			2 => 'danger',
 			0 => '',
@@ -62,7 +57,6 @@ class TaskController extends AbstractController
 	#[Route('/tasks', name: 'app_task_show_list')]
     public function showAll(Request $request): Response
     {
-
 	    $perPage = $request->query->getInt('per-page', $this->defaultPerPage);
 	    $sort = $request->query->get('sort') ?? $this->defaultSort;
 
@@ -83,17 +77,13 @@ class TaskController extends AbstractController
         return $this->renderForm('task/list.html.twig', [
 	        'tasksPager' => $pagerfanta,
 			'haveToPaginate' => $pagerfanta->haveToPaginate(),
-
 			'sort' => $sort,
 			'per_page' => $perPage,
-
-			'prioryty_array' => $this->prioryty_array,
-	        'prioryty_bg_array' => $this->prioryty_bg_array,
-
+			'priorityArray' => $this->priorityArray,
+	        'priorityBgArray' => $this->priorityBgArray,
+            'search_phraze' => '',
+            'search_in_description' => '',
 	        'form_task_search' => $formTaskSearch,
-	        'search_phraze' => '',
-	        'search_in_description' => '',
-
 	        'search_badge_list' => '',
         ]);
     }
@@ -203,13 +193,10 @@ class TaskController extends AbstractController
 		return $this->renderForm('task/list.html.twig', [
 			'tasksPager' => $tasks ?? '',
 			'haveToPaginate' => false,
-
 			'sort' => $sort,
 			'per_page' => $perPage,
-
-
-			'prioryty_array' => $this->prioryty_array,
-			'prioryty_bg_array' => $this->prioryty_bg_array,
+			'prioryty_array' => $this->priorityArray,
+			'prioryty_bg_array' => $this->priorityBgArray,
 			'search_phraze' => $request->get('task_search')['title'] ??  '',
 			'search_in_description' => $request->get('search_in_description') ?? '',
 			'search_badge_list' => $searchBadgeList,
@@ -286,17 +273,15 @@ class TaskController extends AbstractController
 		return $this->renderForm('task/list.html.twig', [
 			'tasksPager' => $tasks,
 			'haveToPaginate' => false,
-
 			'sort' => $sort,
 			'per_page' => $perPage,
-
-			'prioryty_array' => $this->prioryty_array,
-			'prioryty_bg_array' => $this->prioryty_bg_array,
-			'category_id' => $cat,
+			'priorityArray' => $this->priorityArray,
+			'priorityBgArray' => $this->priorityBgArray,
 			'search_phraze' => '',
 			'search_in_description' => '',
 			'form_task_search' => $formTaskSearch,
 			'search_badge_list' => '',
+            'category_id' => $cat,
 		]);
 	}
 

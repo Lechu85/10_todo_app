@@ -6,7 +6,7 @@ use App\Config\TaskStatus;
 use App\Entity\Task;
 use App\Entity\TaskCategory;
 use App\Entity\User;
-use Form\Type\TaskPriorytyType;
+use App\Form\Type\TaskPriorytyType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
