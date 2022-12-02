@@ -53,7 +53,6 @@ class TaskController extends AbstractController
 		];
 	}
 
-
 	#[Route('/tasks', name: 'app_task_show_list')]
     public function showAll(Request $request): Response
     {
@@ -74,20 +73,13 @@ class TaskController extends AbstractController
 	    ]);
 
 		//info renderForm podobnie dziala jak render()
-        return $this->renderForm('task/list.html.twig', [
-	        'tasksPager' => $pagerfanta,
-			'haveToPaginate' => $pagerfanta->haveToPaginate(),
-			'sort' => $sort,
-			'per_page' => $perPage,
-			'priorityArray' => $this->priorityArray,
-	        'priorityBgArray' => $this->priorityBgArray,
-            'search_phraze' => '',
-            'search_in_description' => '',
-	        'form_task_search' => $formTaskSearch,
-	        'search_badge_list' => '',
-        ]);
-    }
 
+        $resultArray = $this->buildResultArray(
+            $pagerfanta, $pagerfanta->haveToPaginate(), $sort, $perPage, $this->priorityArray, $this->priorityBgArray, '',
+            '',$formTaskSearch, '', null
+        );
+        return $this->renderForm('task/list.html.twig', $resultArray);
+    }
 
 	#[Route('/task/new', name: 'app_task_new')]
 	public function new(Request $request): Response
@@ -109,7 +101,6 @@ class TaskController extends AbstractController
 			'form' => $form,
 		]);
 	}
-
 
 	#[Route('/task/edit/{id}', name: 'app_task_edit')]
 	public function edit(Task $task, Request $request, int $id): Response
@@ -138,7 +129,6 @@ class TaskController extends AbstractController
 		]);
 	}
 
-
 	#[Route('/task/show/{id}', name: 'app_task_show')]
 	public function showOne(int $id): Response
 	{
@@ -148,9 +138,7 @@ class TaskController extends AbstractController
 			'task' => $task,
 			'id' => $id
 		]);
-
 	}
-
 
 	#[Route('/task/remove/{id}', name: 'app_task_remove')]
 	public function remove(int $id)
@@ -171,7 +159,6 @@ class TaskController extends AbstractController
 		return $this->redirectToRoute('app_task_show_list');
 	}
 
-
 	#[Route('/tasks/search/', name: 'app_task_search')]
 	public function search(Request $request)
 	{
@@ -190,19 +177,14 @@ class TaskController extends AbstractController
 			$tasks = $this->taskRepository->findTasksFromRequest($request);
 		}
 
-		return $this->renderForm('task/list.html.twig', [
-			'tasksPager' => $tasks ?? '',
-			'haveToPaginate' => false,
-			'sort' => $sort,
-			'per_page' => $perPage,
-			'prioryty_array' => $this->priorityArray,
-			'prioryty_bg_array' => $this->priorityBgArray,
-			'search_phraze' => $request->get('task_search')['title'] ??  '',
-			'search_in_description' => $request->get('search_in_description') ?? '',
-			'search_badge_list' => $searchBadgeList,
-			'form_task_search' => $formTaskSearch
-		]);
+        $resultArray = $this->buildResultArray(
+            '', false, $sort, $perPage, $this->priorityArray, $this->priorityBgArray,
+            $request->get('task_search')['title'] ??  '',
+            $request->get('search_in_description') ?? '',
+            $formTaskSearch, '', null
+        );
 
+		return $this->renderForm('task/list.html.twig', $resultArray);
 	}
 
 
@@ -252,7 +234,6 @@ class TaskController extends AbstractController
 		}
 
 		return $this->redirectToRoute('app_task_show_list');
-
 	}
 
 
@@ -270,19 +251,33 @@ class TaskController extends AbstractController
 		]);
 
 		//info tytmczasoro renderForm
-		return $this->renderForm('task/list.html.twig', [
-			'tasksPager' => $tasks,
-			'haveToPaginate' => false,
-			'sort' => $sort,
-			'per_page' => $perPage,
-			'priorityArray' => $this->priorityArray,
-			'priorityBgArray' => $this->priorityBgArray,
-			'search_phraze' => '',
-			'search_in_description' => '',
-			'form_task_search' => $formTaskSearch,
-			'search_badge_list' => '',
-            'category_id' => $cat,
-		]);
+        $resultArray = $this->buildResultArray(
+            $tasks, false, $sort, $perPage, $this->priorityArray, $this->priorityBgArray, '',
+            '',$formTaskSearch, '', $cat
+        );
+
+		return $this->renderForm('task/list.html.twig', $resultArray);
 	}
+
+    //metoda budująca tablicę wyników
+    public function buildResultArray(
+        $pager,$haveToPaginate,$sort,$perPage,$priorityArray,$priorityBgArray,$searchPhrase,$searchInDesc,
+        $ftSearch,$searchBadgeList, $category
+    ): array
+    {
+        return [
+            'tasksPager' => $pager,
+            'haveToPaginate' => $haveToPaginate,
+            'sort' => $sort,
+            'per_page' => $perPage,
+            'priorityArray' => $priorityArray,
+            'priorityBgArray' => $priorityBgArray,
+            'search_phraze' => $searchPhrase,
+            'search_in_description' => $searchInDesc,
+            'form_task_search' => $ftSearch,
+            'search_badge_list' => $searchBadgeList,
+            'category_id' => $category,
+        ];
+    }
 
 }
