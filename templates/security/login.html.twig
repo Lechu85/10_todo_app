@@ -42,7 +42,6 @@
                             <label for="floatingInput">Adres email</label>
                         </div>
 
-
                         <div class="form-floating">
                             <input type="password" name="password" class="form-control" id="floatingPassword" autocomplete="current-password" required>
                             <label for="floatingPassword">Hasło</label>
@@ -50,7 +49,7 @@
 
                         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                        <div class="checkbox mb-3 ms-1 mt-3">
+                        <div class="checkbox ms-1 mt-3 mb-2">
                             <label>
                                 <input type="checkbox" name="_remember_me"> Zapamiętaj mnie
                             </label>
@@ -59,6 +58,12 @@
                         <button class="btn btn-primary" type="submit">
                             Zaloguj się
                         </button>
+
+
+
+                        <div class="mb-2 mt-3">
+                            <a href="{{ path('app_forgot_password_request') }}">Nie pamiętam hasła</a>
+                        </div>
 
                     </form>
                 {% endif %}

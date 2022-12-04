@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reset your password{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('login_and_register') }}
+{% endblock %}
+
+{% block body %}
+<div class="w-100 h-100 d-flex" style="background: #162234;">
+
+    <div class="form-signin m-auto">
+
+        <div class="m-auto text-white p-3 text-center">
+            <img class="bi pe-none me-2" src="{{ asset('build/images/app_logo.png') }}" width="28" height="28" alt="ToDo App">
+            <span class="fs-4">ToDo :)</span>
+        </div>
+
+        <div class="card p-3 shadow">
+            <h1 class="h4 mb-3 font-weight-normal">Zresetuj swoje hasło</h1>
+
+            {{ form_start(resetForm) }}
+                {{ form_row(resetForm.plainPassword) }}
+                <button class="btn btn-primary">Resetuj hasło</button>
+            {{ form_end(resetForm) }}
+        </div>
+
+        <div class="m-auto text-white p-3" style="color: #9ea9b4; text-align: center;">
+            <p>
+                <a href="{{ path('app_login') }}" class="special-link">Zaloguj się</a> lub
+                <a href="{{ path('app_register') }}" class="special-link">Zarejestruj</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
