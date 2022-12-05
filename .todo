@@ -30,9 +30,10 @@ listy i pokazanie tylko tych zadań opatrzonych tym tagiem.
 
 
 
-//fixtures :)
+// V fixtures :)
 https://symfonycasts.com/screencast/symfony-doctrine/foundry#play
 
+//dodać obsługę błędów 404 w kontrolerze.
 
 /Sluggable
 https://symfonycasts.com/screencast/symfony-doctrine/sluggable
