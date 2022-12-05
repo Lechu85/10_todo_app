@@ -1,6 +1,12 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
     form_themes: ['bootstrap_5_layout.html.twig']
+    paths:
+        'public\images': images
+        #'assets\styles': email_styles #bez sass zwytkly css można tutaj trzymac
+        'public\build': email_styles
+        #link do zdjęć, drugi element po : moze być dowolny.
+        # zmieniłem w sciezkach / na \
 
 when@test:
     twig:

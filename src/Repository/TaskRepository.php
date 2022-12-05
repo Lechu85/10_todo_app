@@ -165,7 +165,7 @@ class TaskRepository extends ServiceEntityRepository
 
 			if (!empty($fieldValue) && $fieldName !== '_token') {
 
-				if ($fieldName == 'dueDate' || $fieldName == 'createdAt' || $fieldName == 'doneAt') {
+				if ($fieldName === 'dueDate' || $fieldName === 'createdAt' || $fieldName === 'doneAt') {
 					//if (is_array($fieldValue)) {//pole DateTimeFromToType
 
 					if (!empty($fieldValue['From']) && !empty($fieldValue['To'])) {
@@ -182,7 +182,7 @@ class TaskRepository extends ServiceEntityRepository
 							->setParameter($fieldName . 'From', $fieldValue['From']);
 					}
 
-				} else if ($fieldName == 'status') {//status wysyłamy jako tablice
+				} else if ($fieldName === 'status') {//status wysyłamy jako tablice
 
 					$andwhere = '';
 					if (is_array($fieldValue) && count($fieldValue)>0) {
@@ -256,7 +256,7 @@ class TaskRepository extends ServiceEntityRepository
 
 			//DateTimeFromToType
 			//if (is_array($fieldValue)) {
-			if ($fieldName == 'dueDate' || $fieldName == 'createdAt' || $fieldName == 'doneAt') {
+			if ($fieldName === 'dueDate' || $fieldName === 'createdAt' || $fieldName === 'doneAt') {
 
 				if (!empty($fieldValue['From']) && !empty($fieldValue['To'])) {
 					$generatedHtml .= '<span class="badge text-bg-secondary"><span class="fw-normal">' . $fieldLabel[$fieldName] . '</span>';
@@ -272,7 +272,7 @@ class TaskRepository extends ServiceEntityRepository
 				}
 
 			//zwykłe pole
-			} else if ($fieldName == 'status') {//status wysyłamy jako tablice
+			} else if ($fieldName === 'status') {//status wysyłamy jako tablice
 				//
 			} else {
 
@@ -308,5 +308,32 @@ class TaskRepository extends ServiceEntityRepository
 		//	->count(['dealer' => $dealerId]);
 
 
+	}
+
+	/**
+	 * Pobiera wszystkie zamknięte w dniu obecnym zadania
+	 */
+	public function findAllTodayDoneTasks():array
+	{
+		return $this->createQueryBuilder('t')
+			->andWhere('t.doneAt LIKE :today')
+			->setParameter('today', date('Y-m-d').'%')
+			->groupBy('t.user') //aby nie powielać tych samych useró kilka razy podobnie jak distinct
+			->getQuery()
+			->getResult();
+	}
+
+	/**
+	 * Pobiera wszystkie zamknięte w dniu obecnym zadania, przez wskazanego usera
+	 */
+	public function findAllTodayDoneTasksByUser($user): array
+	{
+		return $this->createQueryBuilder('t')
+			->andWhere('t.user = :user')
+			->andWhere('t.doneAt LIKE :today')
+			->setParameter('user', $user)
+			->setParameter('today', date('Y-m-d').'%')
+			->getQuery()
+			->getResult();
 	}
 }

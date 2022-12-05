@@ -56,6 +56,9 @@ class RegistrationController extends AbstractController
             );
             // do anything else you need here, like send an email
 
+	        //todo przerobic na klase naszą z podstawowym szablonem emaila
+	        //$mailer->sendWelcomeMessage($user);
+
 	        $this->addFlash('success', 'Dziękujemy za rejestracje.');
 
 

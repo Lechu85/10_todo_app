@@ -1,0 +1,38 @@
+{% apply inline_css(source('@email_styles/email.css')) %}
+    <!doctype html>
+    <html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>{{ email.subject }}</title>
+        <style>
+
+        </style>
+    </head>
+    <body>
+    <div class="body">
+        <div class="container">
+            <div class="header text-center">
+                <a href="{{ url('home_index') }}">
+                    <img src="{{ email.image('@images/email/app_logo.png') }}" class="logo" alt="Todo App :)">
+                    ToDo App :)
+
+                </a>
+            </div>
+
+           {% block content %}{% endblock %}
+
+            <div class="footer">
+                <p class="block">
+                    Pozdrawiamy <em>ToDo App Team</em>
+                </p>
+                <p class="block bottom text-center">
+                    Sent with ❤ from the ToDo App :)
+                </p>
+            </div>
+        </div>
+    </div>
+    </body>
+    </html>
+
+{% endapply %}

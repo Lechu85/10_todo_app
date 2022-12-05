@@ -24,6 +24,9 @@ Encore
     .addEntry('tasks', './assets/js/tasks.js')
     //.addEntry('admin_article_form', './assets/js/admin_srticle_form.js') //dla admina osobny zrobimy
     .addStyleEntry('login_and_register', './assets/styles/login_and_register.scss')
+    .addStyleEntry('email', './assets/styles/email.scss') //dodałem dla testu do emaili
+
+
     //info osobne stytle dla loginu
     //.addStyleEntry('account', './assets/styles/plik.scss')
 
