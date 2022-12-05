@@ -1,0 +1,29 @@
+{% extends 'email/emailBase.html.twig' %}
+
+{% block content %}
+    <hr>
+    <br size="20">
+    <table>
+        <tr>
+            <td>
+                <p>
+                   Witaj {{ email.toName }}! Poniżej podsumowanie, lista wykonanych zadań w dniu dzisiejszym
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                {{ include('email/_report-table.html.twig') }}
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <br>
+                {# <button href="{{ url('home_index') }}">Link do aplikacji ToDo App :) </button> #}
+                <button href="http://www.todoapp.pl">Link do aplikacji ToDo App :) </button>
+                <br>
+            </td>
+        </tr>
+    </table>
+
+{% endblock %}

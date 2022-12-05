@@ -1,0 +1,25 @@
+{% extends 'email/emailBase.html.twig' %}
+
+{% block content %}
+    <div class="content">
+        <h1 class="text-center">Witaj {{ user.name }}!</h1>
+        <p class="block">
+            Welcome to <strong>the Space Bar</strong>, we can't wait to read what you have to write.
+            Get started on your first article and connect with the space bar community.
+        </p>
+        <p class="block text-center">
+            <a href="{{ url('app_popular_answers') }}" class="btn">Popular answer</a>
+        </p>
+        <p class="block">
+            Check out our existing articles and share your thoughts in the comments!
+        </p>
+        <p class="block text-center">
+            <a href="{{ url('app_homepage') }}" class="btn">Get reading!</a>
+        </p>
+        <p class="block">
+            We're so excited that you've decided to join us in our corner of the universe,
+            it's a friendly one with other creative and insightful writers just like you!
+            Need help from a friend? We're always just a message away.
+        </p>
+    </div>
+{% endblock %}

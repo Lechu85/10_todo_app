@@ -1,0 +1,18 @@
+{# w emailu klasy table nie zadziałają, bo nie ma bootstrapa, ale jak bedziemy generować pdf to będzie :) #}
+<table class="table table-striped">
+    <tr>
+        <th>#</th>
+        <th>Tytuł</th>
+        <th>Termin</th>
+        <th>Zamknięto</th>
+    </tr>
+    {% for task in tasks %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ task.title }}</td>
+            <td>{{ task.dueDate|date("Y-m-d") }}</td>
+            <td>{{ task.doneAt|date("Y-m-d") }}</td>
+            {# <td>{{ task.comments|length }}</td> #}
+        </tr>
+    {% endfor %}
+</table>

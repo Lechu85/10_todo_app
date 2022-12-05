@@ -62,6 +62,18 @@
             "./migrations/.gitignore"
         ]
     },
+    "knplabs/knp-snappy-bundle": {
+        "version": "1.9",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.5",
+            "ref": "c81bdcf4a9d4e7b1959071457f9608631865d381"
+        },
+        "files": [
+            "./config/packages/knp_snappy.yaml"
+        ]
+    },
     "phpunit/phpunit": {
         "version": "9.5",
         "recipe": {
@@ -271,6 +283,18 @@
             "./config/packages/webpack_encore.yaml",
             "./package.json",
             "./webpack.config.js"
+        ]
+    },
+    "symfonycasts/reset-password-bundle": {
+        "version": "1.16",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "97c1627c0384534997ae1047b93be517ca16de43"
+        },
+        "files": [
+            "./config/packages/reset_password.yaml"
         ]
     },
     "symfonycasts/verify-email-bundle": {

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Form\TaskType;
+use App\Repository\TaskRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -22,35 +23,29 @@ use Twig\Environment;
 
 class TaskController extends AbstractController
 {
-
 	private EntityManagerInterface $entityManager;
-	private $taskRepository;
-	public array $prioryty_array; //lista priorytetow
-	public array $prioryty_bg_array;
-	private int $defaultPerPage;
-	private string $defaultSort;
+	private TaskRepository $taskRepository;
+	public array $priorityArray;                    //lista priorytetow
+	public array $priorityBgArray;
+	private int $defaultPerPage = 25;               //domyślna ilość zadań na stronie
+	private string $defaultSort = 'id DESC';        //domyślne sortowanie
 
 	public function __construct(EntityManagerInterface $entityManager, Environment $twig)
 	{
-
 		$this->entityManager = $entityManager;
 		$this->taskRepository = $entityManager->getRepository(Task::class);
-
-		//domyslna ilosc zadan na jednej stronie
-		$this->defaultPerPage = 25;
-		$this->defaultSort = 'id DESC';
 
 		$twig->addGlobal('current_controller', 'task');
 
 		//zmienic na enum
-		$this->prioryty_array = [
+		$this->priorityArray = [
 			3 => 'Bardzo ważne',
 			2 => 'Ważne',
 			0 => 'Zwykłe',
 			1 => 'Mało ważne'
 		];
 
-		$this->prioryty_bg_array = [
+		$this->priorityBgArray = [
 			3 => 'danger',
 			2 => 'danger',
 			0 => '',
@@ -58,46 +53,33 @@ class TaskController extends AbstractController
 		];
 	}
 
-
 	#[Route('/tasks', name: 'app_task_show_list')]
-    public function showAll(Request $request): Response
-    {
+	public function showAll(Request $request): Response
+	{
+		$perPage = $request->query->getInt('per-page', $this->defaultPerPage);
+		$sort = $request->query->get('sort') ?? $this->defaultSort;
 
-	    $perPage = $request->query->getInt('per-page', $this->defaultPerPage);
-	    $sort = $request->query->get('sort') ?? $this->defaultSort;
+		$queryBuilder = $this->taskRepository->createTaskListQueryBuilder($sort);
 
-	    $queryBuilder = $this->taskRepository->createTaskListQueryBuilder($sort);
+		$pagerfanta = Pagerfanta::createForCurrentPageWithMaxPerPage(
+			new QueryAdapter($queryBuilder),
+			$request->query->getInt('page', 1),
+			$perPage
+		);
 
-	    $pagerfanta = Pagerfanta::createForCurrentPageWithMaxPerPage(
-		    new QueryAdapter($queryBuilder),
-		    $request->query->getInt('page', 1),
-		    $perPage
-	    );
-
-	    $formTaskSearch = $this->createForm(TaskSearchType::class, null, [
-		    'action' => $this->generateUrl('app_task_search'),
-		    'method' => 'GET'
-	    ]);
+		$formTaskSearch = $this->createForm(TaskSearchType::class, null, [
+			'action' => $this->generateUrl('app_task_search'),
+			'method' => 'GET'
+		]);
 
 		//info renderForm podobnie dziala jak render()
-        return $this->renderForm('task/list.html.twig', [
-	        'tasksPager' => $pagerfanta,
-			'haveToPaginate' => $pagerfanta->haveToPaginate(),
 
-			'sort' => $sort,
-			'per_page' => $perPage,
-
-			'prioryty_array' => $this->prioryty_array,
-	        'prioryty_bg_array' => $this->prioryty_bg_array,
-
-	        'form_task_search' => $formTaskSearch,
-	        'search_phraze' => '',
-	        'search_in_description' => '',
-
-	        'search_badge_list' => '',
-        ]);
-    }
-
+		$resultArray = $this->buildResultArray(
+			$pagerfanta, $pagerfanta->haveToPaginate(), $sort, $perPage, $this->priorityArray, $this->priorityBgArray, '',
+			'',$formTaskSearch, '', null
+		);
+		return $this->renderForm('task/list.html.twig', $resultArray);
+	}
 
 	#[Route('/task/new', name: 'app_task_new')]
 	public function new(Request $request): Response
@@ -119,7 +101,6 @@ class TaskController extends AbstractController
 			'form' => $form,
 		]);
 	}
-
 
 	#[Route('/task/edit/{id}', name: 'app_task_edit')]
 	public function edit(Task $task, Request $request, int $id): Response
@@ -148,7 +129,6 @@ class TaskController extends AbstractController
 		]);
 	}
 
-
 	#[Route('/task/show/{id}', name: 'app_task_show')]
 	public function showOne(int $id): Response
 	{
@@ -158,9 +138,7 @@ class TaskController extends AbstractController
 			'task' => $task,
 			'id' => $id
 		]);
-
 	}
-
 
 	#[Route('/task/remove/{id}', name: 'app_task_remove')]
 	public function remove(int $id)
@@ -181,7 +159,6 @@ class TaskController extends AbstractController
 		return $this->redirectToRoute('app_task_show_list');
 	}
 
-
 	#[Route('/tasks/search/', name: 'app_task_search')]
 	public function search(Request $request)
 	{
@@ -200,24 +177,15 @@ class TaskController extends AbstractController
 			$tasks = $this->taskRepository->findTasksFromRequest($request);
 		}
 
-		return $this->renderForm('task/list.html.twig', [
-			'tasksPager' => $tasks ?? '',
-			'haveToPaginate' => false,
+		$resultArray = $this->buildResultArray(
+			'', false, $sort, $perPage, $this->priorityArray, $this->priorityBgArray,
+			$request->get('task_search')['title'] ??  '',
+			$request->get('search_in_description') ?? '',
+			$formTaskSearch, '', null
+		);
 
-			'sort' => $sort,
-			'per_page' => $perPage,
-
-
-			'prioryty_array' => $this->prioryty_array,
-			'prioryty_bg_array' => $this->prioryty_bg_array,
-			'search_phraze' => $request->get('task_search')['title'] ??  '',
-			'search_in_description' => $request->get('search_in_description') ?? '',
-			'search_badge_list' => $searchBadgeList,
-			'form_task_search' => $formTaskSearch
-		]);
-
+		return $this->renderForm('task/list.html.twig', $resultArray);
 	}
-
 
 	//question - zasady SOLID w tejh metodzie zostyały złamane? dla każdej akcji grupowej osobna metoda?
 	#[Route('/task/group_action', name: 'app_task_group_action')]//, methods: 'POST'
@@ -229,7 +197,7 @@ class TaskController extends AbstractController
 		//$request->get('id')
 		$checkedTask = $request->get('task');
 
-		if ($group_action_name == 'done') {
+		if ($group_action_name === 'done') {
 
 			//todo przeniesc do repozytorium
 			$queryBuilder = $this->entityManager->createQueryBuilder();
@@ -247,7 +215,7 @@ class TaskController extends AbstractController
 
 			$this->addFlash('success', 'Oznaczono jako wykonane.');
 
-		} else if ($group_action_name == 'delete') {
+		} else if ($group_action_name === 'delete') {
 
 			$queryBuilder = $this->entityManager->createQueryBuilder();
 
@@ -265,9 +233,7 @@ class TaskController extends AbstractController
 		}
 
 		return $this->redirectToRoute('app_task_show_list');
-
 	}
-
 
 	#[Route('/tasks/{cat}', name: 'app_task_show_list_from_cat')]
 	public function showAllFromCat(Request $request, int $cat): Response
@@ -283,21 +249,33 @@ class TaskController extends AbstractController
 		]);
 
 		//info tytmczasoro renderForm
-		return $this->renderForm('task/list.html.twig', [
-			'tasksPager' => $tasks,
-			'haveToPaginate' => false,
+		$resultArray = $this->buildResultArray(
+			$tasks, false, $sort, $perPage, $this->priorityArray, $this->priorityBgArray, '',
+			'',$formTaskSearch, '', $cat
+		);
 
+		return $this->renderForm('task/list.html.twig', $resultArray);
+	}
+
+	//metoda budująca tablicę wyników
+	private function buildResultArray(
+		$pager,$haveToPaginate,$sort,$perPage,$priorityArray,$priorityBgArray,$searchPhrase,$searchInDesc,
+		$ftSearch,$searchBadgeList, $category
+	): array
+	{
+		return [
+			'tasksPager' => $pager,
+			'haveToPaginate' => $haveToPaginate,
 			'sort' => $sort,
 			'per_page' => $perPage,
-
-			'prioryty_array' => $this->prioryty_array,
-			'prioryty_bg_array' => $this->prioryty_bg_array,
-			'category_id' => $cat,
-			'search_phraze' => '',
-			'search_in_description' => '',
-			'form_task_search' => $formTaskSearch,
-			'search_badge_list' => '',
-		]);
+			'priority_array' => $priorityArray,
+			'priority_bg_array' => $priorityBgArray,
+			'search_phraze' => $searchPhrase,
+			'search_in_description' => $searchInDesc,
+			'form_task_search' => $ftSearch,
+			'search_badge_list' => $searchBadgeList,
+			'category_id' => $category,
+		];
 	}
 
 }

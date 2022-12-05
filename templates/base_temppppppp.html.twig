@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Leszek Chopcian">
+    <title>{% block title %}ToTo App :) {% endblock %}</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('build/images/favicon/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('build/images/favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('build/images/favicon/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('build/images/favicon/site.webmanifest') }}">
+    <link rel="mask-icon" href="{{ asset('build/images/favicon/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+
+    {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+</head>
+
+<body>
+
+    <div class="container-fluid overflow-hidden">
+        <div class="row vh-100 overflow-auto">
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+                <div class="col-12 col-sm-3 col-xl-2 px-sm-2 px-0 d-flex sticky-top" style="background: #132236;" id="left_menu">
+                    <div class="d-flex flex-sm-column flex-row flex-grow-1 align-items-center align-items-sm-start px-3 pt-2 text-white">
+                        <a href="/" class="d-flex align-items-center pb-sm-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                            <img class="bi pe-none me-2" src="{{ asset('build/images/app_logo.png') }}" width="28" height="28" alt="ToDo App">
+                            <span class="fs-4">ToDo :)</span>
+                        </a>
+
+                        <ul id="menu" class="nav nav-pills flex-sm-column flex-row flex-nowrap flex-shrink-1 flex-sm-grow-0 flex-grow-1 mb-sm-auto mb-0 justify-content-center align-items-center align-items-sm-start">
+                            <li class="nav-item">
+                                <a href="{{ path('home_index') }}" class="nav-link" aria-current="page">
+                                    <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"/></svg>
+                                    Główna
+                                </a>
+                            </li>
+                            <li>
+                                <button class="nav-link collapsed  {% if current_controller == 'task' %}active{% endif %}" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" {% if current_controller == 'task' %} aria-expanded="true" {% else %} aria-expanded="false" {% endif %}>
+                                    <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#task_sybol"/></svg>
+                                    Zadania
+                                </button>
+
+                                <div class="collapse {% if current_controller == 'task' %}show{% endif %}" id="dashboard-collapse">
+                                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                        <li><a href="{{ path('app_task_new') }}" class="d-inline-flex text-decoration-none rounded">Nowe zadanie</a></li>
+                                        <li><a href="{{ path('app_task_show_list') }}" class="d-inline-flex text-decoration-none rounded">Lista aktywnych zadań</a></li>
+                                        <li>
+                                            <ul class="list-unstyled ms-1">
+                                                {% for category in taskCategories %}
+                                                    <li><a href="{{ path('app_task_show_list') }}/{{ category.id }}" class="d-inline-flex text-decoration-none rounded"> - {{ category.name }} ({{ category.taskCount }})</a></li>
+                                                {% endfor %}
+                                                <li><a href="{{ path('app_task_search') }}?task_search%5Bstatus%5D%5B%5D=2&task_search%5Bstatus%5D%5B%5D=3&task_search%5Bstatus%5D%5B%5D=4" class="d-inline-flex text-decoration-none rounded"> - Zamknięte zadania</a></li>
+                                            </ul>
+                                        </li>
+
+                                    </ul>
+                                </div>
+
+                            </li>
+
+                            <li>
+                                <a href="{{ path('app_products_list') }}" class="nav-link">
+                                    <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+                                    Products
+                                </a>
+                            </li>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li>
+                                    <a href="#" class="nav-link">
+                                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#people-circle"/></svg>
+                                        Users
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% for link, text in cms_menu %}
+                                <li>
+                                    <a href="{{ path(link) }}" class="nav-link">
+                                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#text-page"/></svg>
+                                        {{ text }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+
+                        {#
+                        <div class="dropdown py-sm-4 mt-sm-auto ms-auto ms-sm-0 flex-shrink-1">
+                            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="d-none d-sm-inline mx-1">
+                                    {{ app.user.name }}
+                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                        - <span class="text-danger">SuperAdmin</span>
+                                    {% elseif is_granted('ROLE_ADMIN') %}
+                                        - <span class="text-danger">Admin</span>
+                                    {% elseif is_granted('ROLE_MODER') %}
+                                        - <span class="text-success">Moder</span>
+                                    {% endif %}
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                                <li><a class="dropdown-item" href="{{ path('app_task_new') }}">Nowe zadanie</a></li>
+                                <li><a class="dropdown-item" href="{{ path('app_profile') }}">Profil</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ path('app_logout') }}">Wyloguj się</a></li>
+                            </ul>
+                        </div>
+                        #}
+
+
+
+                        <div class="dropdown">
+                            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle ms-3" data-bs-toggle="dropdown" aria-expanded="false">
+                                <strong>{{ app.user.name }}
+                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                        - <span class="text-danger">SuperAdmin</span>
+                                    {% elseif is_granted('ROLE_ADMIN') %}
+                                        - <span class="text-danger">Admin</span>
+                                    {% elseif is_granted('ROLE_MODER') %}
+                                        - <span class="text-success">Moder</span>
+                                    {% endif %}</strong>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                                <li><a class="dropdown-item" href="{{ path('app_task_new') }}">Nowe zadanie</a></li>
+                                <li><a class="dropdown-item" href="{{ path('app_profile') }}">Profil</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ path('app_logout') }}">Wyloguj się</a></li>
+                            </ul>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            {% endif %}
+            <div class="col d-flex flex-column h-sm-100">
+                <main class="overflow-auto">
+
+
+                    {% block body %}
+
+                        {% for label, messages in app.flashes(['success', 'warning']) %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ label }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+
+                    {% endblock %}
+
+                </main>
+                <footer class="row bg-light py-4 mt-auto">
+                    <div class="col"> Footer content here... </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+</body></html>

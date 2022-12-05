@@ -51,10 +51,13 @@ class RegistrationController extends AbstractController
                 (new TemplatedEmail())
                     ->from(new Address('admin@sotech.pl', 'Leszek Leszek'))
                     ->to($user->getEmail())
-                    ->subject('Proszę potwierdź Twój adres email')
+                    ->subject('Potwierdzenie rejestracji w Todo App :) ')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
             // do anything else you need here, like send an email
+
+	        //todo przerobic na klase naszą z podstawowym szablonem emaila
+	        //$mailer->sendWelcomeMessage($user);
 
 	        $this->addFlash('success', 'Dziękujemy za rejestracje.');
 

@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>403 - Dostęp zabroniony</h1>
+
+    <p>
+        Nie masz uprawnień, aby otworzyć dostęp do strony, którą chcesz otworzyć.
+        Serwer zrozumiał żądanie, ale nie spełni go.
+        <a href="{{ path('homepage') }}">Powrót do strony głównej</a>.
+
+    </p>
+{% endblock %}

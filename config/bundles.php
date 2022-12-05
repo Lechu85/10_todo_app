@@ -16,4 +16,6 @@ return [
     BabDev\PagerfantaBundle\BabDevPagerfantaBundle::class => ['all' => true],
     Zenstruck\Foundry\ZenstruckFoundryBundle::class => ['dev' => true, 'test' => true],
     Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
+    SymfonyCasts\Bundle\ResetPassword\SymfonyCastsResetPasswordBundle::class => ['all' => true],
+    Knp\Bundle\SnappyBundle\KnpSnappyBundle::class => ['all' => true],
 ];
