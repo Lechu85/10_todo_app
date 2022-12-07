@@ -31,7 +31,12 @@ class Answer
     #[ORM\Column]
     private int $votes = 0;
 
-    public function getId(): ?int
+	public function __toString(): string
+	{
+		return $this->getId();
+	}
+
+	public function getId(): ?int
     {
         return $this->id;
     }

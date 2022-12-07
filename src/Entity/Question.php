@@ -23,11 +23,13 @@ class Question
     #[ORM\Column]
     private ?string $name;
 
-    /**
-     * @Gedmo\Slug(fields={"name"})
-     */
+	/**
+	 * @Gedmo\Slug(fields={"name"})
+	 */
     #[ORM\Column(length: 100, unique: true)]
+    #[Gedmo\Slug(fields: ['name'])]
     private ?string $slug;
+
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $question;
@@ -39,7 +41,8 @@ class Question
     #[ORM\Column]
     private int $votes = 0;
 
-    #[ORM\OneToMany('question', Answer::class)]
+	//trzeba dołożyć orphantRemoval czyli kaskadowe kasowanie, żeby Pole w EasyAdmin działąlo poprawnie.
+    #[ORM\OneToMany('question', Answer::class, orphanRemoval: true)]
     private Collection $answers;
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
