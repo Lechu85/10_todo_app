@@ -35,3 +35,7 @@ services:
     App\Service\AddHelper2Decorator:
         decorates: App\Service\AddHelper2
         arguments: ['@.inner']
+
+    App\EasyAdmin\TruncateLongTextConfigurator:
+        tags:
+            - { name: ea.field_configurator, priority: -1 }

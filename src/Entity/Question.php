@@ -60,7 +60,12 @@ class Question
         $this->answers = new ArrayCollection();
     }
 
-    public function getId(): ?int
+	public function __toString(): string
+	{
+		return $this->name;
+	}
+
+	public function getId(): ?int
     {
         return $this->id;
     }

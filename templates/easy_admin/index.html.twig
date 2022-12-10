@@ -1,1 +1,35 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}
+    Cauldron Overflow Dashboard
+{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-6">
+            <h3>Latest Questions</h3>
+            <ol>
+                {% for question in latestQuestions %}
+                    <li>
+                        <a href="{# {{ path('app_question_show', {'slug': question.slug}) }} #}">{{ question.name }}</a>
+                        <br>- {{ question.createdAt|date }}
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+        <div class="col-6">
+            <h3>Top Voted</h3>
+            <ol>
+                {% for question in topVoted %}
+                    <li>
+                        <a href="{# {{ path('app_question_show', {'slug': question.slug}) }} #}">{{ question.name }}</a> ({{ question.votes }})
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+
+        <div class="col-12">
+            {{ render_chart(chart) }}
+        </div>
+    </div>
+{% endblock %}

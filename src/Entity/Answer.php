@@ -33,7 +33,7 @@ class Answer
 
 	public function __toString(): string
 	{
-		return $this->getId();
+		return $this->id;
 	}
 
 	public function getId(): ?int
