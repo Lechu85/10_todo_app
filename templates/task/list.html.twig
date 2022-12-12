@@ -23,8 +23,8 @@
 
         <div class="border-bottom d-flex align-items-center p-3 mb-2">
             <div class="fs-5 fw-semibold me-auto">Lista zadań
-            {% if category_id is defined %} z grupy:
-                {{ category_id }}
+            {% if Category is defined %} z grupy:
+                {{ Category }}
             {% endif %}
             </div>
 
@@ -48,7 +48,7 @@
                     <a class="btn btn-danger btn-sm" href="{{ path('app_task_show_list') }}" >Wyczyść filtr</a>
 
                 {% elseif current_path == 'app_task_show_list_from_cat' %}
-                    Brak zadań w kategorii: {{ category_id }}.
+                    Brak zadań w kategorii: {{ Category }}.
 
                 {% else %}
                     Brak zadań
@@ -70,7 +70,7 @@
                         <option value="dueDate DESC" {% if sort == 'dueDate DESC' %} selected {% endif %}>Termin: od najnowszych</option>
                         <option value="title ASC" {% if sort == 'title ASC' %} selected {% endif %}>Tytuł: od A do Z</option>
                         <option value="title DESC" {% if sort == 'title DESC' %} selected {% endif %}>Tytuł: od Z do A</option>
-                        <option value="Category_id ASC" {% if sort == 'Category_id ASC' %} selected {% endif %}>Kategoria</option>
+                        <option value="Category ASC" {% if sort == 'Category ASC' %} selected {% endif %}>Kategoria</option>
                     </select>
 
                     <label for="per-page" class="ms-2" style="display: inline-block;">Pozycji na stronie:</label>

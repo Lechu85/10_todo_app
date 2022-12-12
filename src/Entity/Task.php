@@ -62,6 +62,7 @@ class Task
     private ?int $doneByUser = null;
 
     #[ORM\ManyToOne(inversedBy: 'tasks')]
+    #[ORM\JoinColumn(name: 'id')]
     private ?TaskCategory $Category = null;
 
     #[ORM\Column(nullable: true)]

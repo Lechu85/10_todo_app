@@ -276,7 +276,7 @@ class TaskController extends AbstractController
             'search_in_description' => $searchInDesc,
             'form_task_search' => $ftSearch,
             'search_badge_list' => $searchBadgeList,
-            'category_id' => $category,
+            'Category' => $category,
         ];
     }
 
