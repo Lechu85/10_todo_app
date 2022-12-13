@@ -3,6 +3,8 @@
 namespace App\Controller\Api;
 
 use App\Entity\Task;
+use App\Enum\TaskEnum;
+use Doctrine\Common\Annotations\Annotation\Enum;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -51,6 +53,7 @@ class TaskApiController extends AbstractController
 				'id' => $task->getId(),
 				'title' => $task->getTitle(),
 				'description' => $task->getDescription(),
+                'status' => TaskEnum::NEW
 			];
 
 			return new JsonResponse($data, Response::HTTP_OK);
