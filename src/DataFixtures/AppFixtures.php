@@ -13,10 +13,11 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
+		//todo - emaile użytkownikó ustawić wg roli czyli superadmin@todoapp.pl itp
         // Load Users
         UserFactory::new()
             ->withAttributes([
-                'email' => 'leszek.chopcian@gmail.com',
+                'email' => 'superadmin@todoapp.pl',
                 'plainPassword' => 'test123',
             ])
             ->promoteRole('ROLE_SUPER_ADMIN')
@@ -24,7 +25,7 @@ class AppFixtures extends Fixture
 
         UserFactory::new()
             ->withAttributes([
-                'email' => 'leszekk@todoapp.pl',
+                'email' => 'admin@todoapp.pl',
                 'plainPassword' => 'test123',
             ])
             ->promoteRole('ROLE_ADMIN')
@@ -32,7 +33,7 @@ class AppFixtures extends Fixture
 
         UserFactory::new()
             ->withAttributes([
-                'email' => 'moderatoradmin@example.com',
+                'email' => 'moderator@todoapp.pl',
                 'plainPassword' => 'test123',
             ])
             ->promoteRole('ROLE_MODERATOR')
@@ -40,7 +41,7 @@ class AppFixtures extends Fixture
 
         UserFactory::new()
             ->withAttributes([
-                'email' => 'tisha@symfonycasts.com',
+                'email' => 'user@todoapp.pl',
                 'plainPassword' => 'test123',
                 'name' => 'Tisha The Cat',
                 'avatar' => 'tisha.png',

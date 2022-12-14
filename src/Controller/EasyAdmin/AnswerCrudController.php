@@ -25,7 +25,9 @@ class AnswerCrudController extends AbstractCrudController
 		yield Field::new('answer');
 		yield VotesField::new('votes');
 		yield AssociationField::new('question')
-			->hideOnIndex();
+			->hideOnIndex()
+			->autocomplete()
+			->setCrudController(QuestionCrudController::class);
 		yield AssociationField::new('answeredBy');
 		yield Field::new('createdAt')
 			->hideOnIndex();
