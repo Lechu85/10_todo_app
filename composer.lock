@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "38612dcdae9dd378dae05107bc453e8f",
+    "content-hash": "ce30eb9691368617ac2b1a8abadab18e",
     "packages": [
         {
             "name": "babdev/pagerfanta-bundle",
@@ -1857,6 +1857,75 @@
                 "wiki": "https://github.com/Atlantic18/DoctrineExtensions/tree/main/doc"
             },
             "time": "2022-11-14T20:25:40+00:00"
+        },
+        {
+            "name": "handcraftedinthealps/goodby-csv",
+            "version": "1.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/handcraftedinthealps/goodby-csv.git",
+                "reference": "5a520c76c6d945abc06173954f0ade67cf2abc30"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/handcraftedinthealps/goodby-csv/zipball/5a520c76c6d945abc06173954f0ade67cf2abc30",
+                "reference": "5a520c76c6d945abc06173954f0ade67cf2abc30",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2",
+                "symfony/polyfill-mbstring": "^1.0"
+            },
+            "replace": {
+                "goodby/csv": "self.version"
+            },
+            "require-dev": {
+                "mikey179/vfsstream": "^1.1",
+                "mockery/mockery": "^1.0",
+                "phpunit/phpunit": "^8.5",
+                "rector/rector": "^0.12.5",
+                "suin/php-expose": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Goodby\\CSV": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "reoring",
+                    "email": "mori.reo@gmail.com",
+                    "homepage": "https://www.facebook.com/reoring",
+                    "role": "Developer"
+                },
+                {
+                    "name": "suin",
+                    "email": "suinyeze@gmail.com",
+                    "homepage": "https://www.facebook.com/suinyeze",
+                    "role": "Developer, Renaming Specialist"
+                },
+                {
+                    "name": "Handcrafted in the alps contributors",
+                    "homepage": "https://github.com/handcraftedinthealps/goodby-csv/graphs/contributors",
+                    "role": "Contributors"
+                }
+            ],
+            "description": "CSV import/export library",
+            "homepage": "https://github.com/handcraftedinthealps/goodby-csv",
+            "keywords": [
+                "csv",
+                "export",
+                "import"
+            ],
+            "support": {
+                "source": "https://github.com/handcraftedinthealps/goodby-csv/tree/1.4.1"
+            },
+            "time": "2022-07-08T11:57:03+00:00"
         },
         {
             "name": "knplabs/knp-snappy",

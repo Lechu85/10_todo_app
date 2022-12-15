@@ -2,6 +2,8 @@
 
 namespace App\Controller\EasyAdmin;
 
+
+use App\Entity\Question;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -15,8 +17,8 @@ class QuestionPendingApprovalCrudController extends QuestionCrudController
 	{
 		return parent::configureCrud($crud)
 			->setPageTitle(Crud::PAGE_INDEX, 'Questions pending approval')
-			->setPageTitle(Crud::PAGE_DETAIL, static function(Question $question) {
-				sprintf('#%s %s', $question->getId(), $question->getName());
+			->setPageTitle(Crud::PAGE_DETAIL, static function (Question $question) {
+				return sprintf('#%s %s', $question->getId(), $question->getName());
 			})
 			->setHelp(Crud::PAGE_INDEX,'Pytania nie są wyświetlanie do czasu zatwierdzenia przez obsługę.');
 	}
