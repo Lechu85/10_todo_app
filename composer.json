@@ -29,6 +29,7 @@
         "symfony/flex": "^2",
         "symfony/form": "6.1.*",
         "symfony/framework-bundle": "6.1.*",
+        "symfony/http-client": "6.1.*",
         "symfony/mailer": "6.1.*",
         "symfony/messenger": "6.1.*",
         "symfony/property-access": "6.1.*",
