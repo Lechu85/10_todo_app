@@ -5,23 +5,43 @@ namespace App\Controller\EasyAdmin;
 use App\EasyAdmin\VotesField;
 use App\Entity\Question;
 use App\Entity\User;
+use App\Service\CsvExporter;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Factory\FilterFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 #[IsGranted("ROLE_MODERATOR")]
 //info jak jest niżej zablokowany dostp do akcji Action::INDEX to jest to to samo co tutaj w atrybutach.
 class QuestionCrudController extends AbstractCrudController
 {
+	private AdminUrlGenerator $adminUrlGenerator;
+	private RequestStack $requestStack;
+
+	/**
+	 *  Musi byc konstruktor ponieważ nie możemy tych klas wczytać jako argument metody. Nie sa podłączone pod Autowire
+	 */
+	public function __construct(AdminUrlGenerator $adminUrlGenerator, RequestStack $requestStack)
+	{
+
+		$this->adminUrlGenerator = $adminUrlGenerator;
+		$this->requestStack = $requestStack;
+	}
+
     public static function getEntityFqcn(): string
     {
         return Question::class;
@@ -29,15 +49,20 @@ class QuestionCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+	    yield FormField::addTab('Basic Data');//addPanel również można :)
+	        //->collapsible();
 		yield IdField::new('id')
 			->onlyOnIndex();
-		yield Field::new('name');
+
+		yield Field::new('name')
+			->setColumns(5);//bootstrapo parametr
 		yield Field::new('slug')
 			->hideOnIndex()
 			->setFormTypeOption(
 				'disabled',
 				$pageName !== Crud::PAGE_NEW
-			);
+			)
+			->setColumns(5);//bootstrapo parametr ;
 	    yield AssociationField::new('topic');
 		yield TextareaField::new('question')
 			->hideOnIndex()
@@ -51,6 +76,10 @@ class QuestionCrudController extends AbstractCrudController
 				],
 			])
 			->setHelp('Podgląd:');
+		yield FormField::addTab('Details')//addPanel również można
+			->setIcon('fa fa-info')
+			->setHelp('Additional details');
+			//->collapsible();
 	    yield AssociationField::new('askedBy')
 		    ->autocomplete()
 	        ->formatValue(static function($value, Question $question) { //value to wartośc pola, a $question to obiekt question obecny
@@ -90,14 +119,67 @@ class QuestionCrudController extends AbstractCrudController
 
 	public function configureActions(Actions $actions): Actions
 	{
+		//tworzymy nowa akcje "View on Site."
+		$viewAction = function() {
+			return Action::new('view')
+				->linkToUrl(function(Question $question) {
+					return $this->generateUrl('app_task_show_list', [//zly route
+						'slug' => $question->getSlug(),
+					]);
+				})
+				->setIcon('fa fa-eye')
+				->setLabel('View on site');
+		};
+
+		//akcja zatwierdzania pytań
+		$approveAction = Action::new('approve')
+			->setTemplatePath('easy_admin/approve_action.html.twig')
+			->linkToCrudAction('approve')
+			->addCssClass('btn btn-success')
+			->setIcon('fa fa-check-circle')
+			->displayAsButton()
+			->displayIf(static function (Question $question): bool {
+				return !$question->getIsApproved();
+			});
+
+		//akcja exportu do csv
+		$exportAction = Action::new('export')
+			->linkToUrl(function () {
+				$request = $this->requestStack->getCurrentRequest();
+				return $this->adminUrlGenerator->setAll($request->query->all())
+					->setAction('export')
+					->generateUrl();
+			});
+
 		return parent::configureActions($actions)
+			//info tylko nie zatwierdzone pytania można usunąć.
+			->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
+				$action->displayIf(function(Question $question) {
+					return !$question->getIsApproved();
+				});
+
+				return $action;
+			})
+
 			->setPermission(Action::INDEX, 'ROLE_MODERATOR')
 			->setPermission(Action::DETAIL, 'ROLE_MODERATOR')
 			->setPermission(Action::EDIT, 'ROLE_MODERATOR')
 			->setPermission(Action::NEW, 'ROLE_ADMIN')
 			->setPermission(Action::DELETE, 'ROLE_ADMIN')
 			//info pola checkboxdo zaznaczenia na liscie
-			->setPermission(Action::BATCH_DELETE, 'ROLE_ADMIN');
+			->setPermission(Action::BATCH_DELETE, 'ROLE_ADMIN')
+			->add(Crud::PAGE_DETAIL, $viewAction()->addCssClass('btn btn-success'))
+			->add(Crud::PAGE_INDEX, $viewAction())
+			->add(Crud::PAGE_DETAIL, $approveAction)
+			->add(Crud::PAGE_INDEX, $exportAction)
+			//info zmiana kolejności
+			->reorder(Crud::PAGE_DETAIL, [
+				'approve',
+				'view',
+				Action::EDIT,
+				Action::INDEX,
+				Action::DELETE,
+			]);
 	}
 
 	public function configureFilters(Filters $filters): Filters
@@ -125,5 +207,49 @@ class QuestionCrudController extends AbstractCrudController
 		parent::updateEntity($entityManager, $entityInstance); // TODO: Change the autogenerated stub
 	}
 
+	/**
+	 * funkcja ta zabezpiecza akcje usunięcia dla zatwierdzonych pytań
+	 * @param Question $entityInstance
+	 */
+	public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+	{
+		if ($entityInstance->getIsApproved()) {
+			throw new \Exception('Usuwanie zatwierdzonych Pytań nie jest dozwolone');
+		}
 
+		parent::deleteEntity($entityManager, $entityInstance); // TODO: Change the autogenerated stub
+	}
+
+	/**
+	 * Nasza własna akacja zatwierdzania Pytań
+	 *
+	 */
+	public function approve(AdminContext $adminContext, EntityManagerInterface $entityManager, AdminUrlGenerator $adminUrlGenerator)
+	{
+		$question = $adminContext->getEntity()->getInstance();
+		if (!$question instanceof Question) {
+			throw new \LogicException('Entity is missing or not a Question');
+		}
+		$question->setIsApproved(true);
+		$entityManager->flush();
+		$targetUrl = $adminUrlGenerator
+			->setController(self::class)
+			->setAction(Crud::PAGE_DETAIL)
+			->setEntityId($question->getId())
+			->generateUrl();
+		return $this->redirect($targetUrl);
+	}
+
+	/**
+	 * Nasza akcja globalna Export to CSV
+	 *
+	 */
+	public function export(AdminContext $context, CsvExporter $csvExporter)
+	{
+		$fields = FieldCollection::new($this->configureFields(Crud::PAGE_INDEX));
+		$filters = $this->get(FilterFactory::class)->create($context->getCrud()->getFiltersConfig(), $fields, $context->getEntity());
+		$queryBuilder = $this->createIndexQueryBuilder($context->getSearch(), $context->getEntity(), $fields, $filters);
+
+		return $csvExporter->createResponseFromQueryBuilder($queryBuilder, $fields, 'questions.csv');
+	}
 }

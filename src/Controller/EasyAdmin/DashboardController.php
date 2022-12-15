@@ -35,6 +35,7 @@ class DashboardController extends AbstractDashboardController
 		$this->questionRepository = $questionRepository;
 	}
 
+	//jest to normalna akcja - popropstu akcja index
 	#[IsGranted('ROLE_MODERATOR')]
     #[Route('/admin', name: 'admin')]
     public function index(ChartBuilderInterface $chartBuilder = null): Response
@@ -119,9 +120,16 @@ class DashboardController extends AbstractDashboardController
 	public function configureActions(): Actions
 	{
 		return parent::configureActions()
-			//info nie działa, trzeba rozpracowąc. opcja dodatkowa show w menu
-			->add(Crud::PAGE_DETAIL, Action::DETAIL);
-			//For the Crud::PAGE_INDEX page, please add the Action::DETAIL.
+			//info For the Crud::PAGE_INDEX page, please add the Action::DETAIL.
+			->add(Crud::PAGE_INDEX, Action::DETAIL)
+			//info dodajemy ikonke do wszystichy przyciskó edit
+			->update(Crud::PAGE_DETAIL, Action::EDIT, static function (Action $action) {
+				return $action->setIcon('fa fa-edit');
+			})
+			//info dodajemy ikonke do wszystkich przyciskó pokaż liste
+			->update(Crud::PAGE_DETAIL, Action::INDEX, static function (Action $action) {
+				return $action->setIcon('fa fa-list');
+			});
 		}
 
 	public function configureAssets(): Assets

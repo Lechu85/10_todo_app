@@ -158,6 +158,7 @@
       <path value="$PROJECT_DIR$/vendor/stof/doctrine-extensions-bundle" />
       <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
       <path value="$PROJECT_DIR$/vendor/symfony/ux-chartjs" />
+      <path value="$PROJECT_DIR$/vendor/handcraftedinthealps/goodby-csv" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1">
