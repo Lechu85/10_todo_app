@@ -46,20 +46,20 @@ class Dinosaur
             return 'Large';
         }
 
-        if ($this->length >= 5) {
-            return 'Medium';
-        }
+	    if ($this->length >= 5) {
+		    return 'Medium';
+	    }
 
-        return 'Small';
+       return 'Small';
     }
 
-    public function isAcceptingVisitors(): bool
-    {
-        return $this->health !== HealthStatus::SICK;
-    }
+	public function isAcceptingVisitors(): bool
+	{
+		return $this->health !== HealthStatus::SICK;
+	}
 
-    public function setHealth(HealthStatus $health): void
-    {
-        $this->health = $health;
-    }
+	public function setHealth(HealthStatus $health): void
+	{
+		$this->health = $health;
+	}
 }

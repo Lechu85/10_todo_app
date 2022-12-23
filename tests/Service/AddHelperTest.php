@@ -5,7 +5,7 @@ namespace App\Tests\Service;
 use App\Service\AddHelper;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class AddHelperTest extends KernelTestCase
+class AddHelperTest //extends KernelTestCase
 {
 	public function testAdd()
 	{

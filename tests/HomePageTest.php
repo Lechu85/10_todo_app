@@ -4,8 +4,8 @@ namespace App\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class HomePageTest extends WebTestCase
-{
+class HomePageTest //extends WebTestCase
+{/*
     public function testSomething(): void
     {
         $client = static::createClient(); //tworzymy klienta
@@ -16,5 +16,5 @@ class HomePageTest extends WebTestCase
         $this->assertSelectorTextContains('h1', 'Witamy w aplikacji treningowej ToDo App :)'); //na stronie głównej ma być hello world w h1
         //Czyli strona ma mieć H1 z taką zawartością
 
-	}
+	}*/
 }

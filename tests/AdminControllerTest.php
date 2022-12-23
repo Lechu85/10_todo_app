@@ -5,8 +5,8 @@ namespace App\Tests;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class AdminControllerTest extends WebTestCase
-{
+class AdminControllerTest //extends WebTestCase
+{/*
     public function testSomething(): void
     {
 
@@ -44,6 +44,6 @@ class AdminControllerTest extends WebTestCase
 
 
 	    //dump($cookieJar);
-		*/
-    }
+
+    }*/
 }

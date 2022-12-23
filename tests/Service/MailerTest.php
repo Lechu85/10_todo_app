@@ -13,11 +13,12 @@ use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 use Twig\Environment;
 use Symfony\Component\Mime\Address;
 
-class MailerTest extends KernelTestCase
-{
+class MailerTest //extends KernelTestCase
+{/*
 	//Unit Test
 	public function testSendWelcomeMessage(): void
 	{
+
 		//Address nowa wersja klasy nammedAddress
 		$symfonyMailer = $this->createMock(MailerInterface::class);
 		$symfonyMailer->expects($this->once())
@@ -41,14 +42,15 @@ class MailerTest extends KernelTestCase
 		//question ---
 		$this->assertSame('Witamy w aplikacji ToDo App :)', $email->getSubject());
 		$this->assertCount(1, $email->getTo());
-		/** @var Address[] $adress */
+		/** @var Address[] $adress * /
 		$adress = $email->getTo();
 		$this->assertInstanceOf(Address::class, $adress[0]);
 		$this->assertSame('Victor', $adress[0]->getName());
 		$this->assertSame('victor@symfonycasts.com', $adress[0]->getAddress());
 
 	}
-
+*/
+/*
 	//Integration test
 	public function testIntegrationDoneTaksDailyReportSendUserMessage()
 	{
@@ -71,6 +73,6 @@ class MailerTest extends KernelTestCase
 		$email = $mailer->sendUserDoneTaskDailyReportMessage($user, [$task]);
 		$this->assertCount(1, $email->getAttachments());
 
-	}
+	}*/
 
 }
